@@ -11,7 +11,7 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 24/09/2020 22:30:09
+ Date: 28/09/2020 23:19:40
 */
 
 SET NAMES utf8mb4;
@@ -38,6 +38,31 @@ CREATE TABLE `permission`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of permission
+-- ----------------------------
+INSERT INTO `permission` VALUES (1, 'Master User', NULL, 'fa-user', '0', b'1', b'0', 1, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (2, 'User', 'user', NULL, '1', b'1', b'0', 2, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (3, 'Role', 'role', NULL, '1', b'1', b'0', 3, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (4, 'Permission', 'permission', NULL, '1', b'1', b'0', 4, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (5, 'Master Article', NULL, 'fa-barcode', '0', b'1', b'0', 5, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (6, 'Warna', NULL, NULL, '5', b'1', b'0', 6, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (7, 'Motif', NULL, NULL, '5', b'1', b'0', 7, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (8, 'Size', NULL, NULL, '5', b'1', b'0', 8, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (9, 'Sex', NULL, NULL, '5', b'1', b'0', 9, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (10, 'Master Item', NULL, NULL, '15', b'1', b'0', 10, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (11, 'Transaksi', NULL, 'fa-shopping-cart', '0', b'1', b'0', 11, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (12, 'POS', NULL, NULL, '11', b'1', b'0', 12, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (13, 'Retur', NULL, NULL, '11', b'1', b'0', 13, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (14, 'Keep Barang', NULL, NULL, '15', b'1', b'0', 14, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (15, 'Inventory', NULL, 'fa-briefcase', '0', b'1', b'0', 15, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (16, 'Penerimaan Barang', NULL, NULL, '15', b'1', b'0', 16, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (17, 'Pengeluaran Barang', NULL, NULL, '15', b'1', b'0', 17, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (18, 'CRM', NULL, 'fa-binoculars', '0', b'1', b'0', 18, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (19, 'Sales', NULL, NULL, '18', b'1', b'0', 19, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (20, 'Customer', NULL, NULL, '18', b'1', b'0', 20, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (21, 'Stock Opname', NULL, NULL, '15', b'1', b'0', 21, b'1', NULL, NULL, NULL);
+
+-- ----------------------------
 -- Table structure for permissionrole
 -- ----------------------------
 DROP TABLE IF EXISTS `permissionrole`;
@@ -47,6 +72,33 @@ CREATE TABLE `permissionrole`  (
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of permissionrole
+-- ----------------------------
+INSERT INTO `permissionrole` VALUES (1, 1);
+INSERT INTO `permissionrole` VALUES (1, 2);
+INSERT INTO `permissionrole` VALUES (1, 3);
+INSERT INTO `permissionrole` VALUES (1, 4);
+INSERT INTO `permissionrole` VALUES (1, 5);
+INSERT INTO `permissionrole` VALUES (1, 6);
+INSERT INTO `permissionrole` VALUES (1, 7);
+INSERT INTO `permissionrole` VALUES (1, 8);
+INSERT INTO `permissionrole` VALUES (1, 9);
+INSERT INTO `permissionrole` VALUES (1, 10);
+INSERT INTO `permissionrole` VALUES (1, 11);
+INSERT INTO `permissionrole` VALUES (1, 12);
+INSERT INTO `permissionrole` VALUES (1, 13);
+INSERT INTO `permissionrole` VALUES (1, 14);
+INSERT INTO `permissionrole` VALUES (1, 15);
+INSERT INTO `permissionrole` VALUES (1, 16);
+INSERT INTO `permissionrole` VALUES (1, 17);
+INSERT INTO `permissionrole` VALUES (1, 18);
+INSERT INTO `permissionrole` VALUES (1, 19);
+INSERT INTO `permissionrole` VALUES (1, 20);
+INSERT INTO `permissionrole` VALUES (1, 21);
+INSERT INTO `permissionrole` VALUES (8, 11);
+INSERT INTO `permissionrole` VALUES (8, 12);
+
+-- ----------------------------
 -- Table structure for roles
 -- ----------------------------
 DROP TABLE IF EXISTS `roles`;
@@ -54,7 +106,13 @@ CREATE TABLE `roles`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rolename` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of roles
+-- ----------------------------
+INSERT INTO `roles` VALUES (1, 'SU');
+INSERT INTO `roles` VALUES (8, 'Cashier');
 
 -- ----------------------------
 -- Table structure for userrole
@@ -65,6 +123,18 @@ CREATE TABLE `userrole`  (
   `roleid` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`userid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of userrole
+-- ----------------------------
+INSERT INTO `userrole` VALUES (14, 1);
+INSERT INTO `userrole` VALUES (74, 4);
+INSERT INTO `userrole` VALUES (78, 2);
+INSERT INTO `userrole` VALUES (79, 3);
+INSERT INTO `userrole` VALUES (80, 5);
+INSERT INTO `userrole` VALUES (81, 6);
+INSERT INTO `userrole` VALUES (82, 4);
+INSERT INTO `userrole` VALUES (84, 1);
 
 -- ----------------------------
 -- Table structure for users
@@ -85,6 +155,11 @@ CREATE TABLE `users`  (
   `email` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 83 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 85 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (14, 'admin', 'admin', '440308e0a299d722ebc5a9459a56d27adffc7ad28688d4471fdc1c7a8324f9a5cabdcd25bae8fe71b65837f6dd33fd1a9187ff4e2b2fea10e88289b70fdb79a221Nz7VN+sVNcNv1J/4lhqE9nfn5cpZTw8zhp2ge4pY0=', 'mnl', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

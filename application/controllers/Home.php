@@ -46,4 +46,8 @@ class home extends CI_Controller {
 		$data['rolename'] = $rs->row()->rolename;
 		$this->load->view('V_Auth/permissionrole',$data);	
 	}
+	public function user()
+	{
+		$this->load->view('V_Auth/users');
+	}
 }

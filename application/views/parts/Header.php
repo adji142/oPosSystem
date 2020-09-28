@@ -52,8 +52,15 @@
     <script src="<?php echo base_url();?>Assets/devexpress/jszip.min.js"></script>
     <script src="<?php echo base_url();?>Assets/devexpress/dx.all.js"></script>
     
+    <!-- Select 2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <style type="text/css">
+      .select2-container {
+      width: 50% !important;
+      }
+    </style>
   </head>
-
   <body class="nav-md">
     <div class="container body">
       <div class="main_container">
