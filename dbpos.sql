@@ -11,7 +11,7 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 28/09/2020 23:19:40
+ Date: 29/09/2020 19:21:10
 */
 
 SET NAMES utf8mb4;
@@ -115,6 +115,22 @@ INSERT INTO `roles` VALUES (1, 'SU');
 INSERT INTO `roles` VALUES (8, 'Cashier');
 
 -- ----------------------------
+-- Table structure for ttest
+-- ----------------------------
+DROP TABLE IF EXISTS `ttest`;
+CREATE TABLE `ttest`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `Nomor` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of ttest
+-- ----------------------------
+INSERT INTO `ttest` VALUES (1, '1002');
+INSERT INTO `ttest` VALUES (2, '1003');
+
+-- ----------------------------
 -- Table structure for userrole
 -- ----------------------------
 DROP TABLE IF EXISTS `userrole`;
@@ -161,5 +177,39 @@ CREATE TABLE `users`  (
 -- Records of users
 -- ----------------------------
 INSERT INTO `users` VALUES (14, 'admin', 'admin', '440308e0a299d722ebc5a9459a56d27adffc7ad28688d4471fdc1c7a8324f9a5cabdcd25bae8fe71b65837f6dd33fd1a9187ff4e2b2fea10e88289b70fdb79a221Nz7VN+sVNcNv1J/4lhqE9nfn5cpZTw8zhp2ge4pY0=', 'mnl', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Procedure structure for test_error
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `test_error`;
+delimiter ;;
+CREATE PROCEDURE `test_error`(id INT)
+BEGIN
+   DECLARE errno SMALLINT UNSIGNED DEFAULT 31001;
+   SET @errmsg = '';
+	 SET @count = 0 ;
+	 
+	 SELECT COUNT(*) INTO @count FROM ttest WHERE id = id
+	 AND nomor ='1001';
+	 
+	 
+   IF @count > 0 THEN
+			SET @errmsg = 'CATCH ERROR';
+      SIGNAL SQLSTATE '45000' SET
+      MYSQL_ERRNO = errno,
+      MESSAGE_TEXT = @errmsg;
+   END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table ttest
+-- ----------------------------
+DROP TRIGGER IF EXISTS `T_Validation`;
+delimiter ;;
+CREATE TRIGGER `T_Validation` AFTER INSERT ON `ttest` FOR EACH ROW CALL test_error(new.id)
+;;
+delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;

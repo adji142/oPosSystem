@@ -26,6 +26,22 @@ class home extends CI_Controller {
 		$this->load->model('Apps_mod');
 		$this->load->model('LoginMod');
 	}
+	public function Test()
+	{
+		try {
+			$rs = $this->ModelsExecuteMaster->ExecInsert(array('Nomor'=>'1001'),'ttest');
+			if ($rs) {
+				print_r('done');
+			}
+			else{
+				$undone = $this->db->error();
+				print_r('undone'.$undone['message']);
+				// var_dump();
+			}
+		} catch (Exception $e) {
+			print_r('hai');
+		}
+	}
 	public function index()
 	{
 		$this->load->view('Dashboard');
