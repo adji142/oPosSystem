@@ -13,7 +13,7 @@
               <div class="col-md-12 col-sm-12  ">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Article - Warna</h2>
+                    <h2>Artikel - Sex</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -36,22 +36,23 @@
             <div class="modal-content">
 
               <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Article - Warna</h4>
+                <h4 class="modal-title" id="myModalLabel">Article - Sex</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                 </button>
               </div>
               <div class="modal-body">
                 <form id="post_" data-parsley-validate class="form-horizontal form-label-left">
                   <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode Article <span class="required">*</span>
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode Artikel <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
                       <input type="text" name="ArticleCode" id="ArticleCode" required="" placeholder="Kode Artikel" class="form-control " readonly="">
                       <input type="hidden" name="formtype" id="formtype" value="add">
+                      <input type="hidden" name="ArticleTable" id="ArticleTable" value="articlesex">
                     </div>
                   </div>
                   <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Article <span class="required">*</span>
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Artikel <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
                       <input type="text" name="ArticleName" id="ArticleName" required="" placeholder="Nama Artikel" class="form-control ">
@@ -83,17 +84,7 @@
       $.ajax({
         type: "post",
         url: "<?=base_url()?>C_Article/Read",
-        data: {'id':'','ArticleTable','articlewarna'},
-        dataType: "json",
-        success: function (response) {
-          bindGrid(response.data);
-        }
-      });
-
-      $.ajax({
-        type: "post",
-        url: "<?=base_url()?>C_Article/GetIndex",
-        data: {'id':'','ArticleTable','articlewarna'},
+        data: {'ArticleCode':'','ArticleTable':'articlesex'},
         dataType: "json",
         success: function (response) {
           bindGrid(response.data);
@@ -109,7 +100,7 @@
 
       $.ajax({
             type    :'post',
-            url     : '<?=base_url()?>C_Atribut/CRUD',
+            url     : '<?=base_url()?>C_Article/CRUD',
             data    : me.serialize(),
             dataType: 'json',
             success : function (response) {
@@ -149,8 +140,8 @@
       var table = 'users';
       $.ajax({
             type: "post",
-            url: "<?=base_url()?>C_Atribut/read",
-            data: {'id':id},
+            url: "<?=base_url()?>C_Article/Read",
+            data: {'ArticleCode':id,'ArticleTable':'articlesex'},
             dataType: "json",
             success: function (response) {
               $.each(response.data,function (k,v) {
@@ -172,7 +163,7 @@
       $("#gridContainer").dxDataGrid({
         allowColumnResizing: true,
             dataSource: data,
-            keyExpr: "KodeAtribut",
+            keyExpr: "ArticleCode",
             showBorders: true,
             allowColumnReordering: true,
             allowColumnResizing: true,
@@ -197,7 +188,7 @@
             },
             export: {
                 enabled: true,
-                fileName: "Daftar Penyakit"
+                fileName: "Daftar Artikel Warna"
             },
             columns: [
                 {
@@ -210,12 +201,33 @@
                     caption: "Nama Artikel",
                     allowEditing:false
                 }
+                // {
+                //     dataField: "NamaPenyakit",
+                //     caption: "Nama Penyakit",
+                //     allowEditing:false
+                // },
+                // {
+                //     dataField: "Nilai",
+                //     caption: "Nilai",
+                //     allowEditing:false
+                // },
             ],
             onEditingStart: function(e) {
                 GetData(e.data.ArticleCode);
             },
             onInitNewRow: function(e) {
                 // logEvent("InitNewRow");
+                $.ajax({
+                  async:false,
+                  type: "post",
+                  url: "<?=base_url()?>C_Article/GetIndex",
+                  data: {'Kolom':'ArticleCode','Table':'articlesex','Prefix':'4'},
+                  dataType: "json",
+                  success: function (response) {
+                    // bindGrid(response.data);
+                    $('#ArticleCode').val(response.nomor);
+                  }
+                });
                 $('#modal_').modal('show');
             },
             onRowInserting: function(e) {
@@ -253,7 +265,7 @@
                   $.ajax({
                       type    :'post',
                       url     : '<?=base_url()?>C_Article/CRUD',
-                      data    : {'ArticleCode':id,'formtype':'delete'},
+                      data    : {'ArticleCode':id,'formtype':'delete','ArticleTable':'articlesex'},
                       dataType: 'json',
                       success : function (response) {
                         if(response.success == true){

@@ -60,3 +60,9 @@ $route['permission'] = 'Home/permission';
 $route['role'] = 'Home/role';
 $route['permissionrole/(:num)'] = 'Home/permissionrole/$1';
 $route['user'] = 'Home/user';
+
+// Article
+$route['warna'] = 'Home/warna';
+$route['motif'] = 'Home/motif';
+$route['size'] = 'Home/size';
+$route['sex'] = 'Home/sex';

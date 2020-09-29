@@ -11,11 +11,113 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 29/09/2020 19:21:10
+ Date: 29/09/2020 21:28:36
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for articlemotif
+-- ----------------------------
+DROP TABLE IF EXISTS `articlemotif`;
+CREATE TABLE `articlemotif`  (
+  `ArticleCode` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ArticleName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `isActive` int(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ArticleCode`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of articlemotif
+-- ----------------------------
+INSERT INTO `articlemotif` VALUES ('2001', 'ELMO 2', 1);
+INSERT INTO `articlemotif` VALUES ('2002', 'BEAR MINI', 0);
+
+-- ----------------------------
+-- Table structure for articlesex
+-- ----------------------------
+DROP TABLE IF EXISTS `articlesex`;
+CREATE TABLE `articlesex`  (
+  `ArticleCode` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ArticleName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `isActive` int(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ArticleCode`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of articlesex
+-- ----------------------------
+INSERT INTO `articlesex` VALUES ('4001', 'MAN', 1);
+INSERT INTO `articlesex` VALUES ('4002', 'LADIES', 1);
+INSERT INTO `articlesex` VALUES ('4003', 'UNISEX', 1);
+
+-- ----------------------------
+-- Table structure for articlesize
+-- ----------------------------
+DROP TABLE IF EXISTS `articlesize`;
+CREATE TABLE `articlesize`  (
+  `ArticleCode` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ArticleName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `isActive` int(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ArticleCode`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of articlesize
+-- ----------------------------
+INSERT INTO `articlesize` VALUES ('3001', 'S', 1);
+INSERT INTO `articlesize` VALUES ('3002', 'M', 1);
+INSERT INTO `articlesize` VALUES ('3003', 'L', 1);
+INSERT INTO `articlesize` VALUES ('3004', 'XL', 1);
+INSERT INTO `articlesize` VALUES ('3005', 'XXL', 1);
+INSERT INTO `articlesize` VALUES ('3006', 'ALL SIZE', 1);
+INSERT INTO `articlesize` VALUES ('3007', 'XXXL', 0);
+
+-- ----------------------------
+-- Table structure for articlewarna
+-- ----------------------------
+DROP TABLE IF EXISTS `articlewarna`;
+CREATE TABLE `articlewarna`  (
+  `ArticleCode` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ArticleName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `isActive` int(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ArticleCode`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of articlewarna
+-- ----------------------------
+INSERT INTO `articlewarna` VALUES ('1001', 'RED', 1);
+INSERT INTO `articlewarna` VALUES ('1002', 'BLUE', 1);
+
+-- ----------------------------
+-- Table structure for itemmasterdata
+-- ----------------------------
+DROP TABLE IF EXISTS `itemmasterdata`;
+CREATE TABLE `itemmasterdata`  (
+  `ItemCode` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ItemName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `A_Warna` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `A_Motif` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `A_Size` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `A_Sex` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `DefaultPrice` decimal(10, 2) NOT NULL,
+  `ItemGroup` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT '1: Penjualan,2:Pembelian,3:ATK',
+  `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `Createdon` datetime(0) NOT NULL,
+  `LastUpdatedby` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `LastUpdatedon` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`ItemCode`) USING BTREE,
+  INDEX `Article`(`A_Warna`, `A_Motif`, `A_Size`, `A_Sex`) USING BTREE,
+  INDEX `A_Motif`(`A_Motif`) USING BTREE,
+  INDEX `F_Size`(`A_Size`) USING BTREE,
+  INDEX `F_Sex`(`A_Sex`) USING BTREE,
+  CONSTRAINT `F_Motif` FOREIGN KEY (`A_Motif`) REFERENCES `articlemotif` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `F_Warna` FOREIGN KEY (`A_Warna`) REFERENCES `articlewarna` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `F_Sex` FOREIGN KEY (`A_Sex`) REFERENCES `articlesex` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `F_Size` FOREIGN KEY (`A_Size`) REFERENCES `articlesize` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for permission
@@ -45,10 +147,10 @@ INSERT INTO `permission` VALUES (2, 'User', 'user', NULL, '1', b'1', b'0', 2, b'
 INSERT INTO `permission` VALUES (3, 'Role', 'role', NULL, '1', b'1', b'0', 3, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (4, 'Permission', 'permission', NULL, '1', b'1', b'0', 4, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (5, 'Master Article', NULL, 'fa-barcode', '0', b'1', b'0', 5, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (6, 'Warna', NULL, NULL, '5', b'1', b'0', 6, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (7, 'Motif', NULL, NULL, '5', b'1', b'0', 7, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (8, 'Size', NULL, NULL, '5', b'1', b'0', 8, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (9, 'Sex', NULL, NULL, '5', b'1', b'0', 9, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (6, 'Warna', 'warna', NULL, '5', b'1', b'0', 6, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (7, 'Motif', 'motif', NULL, '5', b'1', b'0', 7, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (8, 'Size', 'size', NULL, '5', b'1', b'0', 8, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (9, 'Sex', 'sex', NULL, '5', b'1', b'0', 9, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (10, 'Master Item', NULL, NULL, '15', b'1', b'0', 10, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (11, 'Transaksi', NULL, 'fa-shopping-cart', '0', b'1', b'0', 11, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (12, 'POS', NULL, NULL, '11', b'1', b'0', 12, b'1', NULL, NULL, NULL);
@@ -122,7 +224,7 @@ CREATE TABLE `ttest`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Nomor` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of ttest
