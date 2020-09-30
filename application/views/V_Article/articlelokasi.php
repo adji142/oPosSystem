@@ -3,11 +3,6 @@
     require_once(APPPATH."views/parts/Sidebar.php");
     $active = 'dashboard';
 ?>
-<style type="text/css">
-  .select2-container {
-  width: 50% !important;
-  }
-</style>
 <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
@@ -18,7 +13,7 @@
               <div class="col-md-12 col-sm-12  ">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>User</h2>
+                    <h2>Lokasi Stok</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -41,49 +36,26 @@
             <div class="modal-content">
 
               <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Modal User</h4>
+                <h4 class="modal-title" id="myModalLabel">Lokasi Stok</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                 </button>
               </div>
               <div class="modal-body">
                 <form id="post_" data-parsley-validate class="form-horizontal form-label-left">
                   <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Username <span class="required">*</span>
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode Lokasi <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="text" name="uname" id="uname" required="" placeholder="Username" class="form-control ">
-                      <input type="hidden" name="id" id="id">
+                      <input type="text" name="ArticleCode" id="ArticleCode" required="" placeholder="Kode Artikel" class="form-control " readonly="">
                       <input type="hidden" name="formtype" id="formtype" value="add">
+                      <input type="hidden" name="ArticleTable" id="ArticleTable" value="articlelokasi">
                     </div>
                   </div>
-
                   <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama User <span class="required">*</span>
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Lokasi <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="text" name="nama" id="nama" required="" placeholder="Nama User" class="form-control ">
-                    </div>
-                  </div>
-
-                  <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Password <span class="required">*</span>
-                    </label>
-                    <div class="col-md-6 col-sm-6 ">
-                      <input type="Password" name="pass" id="pass" required="" placeholder="Password" class="form-control ">
-                    </div>
-                  </div>
-                  <div class="item form-group">
-                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Role <span class="required">*</span>
-                    </label>
-                    <div class="col-md-12 col-sm-12 ">
-                      <select class="form-control col-md-6" id="roles" name="roles" >
-                        <?php
-                          $rs = $this->db->query("select * from roles")->result();
-                          foreach ($rs as $key) {
-                            echo "<option value = '".$key->id."'>".$key->rolename."</option>";
-                          }
-                        ?>
-                      </select>
+                      <input type="text" name="ArticleName" id="ArticleName" required="" placeholder="Nama Artikel" class="form-control ">
                     </div>
                   </div>
                   <div class="item" form-group>
@@ -104,86 +76,79 @@
 ?>
 <script type="text/javascript">
   $(function () {
-        $(document).ready(function () {
-          $('#roles').select2({
-            width : 'resolve'
-          });
+    $(document).ready(function () {
+      var where_field = '';
+      var where_value = '';
+      var table = 'users';
 
-          var where_field = '';
-          var where_value = '';
-          var table = 'users';
+      $.ajax({
+        type: "post",
+        url: "<?=base_url()?>C_Article/Read",
+        data: {'ArticleCode':'','ArticleTable':'articlelokasi'},
+        dataType: "json",
+        success: function (response) {
+          bindGrid(response.data);
+        }
+      });
+    });
+    $('#post_').submit(function (e) {
+      $('#btn_Save').text('Tunggu Sebentar.....');
+      $('#btn_Save').attr('disabled',true);
 
-          $.ajax({
-            type: "post",
-            url: "<?=base_url()?>Auth/ReadUser",
-            data: {'id':''},
-            dataType: "json",
-            success: function (response) {
-              bindGrid(response.data);
+      e.preventDefault();
+      var me = $(this);
+
+      $.ajax({
+            type    :'post',
+            url     : '<?=base_url()?>C_Article/CRUD',
+            data    : me.serialize(),
+            dataType: 'json',
+            success : function (response) {
+              if(response.success == true){
+                $('#modal_').modal('toggle');
+                Swal.fire({
+                  type: 'success',
+                  title: 'Horay..',
+                  text: 'Data Berhasil disimpan!',
+                  // footer: '<a href>Why do I have this issue?</a>'
+                }).then((result)=>{
+                  location.reload();
+                });
+              }
+              else{
+                $('#modal_').modal('toggle');
+                Swal.fire({
+                  type: 'error',
+                  title: 'Woops...',
+                  text: response.message,
+                  // footer: '<a href>Why do I have this issue?</a>'
+                }).then((result)=>{
+                  $('#modal_').modal('show');
+                  $('#btn_Save').text('Save');
+                  $('#btn_Save').attr('disabled',false);
+                });
+              }
             }
           });
         });
-        $('#post_').submit(function (e) {
-          $('#btn_Save').text('Tunggu Sebentar.....');
-          $('#btn_Save').attr('disabled',true);
-
-          e.preventDefault();
-          var me = $(this);
-
-          $.ajax({
-                type    :'post',
-                url     : '<?=base_url()?>Auth/RegisterUser',
-                data    : me.serialize(),
-                dataType: 'json',
-                success : function (response) {
-                  if(response.success == true){
-                    $('#modal_').modal('toggle');
-                    Swal.fire({
-                      type: 'success',
-                      title: 'Horay..',
-                      text: 'Data Berhasil disimpan!',
-                      // footer: '<a href>Why do I have this issue?</a>'
-                    }).then((result)=>{
-                      location.reload();
-                    });
-                  }
-                  else{
-                    $('#modal_').modal('toggle');
-                    Swal.fire({
-                      type: 'error',
-                      title: 'Woops...',
-                      text: response.message,
-                      // footer: '<a href>Why do I have this issue?</a>'
-                    }).then((result)=>{
-                      $('#modal_').modal('show');
-                      $('#btn_Save').text('Save');
-                      $('#btn_Save').attr('disabled',false);
-                    });
-                  }
-                }
-              });
-            });
-        $('.close').click(function() {
-          location.reload();
-        });
+    $('.close').click(function() {
+      location.reload();
+    });
     function GetData(id) {
       var where_field = 'id';
       var where_value = id;
       var table = 'users';
       $.ajax({
             type: "post",
-            url: "<?=base_url()?>Auth/ReadUser",
-            data: {'id':id},
+            url: "<?=base_url()?>C_Article/Read",
+            data: {'ArticleCode':id,'ArticleTable':'articlelokasi'},
             dataType: "json",
             success: function (response) {
               $.each(response.data,function (k,v) {
-                console.log(v.roleid);
+                console.log(v.KelompokUsaha);
                 // $('#KodePenyakit').val(v.KodePenyakit).change;
-                $('#uname').val(v.username);
-                $('#nama').val(v.nama);
-                $('#pass').val(response.decript);
-                $('#roles').val(v.roleid).trigger('change');
-                $('#id').val(v.id);
+                $('#ArticleCode').val(v.ArticleCode);
+                $('#ArticleName').val(v.ArticleName);
                 // $('#Nilai').val(v.Nilai);
 
                 $('#formtype').val("edit");
@@ -198,7 +163,7 @@
       $("#gridContainer").dxDataGrid({
         allowColumnResizing: true,
             dataSource: data,
-            keyExpr: "id",
+            keyExpr: "ArticleCode",
             showBorders: true,
             allowColumnReordering: true,
             allowColumnResizing: true,
@@ -223,27 +188,17 @@
             },
             export: {
                 enabled: true,
-                fileName: "Daftar Penyakit"
+                fileName: "Daftar Artikel Warna"
             },
             columns: [
                 {
-                    dataField: "id",
-                    caption: "#",
+                    dataField: "ArticleCode",
+                    caption: "Kode Lokasi",
                     allowEditing:false
                 },
                 {
-                    dataField: "username",
-                    caption: "Username",
-                    allowEditing:false
-                },
-                {
-                    dataField: "nama",
-                    caption: "Nama",
-                    allowEditing:false
-                },
-                {
-                    dataField: "rolename",
-                    caption: "Level Akses",
+                    dataField: "ArticleName",
+                    caption: "Nama Lokasi",
                     allowEditing:false
                 }
                 // {
@@ -258,10 +213,21 @@
                 // },
             ],
             onEditingStart: function(e) {
-                GetData(e.data.id);
+                GetData(e.data.ArticleCode);
             },
             onInitNewRow: function(e) {
                 // logEvent("InitNewRow");
+                $.ajax({
+                  async:false,
+                  type: "post",
+                  url: "<?=base_url()?>C_Article/GetIndex",
+                  data: {'Kolom':'ArticleCode','Table':'articlelokasi','Prefix':'5'},
+                  dataType: "json",
+                  success: function (response) {
+                    // bindGrid(response.data);
+                    $('#ArticleCode').val(response.nomor);
+                  }
+                });
                 $('#modal_').modal('show');
             },
             onRowInserting: function(e) {
@@ -281,7 +247,7 @@
                 // logEvent(e);
             },
             onRowRemoving: function(e) {
-              id = e.data.id;
+              id = e.data.ArticleCode;
               Swal.fire({
                 title: 'Apakah anda yakin?',
                 text: "anda akan menghapus data di baris ini !",
@@ -298,8 +264,8 @@
 
                   $.ajax({
                       type    :'post',
-                      url     : '<?=base_url()?>Auth/RegisterUser',
-                      data    : {'id':id,'formtype':'delete'},
+                      url     : '<?=base_url()?>C_Article/CRUD',
+                      data    : {'ArticleCode':id,'formtype':'delete','ArticleTable':'articlelokasi'},
                       dataType: 'json',
                       success : function (response) {
                         if(response.success == true){

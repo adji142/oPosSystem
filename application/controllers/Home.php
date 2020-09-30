@@ -108,4 +108,15 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Article/articlesex');
 	}
+	public function lokasi()
+	{
+		$this->load->view('V_Article/articlelokasi');
+	}
+
+	// Inventory
+
+	public function itemmasterdata()
+	{
+		$this->load->view('V_Inventory/itemmasterdata');
+	}	
 }

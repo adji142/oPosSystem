@@ -11,11 +11,27 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 29/09/2020 21:28:36
+ Date: 30/09/2020 22:28:34
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for articlelokasi
+-- ----------------------------
+DROP TABLE IF EXISTS `articlelokasi`;
+CREATE TABLE `articlelokasi`  (
+  `ArticleCode` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `ArticleName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `isActive` int(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ArticleCode`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of articlelokasi
+-- ----------------------------
+INSERT INTO `articlelokasi` VALUES ('5001', 'RAK 2', 0);
 
 -- ----------------------------
 -- Table structure for articlemotif
@@ -97,6 +113,7 @@ INSERT INTO `articlewarna` VALUES ('1002', 'BLUE', 1);
 DROP TABLE IF EXISTS `itemmasterdata`;
 CREATE TABLE `itemmasterdata`  (
   `ItemCode` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `KodeItemLama` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `ItemName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `A_Warna` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `A_Motif` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
@@ -104,19 +121,21 @@ CREATE TABLE `itemmasterdata`  (
   `A_Sex` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `DefaultPrice` decimal(10, 2) NOT NULL,
   `ItemGroup` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT '1: Penjualan,2:Pembelian,3:ATK',
+  `KodeLokasi` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Createdon` datetime(0) NOT NULL,
-  `LastUpdatedby` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `LastUpdatedby` varchar(0) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `LastUpdatedon` datetime(0) NULL DEFAULT NULL,
+  `isActive` int(1) NOT NULL,
   PRIMARY KEY (`ItemCode`) USING BTREE,
   INDEX `Article`(`A_Warna`, `A_Motif`, `A_Size`, `A_Sex`) USING BTREE,
   INDEX `A_Motif`(`A_Motif`) USING BTREE,
   INDEX `F_Size`(`A_Size`) USING BTREE,
   INDEX `F_Sex`(`A_Sex`) USING BTREE,
   CONSTRAINT `F_Motif` FOREIGN KEY (`A_Motif`) REFERENCES `articlemotif` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `F_Warna` FOREIGN KEY (`A_Warna`) REFERENCES `articlewarna` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `F_Sex` FOREIGN KEY (`A_Sex`) REFERENCES `articlesex` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `F_Size` FOREIGN KEY (`A_Size`) REFERENCES `articlesize` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `F_Size` FOREIGN KEY (`A_Size`) REFERENCES `articlesize` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `F_Warna` FOREIGN KEY (`A_Warna`) REFERENCES `articlewarna` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -137,7 +156,7 @@ CREATE TABLE `permission`  (
   `MobileRoute` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `MobileLogo` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -151,7 +170,7 @@ INSERT INTO `permission` VALUES (6, 'Warna', 'warna', NULL, '5', b'1', b'0', 6, 
 INSERT INTO `permission` VALUES (7, 'Motif', 'motif', NULL, '5', b'1', b'0', 7, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (8, 'Size', 'size', NULL, '5', b'1', b'0', 8, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (9, 'Sex', 'sex', NULL, '5', b'1', b'0', 9, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (10, 'Master Item', NULL, NULL, '15', b'1', b'0', 10, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (10, 'Master Item', 'itemmasterdata', NULL, '15', b'1', b'0', 10, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (11, 'Transaksi', NULL, 'fa-shopping-cart', '0', b'1', b'0', 11, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (12, 'POS', NULL, NULL, '11', b'1', b'0', 12, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (13, 'Retur', NULL, NULL, '11', b'1', b'0', 13, b'1', NULL, NULL, NULL);
@@ -163,6 +182,7 @@ INSERT INTO `permission` VALUES (18, 'CRM', NULL, 'fa-binoculars', '0', b'1', b'
 INSERT INTO `permission` VALUES (19, 'Sales', NULL, NULL, '18', b'1', b'0', 19, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (20, 'Customer', NULL, NULL, '18', b'1', b'0', 20, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (21, 'Stock Opname', NULL, NULL, '15', b'1', b'0', 21, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (22, 'Lokasi', 'lokasi', NULL, '5', b'1', b'0', 22, b'0', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for permissionrole
@@ -176,6 +196,8 @@ CREATE TABLE `permissionrole`  (
 -- ----------------------------
 -- Records of permissionrole
 -- ----------------------------
+INSERT INTO `permissionrole` VALUES (8, 11);
+INSERT INTO `permissionrole` VALUES (8, 12);
 INSERT INTO `permissionrole` VALUES (1, 1);
 INSERT INTO `permissionrole` VALUES (1, 2);
 INSERT INTO `permissionrole` VALUES (1, 3);
@@ -197,8 +219,7 @@ INSERT INTO `permissionrole` VALUES (1, 18);
 INSERT INTO `permissionrole` VALUES (1, 19);
 INSERT INTO `permissionrole` VALUES (1, 20);
 INSERT INTO `permissionrole` VALUES (1, 21);
-INSERT INTO `permissionrole` VALUES (8, 11);
-INSERT INTO `permissionrole` VALUES (8, 12);
+INSERT INTO `permissionrole` VALUES (1, 22);
 
 -- ----------------------------
 -- Table structure for roles

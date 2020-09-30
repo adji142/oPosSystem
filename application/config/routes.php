@@ -66,3 +66,7 @@ $route['warna'] = 'Home/warna';
 $route['motif'] = 'Home/motif';
 $route['size'] = 'Home/size';
 $route['sex'] = 'Home/sex';
+$route['lokasi'] = 'Home/lokasi';
+
+// Inventory
+$route['itemmasterdata'] = 'Home/itemmasterdata';
