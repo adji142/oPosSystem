@@ -46,7 +46,12 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                      Add content to the page ...
+                      <p>Progress Done :</p>
+                      <ul>
+                        <li>Master User -> All Sub Menu</li>
+                        <li>Master Article -> All Sub Menu</li>
+                        <li>Inventory -> Master Item</li>
+                      </ul>
                   </div>
                 </div>
               </div>

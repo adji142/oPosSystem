@@ -11,7 +11,7 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 30/09/2020 22:28:34
+ Date: 01/10/2020 21:33:08
 */
 
 SET NAMES utf8mb4;
@@ -108,6 +108,36 @@ INSERT INTO `articlewarna` VALUES ('1001', 'RED', 1);
 INSERT INTO `articlewarna` VALUES ('1002', 'BLUE', 1);
 
 -- ----------------------------
+-- Table structure for detailmutasi
+-- ----------------------------
+DROP TABLE IF EXISTS `detailmutasi`;
+CREATE TABLE `detailmutasi`  (
+  `NoTransaksi` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `LineNum` int(11) NOT NULL,
+  `KodeItem` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `Qty` double(16, 2) NOT NULL,
+  `Price` double(16, 2) NOT NULL,
+  `LineTotal` double(16, 2) NOT NULL,
+  `CreatedBy` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `CreatedOn` datetime(6) NOT NULL
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for headermutasi
+-- ----------------------------
+DROP TABLE IF EXISTS `headermutasi`;
+CREATE TABLE `headermutasi`  (
+  `RowID` int(11) NOT NULL,
+  `NoTransaksi` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `TglTransaksi` date NOT NULL,
+  `TglPencatatan` datetime(6) NOT NULL,
+  `Mutasi` int(255) NOT NULL COMMENT '1: IN, 2: OUT',
+  `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `CreatedOn` datetime(6) NOT NULL,
+  PRIMARY KEY (`RowID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for itemmasterdata
 -- ----------------------------
 DROP TABLE IF EXISTS `itemmasterdata`;
@@ -137,6 +167,11 @@ CREATE TABLE `itemmasterdata`  (
   CONSTRAINT `F_Size` FOREIGN KEY (`A_Size`) REFERENCES `articlesize` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `F_Warna` FOREIGN KEY (`A_Warna`) REFERENCES `articlewarna` (`ArticleCode`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of itemmasterdata
+-- ----------------------------
+INSERT INTO `itemmasterdata` VALUES ('101.0001', 'BI25', 'ELMO', '1001', '2001', '3006', '4003', 15000.00, '1', NULL, 'admin', '2020-10-01 03:57:43', '', '2020-10-01 04:09:04', 1);
 
 -- ----------------------------
 -- Table structure for permission

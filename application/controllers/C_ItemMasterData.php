@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class C_Atribut extends CI_Controller {
+class C_ItemMasterData extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -39,12 +39,13 @@ class C_Atribut extends CI_Controller {
 					b.ArticleName Warna,
 					c.ArticleName Motif,
 					d.ArticleName Size,
-					e.ArticleName Sex
+					e.ArticleName Sex,
+					0 Stok
 				FROM itemmasterdata a
 				LEFT JOIN articlewarna b on a.A_Warna = b.ArticleCOde
 				LEFT JOIN articlemotif c on a.A_Motif = c.ArticleCode
 				LEFT JOIN articlesize d on a.A_Size = d.ArticleCode
-				LEFT JOIN articlesex e on a.A_Sex = d.ArticleCode
+				LEFT JOIN articlesex e on a.A_Sex = e.ArticleCode
 				WHERE a.isActive = 1
 			";
 			$rs = $this->db->query($SQL);
@@ -125,7 +126,8 @@ class C_Atribut extends CI_Controller {
 					$data['success'] = true;
 				}
 				else{
-					$data['message'] = "Gagal Input Role";
+					$undone = $this->db->error();
+					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
 					goto jump;
 				}
 			} catch (Exception $e) {
@@ -137,9 +139,13 @@ class C_Atribut extends CI_Controller {
 		}
 		elseif ($formtype == 'edit') {
 			try {
-				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('KodeAtribut'=> $KodeAtribut),'itemmasterdata');
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('ItemCode'=> $ItemCode),'itemmasterdata');
 				if ($rs) {
 					$data['success'] = true;
+				}
+				else{
+					$undone = $this->db->error();
+					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
 				}
 			} catch (Exception $e) {
 				$data['success'] = false;
@@ -153,6 +159,10 @@ class C_Atribut extends CI_Controller {
 				if ($rs) {
 					$data['success'] = true;
 				}
+				else{
+					$undone = $this->db->error();
+					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+				}
 			} catch (Exception $e) {
 				$data['success'] = false;
 				$data['message'] = "Gagal memproses data ". $e->getMessage();
@@ -161,6 +171,29 @@ class C_Atribut extends CI_Controller {
 		else{
 			$data['success'] = false;
 			$data['message'] = "Invalid Form Type";
+		}
+		echo json_encode($data);
+	}
+
+	public function Getindex()
+	{
+		$data = array('success' => false ,'message'=>array(),'Nomor' => '');
+
+		$Kolom = $this->input->post('Kolom');
+		$Table = $this->input->post('Table');
+		$Prefix = $this->input->post('Prefix');
+
+		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+
+		// var_dump($SQL);
+		$rs = $this->db->query($SQL);
+
+		$temp = $rs->row()->Total + 1;
+
+		$nomor = $Prefix.str_pad($temp, 4,"0",STR_PAD_LEFT);
+		if ($nomor != '') {
+			$data['success'] = true;
+			$data['nomor'] = $nomor;
 		}
 		echo json_encode($data);
 	}

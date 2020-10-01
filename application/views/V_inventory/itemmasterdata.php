@@ -110,7 +110,7 @@
                             <!-- 1: Penjualan,2:Pembelian,3:ATK -->
                             <option value="1">Penjualan</option>
                             <option value="2">Pembelian</option>
-                            <option value="3">ATK</option>
+                            <!-- <option value="3">ATK</option> -->
                           </select>
                         </div>
                       </div>
@@ -195,7 +195,7 @@
 
       $.ajax({
         type: "post",
-        url: "<?=base_url()?>C_Article/Read",
+        url: "<?=base_url()?>C_ItemMasterData/Read",
         data: {'id':'','ArticleTable':'articlewarna'},
         dataType: "json",
         success: function (response) {
@@ -207,42 +207,63 @@
       $('#btn_Save').text('Tunggu Sebentar.....');
       $('#btn_Save').attr('disabled',true);
 
+      var prefix = '';
+
+      if ($('#ItemGroup').val() == 1) {
+        prefix = '101.'
+      }
+      else if ($('#ItemGroup').val() == 1) {
+        prefix = '201.'
+      }
+
+      if ($('#formtype').val() == 'ad') {
+        $.ajax({
+          async : false,
+          type: "post",
+          url: "<?=base_url()?>C_ItemMasterData/Getindex",
+          data: {'Kolom':'ItemCode','Table':'itemmasterdata','Prefix' : prefix},
+          dataType: "json",
+          success: function (response) {
+            // bindGrid(response.data);
+            $('#ItemCode').val(response.nomor);
+          }
+        });
+      }
+
       e.preventDefault();
       var me = $(this);
 
       $.ajax({
-            type    :'post',
-            url     : '<?=base_url()?>C_Atribut/CRUD',
-            data    : me.serialize(),
-            dataType: 'json',
-            success : function (response) {
-              if(response.success == true){
-                $('#modal_').modal('toggle');
-                Swal.fire({
-                  type: 'success',
-                  title: 'Horay..',
-                  text: 'Data Berhasil disimpan!',
-                  // footer: '<a href>Why do I have this issue?</a>'
-                }).then((result)=>{
-                  location.reload();
-                });
-              }
-              else{
-                $('#modal_').modal('toggle');
-                Swal.fire({
-                  type: 'error',
-                  title: 'Woops...',
-                  text: response.message,
-                  // footer: '<a href>Why do I have this issue?</a>'
-                }).then((result)=>{
-                  $('#modal_').modal('show');
-                  $('#btn_Save').text('Save');
-                  $('#btn_Save').attr('disabled',false);
-                });
-              }
-            }
-          });
-        });
+        async : false,
+        type    :'post',
+        url     : '<?=base_url()?>C_ItemMasterData/CRUD',
+        data    : me.serialize(),
+        dataType: 'json',
+        success : function (response) {
+          if(response.success == true){
+            Swal.fire({
+              type: 'success',
+              title: 'Horay..',
+              text: 'Data Berhasil disimpan!',
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              location.reload();
+            });
+          }
+          else{
+            Swal.fire({
+              type: 'error',
+              title: 'Woops...',
+              text: response.message,
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              $('#btn_Save').text('Save');
+              $('#btn_Save').attr('disabled',false);
+            });
+          }
+        }
+      });
+    });
     $('.close').click(function() {
       location.reload();
     });
@@ -251,31 +272,41 @@
       var where_value = id;
       var table = 'users';
       $.ajax({
-            type: "post",
-            url: "<?=base_url()?>C_Atribut/read",
-            data: {'id':id},
-            dataType: "json",
-            success: function (response) {
-              $.each(response.data,function (k,v) {
-                console.log(v.KelompokUsaha);
-                // $('#KodePenyakit').val(v.KodePenyakit).change;
-                $('#ArticleCode').val(v.ArticleCode);
-                $('#ArticleName').val(v.ArticleName);
-                // $('#Nilai').val(v.Nilai);
+        type: "post",
+        url: "<?=base_url()?>C_ItemMasterData/read",
+        data: {'id':id},
+        dataType: "json",
+        success: function (response) {
+          $.each(response.data,function (k,v) {
+            $('#ItemCode').val(v.ItemCode);
+            $('#KodeItemLama').val(v.KodeItemLama);
+            $('#ItemName').val(v.ItemName);
+            $('#A_Warna').val(v.A_Warna).change();
+            $('#A_Motif').val(v.A_Motif).change();
+            $('#A_Size').val(v.A_Size).change();
+            $('#A_Sex').val(v.A_Sex).change();
+            $('#DefaultPrice').val(v.DefaultPrice);
+            $('#ItemGroup').val(v.ItemGroup).change();
+            // $('#Nilai').val(v.Nilai);
 
-                $('#formtype').val("edit");
+            $('#formtype').val("edit");
 
-                $('#modal_').modal('show');
-              });
-            }
+            // $(window).scrollTop(0);
+            $('html').animate({scrollTop:0}, 'slow');//IE, FF
+            $('body').animate({scrollTop:0}, 'slow');//chrome, don't know if Safari works
+            $('.popupPeriod').fadeIn(1000, function(){
+                setTimeout(function(){$('.popupPeriod').fadeOut(2000);}, 3000);
+            });
           });
+        }
+      });
     }
     function bindGrid(data) {
 
       $("#gridContainer").dxDataGrid({
         allowColumnResizing: true,
             dataSource: data,
-            keyExpr: "KodeAtribut",
+            keyExpr: "ItemCode",
             showBorders: true,
             allowColumnReordering: true,
             allowColumnResizing: true,
@@ -286,7 +317,6 @@
             },
             editing: {
                 mode: "row",
-                allowAdding:true,
                 allowUpdating: true,
                 allowDeleting: true,
                 texts: {
@@ -304,22 +334,45 @@
             },
             columns: [
                 {
-                    dataField: "ArticleCode",
-                    caption: "Kode Artikel",
+                    dataField: "ItemCode",
+                    caption: "Kode Item",
                     allowEditing:false
                 },
                 {
-                    dataField: "ArticleName",
-                    caption: "Nama Artikel",
+                    dataField: "KodeItemLama",
+                    caption: "Kode Item Lama",
                     allowEditing:false
-                }
+                },
+                {
+                    dataField: "ItemName",
+                    caption: "Nama Item",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Warna",
+                    caption: "Warna",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Motif",
+                    caption: "Motif",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Size",
+                    caption: "Size",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Sex",
+                    caption: "Sex",
+                    allowEditing:false
+                },
             ],
             onEditingStart: function(e) {
-                GetData(e.data.ArticleCode);
+                GetData(e.data.ItemCode);
             },
             onInitNewRow: function(e) {
-                // logEvent("InitNewRow");
-                $('#modal_').modal('show');
             },
             onRowInserting: function(e) {
                 // logEvent("RowInserting");
@@ -338,7 +391,7 @@
                 // logEvent(e);
             },
             onRowRemoving: function(e) {
-              id = e.data.ArticleCode;
+              id = e.data.ItemCode;
               Swal.fire({
                 title: 'Apakah anda yakin?',
                 text: "anda akan menghapus data di baris ini !",
@@ -355,8 +408,8 @@
 
                   $.ajax({
                       type    :'post',
-                      url     : '<?=base_url()?>C_Article/CRUD',
-                      data    : {'ArticleCode':id,'formtype':'delete'},
+                      url     : '<?=base_url()?>C_ItemMasterData/CRUD',
+                      data    : {'ItemCode':id,'formtype':'delete'},
                       dataType: 'json',
                       success : function (response) {
                         if(response.success == true){
