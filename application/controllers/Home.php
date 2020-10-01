@@ -117,6 +117,6 @@ class home extends CI_Controller {
 
 	public function itemmasterdata()
 	{
-		$this->load->view('V_Inventory/itemmasterdata');
+		$this->load->view('V_inventory/itemmasterdata');
 	}	
 }
