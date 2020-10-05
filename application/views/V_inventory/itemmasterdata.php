@@ -216,7 +216,7 @@
         prefix = '201.'
       }
 
-      if ($('#formtype').val() == 'ad') {
+      if ($('#formtype').val() == 'add') {
         $.ajax({
           async : false,
           type: "post",
@@ -264,14 +264,12 @@
         }
       });
     });
-    $('.close').click(function() {
-      location.reload();
-    });
     function GetData(id) {
       var where_field = 'id';
       var where_value = id;
       var table = 'users';
       $.ajax({
+        async : false,
         type: "post",
         url: "<?=base_url()?>C_ItemMasterData/read",
         data: {'id':id},

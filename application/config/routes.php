@@ -70,3 +70,4 @@ $route['lokasi'] = 'Home/lokasi';
 
 // Inventory
 $route['itemmasterdata'] = 'Home/itemmasterdata';
+$route['penerimaanbarang'] = 'Home/penerimaanbarang';

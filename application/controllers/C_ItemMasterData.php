@@ -31,24 +31,14 @@ class C_ItemMasterData extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
 		$id = $this->input->post('id');
-
+		$kriteria = $this->input->post('kriteria');
 		if ($id == '') {
-			$SQL = "
-				SELECT 
-					a.*,
-					b.ArticleName Warna,
-					c.ArticleName Motif,
-					d.ArticleName Size,
-					e.ArticleName Sex,
-					0 Stok
-				FROM itemmasterdata a
-				LEFT JOIN articlewarna b on a.A_Warna = b.ArticleCOde
-				LEFT JOIN articlemotif c on a.A_Motif = c.ArticleCode
-				LEFT JOIN articlesize d on a.A_Size = d.ArticleCode
-				LEFT JOIN articlesex e on a.A_Sex = e.ArticleCode
-				WHERE a.isActive = 1
-			";
+			$SQL = "SELECT * FROM vw_stok";
 			$rs = $this->db->query($SQL);
+		}
+		elseif ($kriteria <> '') {
+			$SQL = "SELECT * FROM vw_stok WHERE CONCAT(ItemCode,' ',Article) LIKE '%".$kriteria."%'";
+			$rs = $this->db->query($SQL);	
 		}
 		else{
 			$rs = $this->ModelsExecuteMaster->FindData(array('ItemCode'=>$id),'itemmasterdata');

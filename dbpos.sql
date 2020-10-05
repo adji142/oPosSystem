@@ -11,7 +11,7 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 01/10/2020 21:33:08
+ Date: 05/10/2020 23:33:34
 */
 
 SET NAMES utf8mb4;
@@ -132,6 +132,7 @@ CREATE TABLE `headermutasi`  (
   `TglTransaksi` date NOT NULL,
   `TglPencatatan` datetime(6) NOT NULL,
   `Mutasi` int(255) NOT NULL COMMENT '1: IN, 2: OUT',
+  `Keterangan` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `CreatedOn` datetime(6) NOT NULL,
   PRIMARY KEY (`RowID`) USING BTREE
@@ -172,6 +173,7 @@ CREATE TABLE `itemmasterdata`  (
 -- Records of itemmasterdata
 -- ----------------------------
 INSERT INTO `itemmasterdata` VALUES ('101.0001', 'BI25', 'ELMO', '1001', '2001', '3006', '4003', 15000.00, '1', NULL, 'admin', '2020-10-01 03:57:43', '', '2020-10-01 04:09:04', 1);
+INSERT INTO `itemmasterdata` VALUES ('101.0002', 'BI26', 'ELCO', '1001', '2001', '3006', '4003', 15000.00, '1', NULL, 'admin', '2020-10-05 04:32:34', NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for permission
@@ -211,7 +213,7 @@ INSERT INTO `permission` VALUES (12, 'POS', NULL, NULL, '11', b'1', b'0', 12, b'
 INSERT INTO `permission` VALUES (13, 'Retur', NULL, NULL, '11', b'1', b'0', 13, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (14, 'Keep Barang', NULL, NULL, '15', b'1', b'0', 14, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (15, 'Inventory', NULL, 'fa-briefcase', '0', b'1', b'0', 15, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (16, 'Penerimaan Barang', NULL, NULL, '15', b'1', b'0', 16, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (16, 'Penerimaan Barang', 'penerimaanbarang', NULL, '15', b'1', b'0', 16, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (17, 'Pengeluaran Barang', NULL, NULL, '15', b'1', b'0', 17, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (18, 'CRM', NULL, 'fa-binoculars', '0', b'1', b'0', 18, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (19, 'Sales', NULL, NULL, '18', b'1', b'0', 19, b'1', NULL, NULL, NULL);
@@ -335,6 +337,25 @@ CREATE TABLE `users`  (
 -- Records of users
 -- ----------------------------
 INSERT INTO `users` VALUES (14, 'admin', 'admin', '440308e0a299d722ebc5a9459a56d27adffc7ad28688d4471fdc1c7a8324f9a5cabdcd25bae8fe71b65837f6dd33fd1a9187ff4e2b2fea10e88289b70fdb79a221Nz7VN+sVNcNv1J/4lhqE9nfn5cpZTw8zhp2ge4pY0=', 'mnl', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- View structure for vw_stok
+-- ----------------------------
+DROP VIEW IF EXISTS `vw_stok`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `vw_stok` AS SELECT 
+	a.*,
+	b.ArticleName Warna,
+	c.ArticleName Motif,
+	d.ArticleName Size,
+	e.ArticleName Sex,
+	0 Stok,
+	CONCAT(a.ItemName,' ',c.ArticleName,' ',b.ArticleName) Article
+FROM itemmasterdata a
+LEFT JOIN articlewarna b on a.A_Warna = b.ArticleCOde
+LEFT JOIN articlemotif c on a.A_Motif = c.ArticleCode
+LEFT JOIN articlesize d on a.A_Size = d.ArticleCode
+LEFT JOIN articlesex e on a.A_Sex = e.ArticleCode
+WHERE a.isActive = 1 ;
 
 -- ----------------------------
 -- Procedure structure for test_error
