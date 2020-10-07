@@ -34,36 +34,42 @@ class home extends CI_Controller {
 		// 		print_r('done');
 		// 	}
 		// 	else{
-		// 		$undone = $this->db->error();
-		// 		print_r('undone'.$undone['message']);
+		// 		goto jump;	
 		// 		// var_dump();
 		// 	}
 		// } catch (Exception $e) {
-		// 	print_r('hai');
+		// 	jump:
+		// 	$undone = $this->db->error();
+		// 	print_r('undone'.$undone['message']);
 		// }
-		$data = array('success' => false ,'message'=>array(),'Nomor' => '');
+		// $data = array('success' => false ,'message'=>array(),'Nomor' => '');
+		$my_report = "C:/xampp/htdocs/oPos/Report1.rpt";
+		$COM_Object = "CrystalReports115.ObjectFactory.1";
+		$objCom = new COM($COM_Object, "localhost", 0, "");
+		$crapp = $objCom->CreateObject("CrystalDesignRunTime.Application");
+		$creport = $crapp->OpenReport($my_report, 1);
 
 		// $Kolom = $this->input->post('Kolom');
 		// $Table = $this->input->post('Table');
 		// $Prefix = $this->input->post('Prefix');
 
-		$Kolom = 'ArticleCode';
-		$Table = 'articlewarna';
-		$Prefix = '1';
+		// $Kolom = 'ArticleCode';
+		// $Table = 'articlewarna';
+		// $Prefix = '1';
 
-		$SQL = "SELECT RIGHT(MAX(".$Kolom."),3)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+		// $SQL = "SELECT RIGHT(MAX(".$Kolom."),3)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
 
-		// var_dump($SQL);
-		$rs = $this->db->query($SQL);
+		// // var_dump($SQL);
+		// $rs = $this->db->query($SQL);
 
-		$temp = $rs->row()->Total + 1;
+		// $temp = $rs->row()->Total + 1;
 
-		$nomor = $Prefix.str_pad($temp, 3,"0",STR_PAD_LEFT);
-		if ($nomor != '') {
-			$data['success'] = true;
-			$data['nomor'] = $nomor;
-		}
-		echo json_encode($data);
+		// $nomor = $Prefix.str_pad($temp, 3,"0",STR_PAD_LEFT);
+		// if ($nomor != '') {
+		// 	$data['success'] = true;
+		// 	$data['nomor'] = $nomor;
+		// }
+		// echo json_encode($data);
 	}
 	public function index()
 	{

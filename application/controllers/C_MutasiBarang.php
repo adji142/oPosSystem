@@ -32,8 +32,9 @@ class C_MutasiBarang extends CI_Controller {
 
 		$TglAwal = $this->input->post('TglAwal');
 		$TglAkhir = $this->input->post('TglAkhir');
+		$Mutasi = $this->input->post('Mutasi');
 
-		$SQL = "SELECT * FROM headermutasi where TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."'";
+		$SQL = "SELECT * FROM headermutasi where TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."' AND Mutasi =".$Mutasi;
 
 		$rs = $this->db->query($SQL);
 		if ($rs->num_rows() > 0) {
@@ -51,7 +52,9 @@ class C_MutasiBarang extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 		$HeaderID = $this->input->post('HeaderID');
 
-		$SQL = "SELECT * FROM detailmutasi where NoTransaksi = '".$HeaderID."' ORDER BY LineNum";
+		$SQL = "SELECT A.*,B.ItemName,B.Article FROM detailmutasi A 
+				LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
+				where A.NoTransaksi = '".$HeaderID."' ORDER BY A.LineNum";
 
 		$rs = $this->db->query($SQL);
 
@@ -73,68 +76,103 @@ class C_MutasiBarang extends CI_Controller {
 
 		$data['data'] = array();
 
-		$data['masteralat'] = $call2;
-
 		echo json_encode($data);
 	}
 	public function CRUD()
 	{
 		$data = array('success' => false ,'message'=>array());
-		$rolename = $this->input->post('rolename');
-		$id = $this->input->post('id');
 
-		// $exploder = explode("|",$ItemGroup[0]);
-		$formtype = $this->input->post('formtype');
+		$errorCount = 0;
+		// Header
+		$NoTransaksi = "";
+		$TglTransaksi = $this->input->post('TglTransaksi');
+		$TglPencatatan = date("Y-m-d h:i:sa");
+		$Mutasi = $this->input->post('Mutasi');
+		$Keterangan = $this->input->post('Keterangan');
+		$Createdby = $this->session->userdata('username');
+		$CreatedOn = date("Y-m-d h:i:sa");
 
-		$param = array(
-			'rolename' => $rolename
-		);
-		if ($formtype == 'add') {
-			$this->db->trans_begin();
-			try {
-				$call_x = $this->ModelsExecuteMaster->ExecInsert($param,'roles');
-				if ($call_x) {
-					$this->db->trans_commit();
-					$data['success'] = true;
-				}
-				else{
-					$data['message'] = "Gagal Input Role";
-					goto jump;
-				}
-			} catch (Exception $e) {
-				jump:
-				$this->db->trans_rollback();
-				// $data['success'] = false;
-				// $data['message'] = "Gagal memproses data ". $e->getMessage();
-			}
-		}
-		elseif ($formtype == 'edit') {
-			try {
-				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('id'=> $id),'roles');
-				if ($rs) {
-					$data['success'] = true;
-				}
-			} catch (Exception $e) {
-				$data['success'] = false;
-				$data['message'] = "Gagal memproses data ". $e->getMessage();
-			}
-		}
-		elseif ($formtype == 'delete') {
-			try {
-				$SQL = "DELETE FROM roles WHERE id = '".$id."'";
-				$rs = $this->db->query($SQL);
-				if ($rs) {
-					$data['success'] = true;
-				}
-			} catch (Exception $e) {
-				$data['success'] = false;
-				$data['message'] = "Gagal memproses data ". $e->getMessage();
-			}
+		// Detail
+
+		$array_detail = $this->input->post('array_detail');
+
+
+		// NoTransaksi
+		$Kolom = 'NoTransaksi';
+		$Table = 'headermutasi';
+		$Prefix = 'MTIN';
+
+		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+
+		// var_dump($SQL);
+		$rs = $this->db->query($SQL);
+
+		$temp = $rs->row()->Total + 1;
+
+		$nomor = $Prefix.str_pad($temp, 6,"0",STR_PAD_LEFT);
+		if ($nomor != '') {
+			$NoTransaksi = $nomor;
 		}
 		else{
-			$data['success'] = false;
-			$data['message'] = "Invalid Form Type";
+			$data['message'] = "Nomor Transaksi Gagal generate";
+			goto jump;
 		}
+		
+		try {
+			$this->db->trans_begin();
+			$header = array(
+				'NoTransaksi' => $NoTransaksi,
+				'TglTransaksi' => $TglTransaksi,
+				'TglPencatatan' => $TglPencatatan,
+				'Mutasi' => $Mutasi,
+				'Keterangan' => $Keterangan,
+				'Createdby' => $Createdby,
+				'CreatedOn' => $CreatedOn
+			);
+			$appendHeader = $this->ModelsExecuteMaster->ExecInsert($header,'headermutasi');
+			if ($appendHeader) {
+				// do looop
+				$detail = json_decode($array_detail);
+				for ($i=0; $i < count($detail) ; $i++) { 
+					// print_r($detail[$i]->ItemCode);
+					$paramdetail = array(
+						'NoTransaksi' => $NoTransaksi,
+						'LineNum' 	=> $i,
+						'KodeItem' 	=> $detail[$i]->ItemCode,
+						'Qty' 		=> $detail[$i]->Qty,
+						'Price' 	=> $detail[$i]->Price,
+						'LineTotal' => $detail[$i]->Qty * $detail[$i]->Price,
+						'CreatedBy' => $Createdby,
+						'CreatedOn' => $CreatedOn
+					);
+					$appendDetail = $this->ModelsExecuteMaster->ExecInsert($paramdetail,'detailmutasi');
+					if ($appendDetail) {
+						$data['success'] = true;
+					}
+					else{
+						$errorCount +=1;
+						goto catchjump;
+					}
+				}
+			}
+			else{
+				$errorCount += 1;
+			}
+			if ($errorCount == 0) {
+				$this->db->trans_commit();
+			}
+			else{
+				$this->db->trans_rollback();
+			}
+		} catch (Exception $e) {
+			catchjump:
+			$undone = $this->db->error();
+			$data['success'] = false;
+			$data['message'] = "Sistem Gagal Melakukan Pemrossan Data: ".$undone['message'];
+			$this->db->trans_rollback();
+		}
+
+		jump:
 		echo json_encode($data);
 	}
 }

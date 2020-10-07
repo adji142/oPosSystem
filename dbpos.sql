@@ -11,7 +11,7 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 05/10/2020 23:33:34
+ Date: 07/10/2020 23:50:48
 */
 
 SET NAMES utf8mb4;
@@ -119,15 +119,24 @@ CREATE TABLE `detailmutasi`  (
   `Price` double(16, 2) NOT NULL,
   `LineTotal` double(16, 2) NOT NULL,
   `CreatedBy` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `CreatedOn` datetime(6) NOT NULL
+  `CreatedOn` datetime(6) NOT NULL,
+  INDEX `FKDetail`(`NoTransaksi`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of detailmutasi
+-- ----------------------------
+INSERT INTO `detailmutasi` VALUES ('MTIN000001', 0, '101.0001', 2.00, 15000.00, 30000.00, 'admin', '2020-10-07 05:51:39.000000');
+INSERT INTO `detailmutasi` VALUES ('MTIN000001', 1, '101.0002', 2.00, 15000.00, 30000.00, 'admin', '2020-10-07 05:51:39.000000');
+INSERT INTO `detailmutasi` VALUES ('MTIN000002', 0, '101.0002', 100.00, 15000.00, 1500000.00, 'admin', '2020-10-07 05:52:05.000000');
+INSERT INTO `detailmutasi` VALUES ('MTIN000003', 0, '101.0002', 1.00, 15000.00, 15000.00, 'admin', '2020-10-07 06:32:13.000000');
 
 -- ----------------------------
 -- Table structure for headermutasi
 -- ----------------------------
 DROP TABLE IF EXISTS `headermutasi`;
 CREATE TABLE `headermutasi`  (
-  `RowID` int(11) NOT NULL,
+  `RowID` int(11) NOT NULL AUTO_INCREMENT,
   `NoTransaksi` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `TglTransaksi` date NOT NULL,
   `TglPencatatan` datetime(6) NOT NULL,
@@ -135,8 +144,16 @@ CREATE TABLE `headermutasi`  (
   `Keterangan` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `CreatedOn` datetime(6) NOT NULL,
-  PRIMARY KEY (`RowID`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`RowID`) USING BTREE,
+  INDEX `NoTransaksi`(`NoTransaksi`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of headermutasi
+-- ----------------------------
+INSERT INTO `headermutasi` VALUES (2, 'MTIN000001', '2020-10-07', '2020-10-07 05:51:39.000000', 1, 'Test Data', 'admin', '2020-10-07 05:51:39.000000');
+INSERT INTO `headermutasi` VALUES (3, 'MTIN000002', '2020-10-07', '2020-10-07 05:52:05.000000', 1, '2', 'admin', '2020-10-07 05:52:05.000000');
+INSERT INTO `headermutasi` VALUES (4, 'MTIN000003', '2020-10-07', '2020-10-07 06:32:13.000000', 1, 'Coba insert laagi', 'admin', '2020-10-07 06:32:13.000000');
 
 -- ----------------------------
 -- Table structure for itemmasterdata
@@ -282,7 +299,7 @@ CREATE TABLE `ttest`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Nomor` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of ttest
@@ -348,7 +365,7 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `vw_stok` AS SELECT
 	c.ArticleName Motif,
 	d.ArticleName Size,
 	e.ArticleName Sex,
-	0 Stok,
+	100000 Stok,
 	CONCAT(a.ItemName,' ',c.ArticleName,' ',b.ArticleName) Article
 FROM itemmasterdata a
 LEFT JOIN articlewarna b on a.A_Warna = b.ArticleCOde

@@ -55,6 +55,10 @@
     <!-- Select 2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <!-- datatable -->
+
+    <script src="<?php echo base_url();?>Assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="<?php echo base_url();?>Assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
   </head>
   <body class="nav-md">
     <div class="container body">

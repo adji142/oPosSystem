@@ -28,7 +28,7 @@
                         </label>
                         <div class="col-md-8 col-sm-8 ">
                           <input type="text" name="NoTransaksi" id="NoTransaksi" required="" placeholder="Kode Item" class="form-control" readonly="" value="<AUTO>">
-                          <input type="hidden" name="formtype" id="formtype" value="add">
+                          <input type="hidden" name="Mutasi" id="Mutasi" value="1">
                         </div>
                       </div>
                       <div class="item form-group">
@@ -53,10 +53,10 @@
                         </div>
                       </div>
                       <br>
-                      <div class="item" form-group>
-                        <button class="btn btn-primary" id="btn_Save">Save</button>
-                      </div>
                     </form>
+                    <div class="item" form-group>
+                      <button class="btn btn-primary" id="btn_Save">Save</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -76,12 +76,12 @@
                         <label class="col-form-label label-align" for="first-name">Tanggal <span class="required">*</span>
                         </label>
                         <div class="col-md-3 col-sm-3  form-group">
-                          <input type="date" placeholder="dd-mm-yyyy" dateformat="dd-mm-yyyy" class="form-control" value="<?php echo date("Y-m-d");?>">
+                          <input type="date" id="TglAwal" name="TglAwal" placeholder="dd-mm-yyyy" dateformat="dd-mm-yyyy" class="form-control" value="<?php echo date("Y-m-d");?>">
                         </div>
                          <label class="col-form-label label-align" for="first-name">s/d </label>
                          <!-- end -->
                         <div class="col-md-3 col-sm-3  form-group">
-                          <input type="date" placeholder=".col-md-12" class="form-control" value="<?php echo date("Y-m-d");?>">
+                          <input type="date" id="TglAkhir" name="TglAkhir" placeholder=".col-md-12" class="form-control" value="<?php echo date("Y-m-d");?>">
                         </div>
                         <div class="form-group">
                           <!-- <input type="date" placeholder=".col-md-12" class="form-control"> -->
@@ -119,13 +119,21 @@
                 </button>
               </div>
               <div class="modal-body">
-                <table class="table table-bordered data-table" id="ItemLookup">
+                <div class="item form-group">
+                  <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Search <span class="required">*</span>
+                  </label>
+                  <div class="col-md-8 col-sm-8 ">
+                    <input type="text" name="mySearch" id="mySearch" placeholder="Search" class="form-control ">
+                  </div>
+                </div>
+                <table class="table table-striped table-bordered" id="ItemLookup">
                   <thead>
                       <tr>
                         <th>Kode Item</th>
                         <th>Nama Item</th>
                         <th>Article</th>
                         <th>Stok Akhir</th>
+                        <th>Default Price</th>
                       </tr>
                     </thead>
                     <tbody id="load_Lookup">
@@ -146,8 +154,24 @@
 <script type="text/javascript">
   var row_validate = 0;
   var items_data;
+  var itemJson = "";
+  // constanta
+  var _ItemCode = 0;
+  var _ItemName = 1;
+  var _OnHand = 2;
+  var _Price = 3;
+  var _Qty = 4;
   $(function () {
     $(document).ready(function () {
+      // Auto Search
+      $("#mySearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#load_Lookup tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+      // End Auto Search
+
       $('#A_Warna').select2({
         width : 'resolve',
         placeholder: 'Pilih Warna'
@@ -164,14 +188,15 @@
         width : 'resolve',
         placeholder: 'Pilih Sex'
       });
-      var where_field = '';
-      var where_value = '';
-      var table = 'users';
+      
+
+      var TglAwal = $('#TglAwal').val();
+      var TglAkhir = $('#TglAkhir').val();
 
       $.ajax({
         type: "post",
-        url: "<?=base_url()?>C_ItemMasterData/Read",
-        data: {'id':'','ArticleTable':'articlewarna'},
+        url: "<?=base_url()?>C_MutasiBarang/ReadHeader",
+        data: {'TglAwal':TglAwal,'TglAkhir':TglAkhir,'Mutasi':1},
         dataType: "json",
         success: function (response) {
           bindGridHeader(response.data);
@@ -198,60 +223,56 @@
       var ItemCode = $(this).find("#ItemCode").text();
       var ItemName = $(this).find("#ItemName").text();
       var Stok = $(this).find("#Stok").text();
+      var dflt = $(this).find("#dflt").text();
 
+      var prevQty = 0;
+      // console.log(items_data);
+      for (var i = 0; i < items_data.length; i++) {
+        if (items_data[i]["ItemCode"] == ItemCode) {
+          prevQty = items_data[i]["Qty"];
+          // items_data.remove(i);
+          items_data.splice(i, 1);
+        }
+        else{
+          prevQty = 0;
+        }
+      }
       items_data.push({
         ItemCode : ItemCode,
         ItemName : ItemName,
-        Qty : 0,
-        Price:0,
-        OnHand:Stok
+        Qty : parseInt(prevQty) + 1,
+        Price:dflt,
+        OnHand:Stok,
+        __KEY__:create_UUID()
       });
       row_validate +=1;
       validation(row_validate);
       bindGridItem(items_data);
     });
-    $('#post_').submit(function (e) {
-      $('#btn_Save').text('Tunggu Sebentar.....');
+
+    $('#btn_Save').click(function () {
+      $('#btn_Save').text('Tunggu Sebentar');
       $('#btn_Save').attr('disabled',true);
 
-      var prefix = '';
-
-      if ($('#ItemGroup').val() == 1) {
-        prefix = '101.'
-      }
-      else if ($('#ItemGroup').val() == 1) {
-        prefix = '201.'
-      }
-
-      if ($('#formtype').val() == 'ad') {
-        $.ajax({
-          async : false,
-          type: "post",
-          url: "<?=base_url()?>C_ItemMasterData/Getindex",
-          data: {'Kolom':'ItemCode','Table':'itemmasterdata','Prefix' : prefix},
-          dataType: "json",
-          success: function (response) {
-            // bindGrid(response.data);
-            $('#ItemCode').val(response.nomor);
-          }
-        });
-      }
-
-      e.preventDefault();
-      var me = $(this);
+      var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+      // console.log(gridItems);
+      var TglTransaksi  = $('#TglTransaksi').val();
+      var Mutasi        = $('#Mutasi').val();
+      var Keterangan    = $('#Keterangan').val();
+      var array_detail  = JSON.stringify(gridItems)
 
       $.ajax({
         async : false,
-        type    :'post',
-        url     : '<?=base_url()?>C_ItemMasterData/CRUD',
-        data    : me.serialize(),
-        dataType: 'json',
-        success : function (response) {
-          if(response.success == true){
+        type: "post",
+        url: "<?=base_url()?>C_MutasiBarang/CRUD",
+        data: {'TglTransaksi':TglTransaksi,'Mutasi':Mutasi,'Keterangan':Keterangan,'array_detail':array_detail},
+        dataType: "json",
+        success: function (response) {
+          if (response.success == true) {
             Swal.fire({
               type: 'success',
-              title: 'Horay..',
-              text: 'Data Berhasil disimpan!',
+              title: 'Woops...',
+              text: 'Data Berhasil diproses',
               // footer: '<a href>Why do I have this issue?</a>'
             }).then((result)=>{
               location.reload();
@@ -264,13 +285,15 @@
               text: response.message,
               // footer: '<a href>Why do I have this issue?</a>'
             }).then((result)=>{
+              $('#modal_').modal('show');
               $('#btn_Save').text('Save');
               $('#btn_Save').attr('disabled',false);
             });
           }
         }
-      });
-    });
+      })
+    })
+
     function GetData(id) {
       var where_field = 'id';
       var where_value = id;
@@ -366,53 +389,54 @@
             },
             onRowInserting: function(e) {
                 // logEvent("RowInserting");
-                var grid = $("#gridContainerItem").dxDataGrid("instance");
-
-                var index = 0;
             },
             onRowInserted: function(e) {
-              console.log(e);
-                // if (e.data.onhand >= e.data.Qty && e.data.Qty > 0) {
-                //   row_validate += 1;
-                //   validation(row_validate);
-                // }
-                // else{
-                // Swal.fire({
-                //     type: 'error',
-                //     title: 'Woops...',
-                //     text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
-                //     // footer: '<a href>Why do I have this issue?</a>'
-                //   }).then((result)=>{
-                //     $('#basicExampleModal').modal('show');
-                //     row_validate = 0;
-                //     validation($('#tgltrans').val(),$('#fasyankes').val(),$('#nama').val(),$('#petugas').val(),$('#tujuan').val(),row_validate);
-                //   });
-                // }
-                var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
-                var grid = $("#gridContainerItem").dxDataGrid("instance");
+              console.log();
+              var grid = $("#gridContainerItem").dxDataGrid("instance");
+                if (parseInt(e.data.OnHand) >= parseInt(e.data.Qty) && parseInt(e.data.Qty) > 0) {
+                  var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+                  // console.log(gridItems);
+                  // console.log(gridItems[0]["__KEY__"]);
+                  var arr = {"ItemCode":"","ItemName":"","OnHand":0,"Price":0,"Qty":0,"__KEY__":""}
 
-                var index = 0;
-                // grid.deleteRow(1);
-                // grid.getRowIndexByKey();
-                // console.log(grid.getRowIndexByKey(e.key.__KEY__));
-                $.each(gridItems,function (k,v) {
-                  if (v.ItemCode == e.data.ItemCode && gridItems.length > 1) {
-                    grid.cellValue(k, "Qty", parseInt(grid.cellValue(k, "Qty"))+parseInt(e.data.Qty));
-                    store.remove(e.data);
-                    // grid.refresh();
-                    // console.log(gridItems.length);
-                    if (index === gridItems.length - 1) {
-                      
+                  for (var i = 0; i < gridItems.length; i++) {
+                    if (gridItems[i]["ItemCode"] == e.data.ItemCode && gridItems.length > 1 && e.key.__KEY__ != gridItems[i]["__KEY__"]) {
+                      // console.log("Edit array nya dong"+i);
+                      arr["ItemCode"] = gridItems[i]["ItemCode"];
+                      arr["ItemName"] = gridItems[i]["ItemName"];
+                      arr["OnHand"]   = gridItems[i]["OnHand"];
+                      arr["Price"]    = gridItems[i]["Price"];
+                      arr["Qty"]      = parseInt(gridItems[i]["Qty"])+parseInt(e.data.Qty);
+                      arr["__KEY__"]  = gridItems[i]["__KEY__"];
+
+                      store.remove(e.data);
+                      store.update(gridItems[i],arr)
+                      grid.refresh();
+                      // console.log(gridItems[i]);
                     }
-                    console.log(store);
-                  }
-                  index += 1;
-                });
+                    // console.log(gridItems[i]["ItemName"]);
 
-                if (e.data.Qty > 0) {
-                  row_validate += 1;
-                  validation(row_validate);
+                  }
+                  if (e.data.Qty > 0) {
+                    row_validate += 1;
+                    validation(row_validate);
+                  }
                 }
+                else{
+                Swal.fire({
+                    type: 'error',
+                    title: 'Woops...',
+                    text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
+                    // footer: '<a href>Why do I have this issue?</a>'
+                  }).then((result)=>{
+                    var button = $('.dx-link-edit');
+                    button.click();
+                    row_validate = 0
+                    validation(row_validate);
+                  });
+                }
+                // $('#array_detail').val('');
+                // $('#array_detail').val(itemJson);
             },
             onRowUpdating: function(e) {
                 // logEvent("RowUpdating");
@@ -420,6 +444,50 @@
             },
             onRowUpdated: function(e) {
                 // logEvent(e);
+                var grid = $("#gridContainerItem").dxDataGrid("instance");
+                if (e.data.OnHand >= e.data.Qty && e.data.Qty > 0) {
+                  var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+                  // console.log(gridItems);
+                  // console.log(gridItems[0]["__KEY__"]);
+                  var arr = {"ItemCode":"","ItemName":"","OnHand":0,"Price":0,"Qty":0,"__KEY__":""}
+
+                  for (var i = 0; i < gridItems.length; i++) {
+                    if (gridItems[i]["ItemCode"] == e.data.ItemCode && gridItems.length > 1 && e.key.__KEY__ != gridItems[i]["__KEY__"]) {
+                      // console.log("Edit array nya dong"+i);
+                      arr["ItemCode"] = gridItems[i]["ItemCode"];
+                      arr["ItemName"] = gridItems[i]["ItemName"];
+                      arr["OnHand"]   = gridItems[i]["OnHand"];
+                      arr["Price"]    = gridItems[i]["Price"];
+                      arr["Qty"]      = parseInt(gridItems[i]["Qty"])+parseInt(e.data.Qty);
+                      arr["__KEY__"]  = gridItems[i]["__KEY__"];
+
+                      store.remove(e.data);
+                      store.update(gridItems[i],arr)
+                      grid.refresh();
+                      // console.log(gridItems[i]);
+                    }
+                    // console.log(gridItems[i]["ItemName"]);
+
+                  }
+                  if (e.data.Qty > 0) {
+                    row_validate += 1;
+                    validation(row_validate);
+                  }
+                }
+                else{
+                Swal.fire({
+                    type: 'error',
+                    title: 'Woops...',
+                    text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
+                    // footer: '<a href>Why do I have this issue?</a>'
+                  }).then((result)=>{
+                    var button = $('.dx-link-edit');
+                    button.click();
+
+                    row_validate = 0
+                    validation(row_validate);
+                  });
+                }
             },
             onRowRemoving: function(e) {
             },
@@ -452,9 +520,9 @@
                               grid.cellValue(index, "ItemCode", v.ItemCode);
                               grid.cellValue(index, "ItemName", v.ItemName);
                               grid.cellValue(index, "OnHand", v.Stok);
+                              grid.cellValue(index, "Price", v.DefaultPrice);
                             });
-                            grid.cellValue(index, "Qty", 0);
-                            grid.cellValue(index, "Price", 0);
+                            grid.cellValue(index, "Qty", 1);
                           }
                           else{
                             var html = '';
@@ -466,6 +534,7 @@
                                       '<td id = "ItemName">' + response.data[i].ItemName + '</td>' +
                                       '<td id = "Article">' + response.data[i].Article + '</td>' +
                                       '<td id = "Stok">' + response.data[i].Stok + '</td>' +
+                                      '<td id = "dflt">' + response.data[i].DefaultPrice + '</td>' +
                                       '<tr>';
                                j++;
                             }
@@ -514,18 +583,15 @@
             dataSource: {
                 store: {
                   type: "array",
-                  key: "ItemCode",
+                  key: "NoTransaksi",
                   data: data
                   // Other LocalStore options go here
               },
               select: [
-                'ItemCode',
-                'KodeItemLama',
-                'ItemName',
-                'Warna',
-                'Motif',
-                'Size',
-                'Sex'
+                'NoTransaksi',
+                'TglTransaksi',
+                'Keterangan',
+                'Createdby'
               ]
             },
             showBorders: true,
@@ -534,12 +600,11 @@
             columnAutoWidth: true,
             showBorders: true,
             paging: {
-                enabled: false
+                pageSize: 10,
+                enabled: true
             },
             editing: {
                 mode: "row",
-                allowUpdating: true,
-                allowDeleting: true,
                 texts: {
                     confirmDeleteMessage: ''  
                 }
@@ -549,46 +614,27 @@
                 width: 240,
                 placeholder: "Search..."
             },
-            export: {
-                enabled: true,
-                fileName: "Daftar Penyakit"
-            },
             columns: [
                 {
-                    dataField: "ItemCode",
-                    caption: "Kode Item",
+                    dataField: "NoTransaksi",
+                    caption: "#",
                     allowEditing:false
                 },
                 {
-                    dataField: "KodeItemLama",
-                    caption: "Kode Item Lama",
+                    dataField: "TglTransaksi",
+                    caption: "Tanggal Transaksi",
                     allowEditing:false
                 },
                 {
-                    dataField: "ItemName",
-                    caption: "Nama Item",
+                    dataField: "Keterangan",
+                    caption: "Keterangan",
                     allowEditing:false
                 },
                 {
-                    dataField: "Warna",
-                    caption: "Warna",
+                    dataField: "Createdby",
+                    caption: "Created by",
                     allowEditing:false
-                },
-                {
-                    dataField: "Motif",
-                    caption: "Motif",
-                    allowEditing:false
-                },
-                {
-                    dataField: "Size",
-                    caption: "Size",
-                    allowEditing:false
-                },
-                {
-                    dataField: "Sex",
-                    caption: "Sex",
-                    allowEditing:false
-                },
+                }
             ],
             focusedRowEnabled: true,
             focusedRowKey: 0,
@@ -620,8 +666,45 @@
             },
             onEditorPrepared: function (e) {
               // console.log(e);
+            },
+            onFocusedRowChanging: function(e) {
+              var rowsCount = e.component.getVisibleRows().length,
+                  pageCount = e.component.pageCount(),
+                  pageIndex = e.component.pageIndex(),
+                  key = e.event && e.event.key;
+
+              if(key && e.prevRowIndex === e.newRowIndex) {
+                  if(e.newRowIndex === rowsCount - 1 && pageIndex < pageCount - 1) {
+                      e.component.pageIndex(pageIndex + 1).done(function() {
+                          e.component.option("focusedRowIndex", 0);
+                      });
+                  } else if(e.newRowIndex === 0 && pageIndex > 0) {
+                      e.component.pageIndex(pageIndex - 1).done(function() {
+                          e.component.option("focusedRowIndex", rowsCount - 1);
+                      });
+                  }
+              }
+          },
+          onFocusedRowChanged: function(e) {
+            const row = e.row;
+            const rowData = row && row.data;
+            const xdata = rowData && rowData.NoTransaksi
+            
+            if (xdata != "") {
+              $.ajax({
+                type    :'post',
+                url     : '<?=base_url()?>C_MutasiBarang/ReadDetail',
+                data    : {'HeaderID':xdata},
+                dataType: 'json',
+                success:function (response) {
+                  if(response.success == true){
+                    bindGridDetail(response.data);
+                  }
+                }
+              });
             }
-        });
+          }
+        }).dxDataGrid("instance");
 
         // add dx-toolbar-after
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
@@ -632,32 +715,33 @@
       $("#gridContainerDetail").dxDataGrid({
         allowColumnResizing: true,
             dataSource: data,
-            keyExpr: "ItemCode",
+            keyExpr: "LineNum",
             showBorders: true,
             allowColumnReordering: true,
             allowColumnResizing: true,
             columnAutoWidth: true,
             showBorders: true,
-            paging: {
-                enabled: false
-            },
             editing: {
                 mode: "row",
-                allowUpdating: true,
-                allowDeleting: true,
                 texts: {
                     confirmDeleteMessage: ''  
                 }
             },
             columns: [
                 {
-                    dataField: "ItemCode",
+                    dataField: "LineNum",
+                    caption: "#",
+                    allowEditing:false,
+                    visible:false,
+                },
+                {
+                    dataField: "KodeItem",
                     caption: "Kode Item",
                     allowEditing:false
                 },
                 {
-                    dataField: "KodeItemLama",
-                    caption: "Kode Item Lama",
+                    dataField: "Article",
+                    caption: "Article",
                     allowEditing:false
                 },
                 {
@@ -666,25 +750,20 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "Warna",
-                    caption: "Warna",
+                    dataField: "Qty",
+                    caption: "Qty",
                     allowEditing:false
                 },
                 {
-                    dataField: "Motif",
-                    caption: "Motif",
+                    dataField: "Price",
+                    caption: "Harga",
                     allowEditing:false
                 },
                 {
-                    dataField: "Size",
-                    caption: "Size",
+                    dataField: "LineTotal",
+                    caption: "Total",
                     allowEditing:false
-                },
-                {
-                    dataField: "Sex",
-                    caption: "Sex",
-                    allowEditing:false
-                },
+                }
             ],
             onEditingStart: function(e) {
                 GetData(e.data.ItemCode);
@@ -729,5 +808,25 @@ function validation(rowvalidate) {
   else{
     $('#btn_Save').attr('disabled',false);  
   }
+}
+function create_UUID(){
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+function GetRowData(row) {
+    const rowData = row && row.data;
+    console.log(rowData);
+    const taskItem = {
+        HeaderID: ""
+    };
+    if(rowData) {
+        taskItem.HeaderID = rowData.NoTransaksi;
+    }
+    return taskItem;
 }
 </script>
