@@ -11,7 +11,7 @@
  Target Server Version : 100210
  File Encoding         : 65001
 
- Date: 07/10/2020 23:50:48
+ Date: 08/10/2020 21:48:46
 */
 
 SET NAMES utf8mb4;
@@ -130,6 +130,8 @@ INSERT INTO `detailmutasi` VALUES ('MTIN000001', 0, '101.0001', 2.00, 15000.00, 
 INSERT INTO `detailmutasi` VALUES ('MTIN000001', 1, '101.0002', 2.00, 15000.00, 30000.00, 'admin', '2020-10-07 05:51:39.000000');
 INSERT INTO `detailmutasi` VALUES ('MTIN000002', 0, '101.0002', 100.00, 15000.00, 1500000.00, 'admin', '2020-10-07 05:52:05.000000');
 INSERT INTO `detailmutasi` VALUES ('MTIN000003', 0, '101.0002', 1.00, 15000.00, 15000.00, 'admin', '2020-10-07 06:32:13.000000');
+INSERT INTO `detailmutasi` VALUES ('MTOT000001', 0, '101.0001', 2.00, 15000.00, 30000.00, 'admin', '2020-10-08 02:43:55.000000');
+INSERT INTO `detailmutasi` VALUES ('MTOT000001', 1, '101.0002', 3.00, 15000.00, 45000.00, 'admin', '2020-10-08 02:43:55.000000');
 
 -- ----------------------------
 -- Table structure for headermutasi
@@ -146,7 +148,7 @@ CREATE TABLE `headermutasi`  (
   `CreatedOn` datetime(6) NOT NULL,
   PRIMARY KEY (`RowID`) USING BTREE,
   INDEX `NoTransaksi`(`NoTransaksi`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of headermutasi
@@ -154,6 +156,7 @@ CREATE TABLE `headermutasi`  (
 INSERT INTO `headermutasi` VALUES (2, 'MTIN000001', '2020-10-07', '2020-10-07 05:51:39.000000', 1, 'Test Data', 'admin', '2020-10-07 05:51:39.000000');
 INSERT INTO `headermutasi` VALUES (3, 'MTIN000002', '2020-10-07', '2020-10-07 05:52:05.000000', 1, '2', 'admin', '2020-10-07 05:52:05.000000');
 INSERT INTO `headermutasi` VALUES (4, 'MTIN000003', '2020-10-07', '2020-10-07 06:32:13.000000', 1, 'Coba insert laagi', 'admin', '2020-10-07 06:32:13.000000');
+INSERT INTO `headermutasi` VALUES (5, 'MTOT000001', '2020-10-08', '2020-10-08 02:43:55.000000', 2, 'ADJ OUT', 'admin', '2020-10-08 02:43:55.000000');
 
 -- ----------------------------
 -- Table structure for itemmasterdata
@@ -231,11 +234,11 @@ INSERT INTO `permission` VALUES (13, 'Retur', NULL, NULL, '11', b'1', b'0', 13, 
 INSERT INTO `permission` VALUES (14, 'Keep Barang', NULL, NULL, '15', b'1', b'0', 14, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (15, 'Inventory', NULL, 'fa-briefcase', '0', b'1', b'0', 15, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (16, 'Penerimaan Barang', 'penerimaanbarang', NULL, '15', b'1', b'0', 16, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (17, 'Pengeluaran Barang', NULL, NULL, '15', b'1', b'0', 17, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (17, 'Pengeluaran Barang', 'pengeluaranbarang', NULL, '15', b'1', b'0', 17, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (18, 'CRM', NULL, 'fa-binoculars', '0', b'1', b'0', 18, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (19, 'Sales', NULL, NULL, '18', b'1', b'0', 19, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (19, 'Sales', 'sales', NULL, '18', b'1', b'0', 19, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (20, 'Customer', NULL, NULL, '18', b'1', b'0', 20, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (21, 'Stock Opname', NULL, NULL, '15', b'1', b'0', 21, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (21, 'Stock Opname', NULL, NULL, '15', b'1', b'0', 21, b'0', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (22, 'Lokasi', 'lokasi', NULL, '5', b'1', b'0', 22, b'0', NULL, NULL, NULL);
 
 -- ----------------------------
@@ -290,6 +293,25 @@ CREATE TABLE `roles`  (
 -- ----------------------------
 INSERT INTO `roles` VALUES (1, 'SU');
 INSERT INTO `roles` VALUES (8, 'Cashier');
+
+-- ----------------------------
+-- Table structure for tsales
+-- ----------------------------
+DROP TABLE IF EXISTS `tsales`;
+CREATE TABLE `tsales`  (
+  `KodeSales` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `NamaSales` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `Alamat` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `Email` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `NoTlp` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `isActive` int(1) NOT NULL,
+  PRIMARY KEY (`KodeSales`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tsales
+-- ----------------------------
+INSERT INTO `tsales` VALUES ('AJI', 'PRASETYO AJI WIBOWO', 'solo 2', 'prasetyoajiw@gmail.com', '081325058258', 1);
 
 -- ----------------------------
 -- Table structure for ttest
@@ -356,6 +378,38 @@ CREATE TABLE `users`  (
 INSERT INTO `users` VALUES (14, 'admin', 'admin', '440308e0a299d722ebc5a9459a56d27adffc7ad28688d4471fdc1c7a8324f9a5cabdcd25bae8fe71b65837f6dd33fd1a9187ff4e2b2fea10e88289b70fdb79a221Nz7VN+sVNcNv1J/4lhqE9nfn5cpZTw8zhp2ge4pY0=', 'mnl', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
+-- View structure for vw_mutasistock
+-- ----------------------------
+DROP VIEW IF EXISTS `vw_mutasistock`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `vw_mutasistock` AS SELECT
+	x.KodeItem,
+	a.ItemName,
+	CONCAT(a.ItemName,' ',c.ArticleName,' ',b.ArticleName) Article,
+	SUM(x.ADJIN) ADJIN,
+	SUM(x.ADJOUT) ADJOUT,
+	SUM(x.Booking) Booking,
+	SUM(x.penjualan) penjualan,
+	SUM(x.Retur) Retur
+FROM (
+	SELECT 
+		b.KodeItem,
+		SUM(CASE WHEN a.Mutasi = 1 THEN b.Qty ELSE 0 END) ADJIN,
+		SUM(CASE WHEN a.Mutasi = 2 THEN b.Qty ELSE 0 END) ADJOUT,
+		0 Booking,
+		0 Penjualan,
+		0 Retur
+	FROM headermutasi a
+	LEFT JOIN detailmutasi b on a.NoTransaksi = b.NoTransaksi
+	GROUP BY b.KodeItem
+)x
+LEFT JOIN itemmasterdata a on a.ItemCode = x.KodeItem
+LEFT JOIN articlewarna b on a.A_Warna = b.ArticleCOde
+LEFT JOIN articlemotif c on a.A_Motif = c.ArticleCode
+LEFT JOIN articlesize d on a.A_Size = d.ArticleCode
+LEFT JOIN articlesex e on a.A_Sex = e.ArticleCode
+GROUP BY x.KodeItem ;
+
+-- ----------------------------
 -- View structure for vw_stok
 -- ----------------------------
 DROP VIEW IF EXISTS `vw_stok`;
@@ -365,13 +419,14 @@ CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `vw_stok` AS SELECT
 	c.ArticleName Motif,
 	d.ArticleName Size,
 	e.ArticleName Sex,
-	100000 Stok,
+	COALESCE(ADJIN,0) - COALESCE(ADJOUT,0) - COALESCE(Booking,0) - COALESCE(Penjualan,0) + COALESCE(Retur,0) Stok,
 	CONCAT(a.ItemName,' ',c.ArticleName,' ',b.ArticleName) Article
 FROM itemmasterdata a
 LEFT JOIN articlewarna b on a.A_Warna = b.ArticleCOde
 LEFT JOIN articlemotif c on a.A_Motif = c.ArticleCode
 LEFT JOIN articlesize d on a.A_Size = d.ArticleCode
 LEFT JOIN articlesex e on a.A_Sex = e.ArticleCode
+LEFT JOIN vw_mutasistock f on a.ItemCode = f.KodeItem
 WHERE a.isActive = 1 ;
 
 -- ----------------------------

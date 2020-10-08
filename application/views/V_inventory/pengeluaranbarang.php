@@ -18,7 +18,7 @@
               <div class="col-md-12 col-sm-12  ">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Penerimaan Barang</h2>
+                    <h2>Pengeluaran Barang</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -28,7 +28,7 @@
                         </label>
                         <div class="col-md-8 col-sm-8 ">
                           <input type="text" name="NoTransaksi" id="NoTransaksi" required="" placeholder="Kode Item" class="form-control" readonly="" value="<AUTO>">
-                          <input type="hidden" name="Mutasi" id="Mutasi" value="1">
+                          <input type="hidden" name="Mutasi" id="Mutasi" value="2">
                         </div>
                       </div>
                       <div class="item form-group">
@@ -68,7 +68,7 @@
               <div class="col-md-12 col-sm-12  ">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Daftar Penerimaan Barang</h2>
+                    <h2>Daftar Pengeluaran Barang</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -196,7 +196,7 @@
       $.ajax({
         type: "post",
         url: "<?=base_url()?>C_MutasiBarang/ReadHeader",
-        data: {'TglAwal':TglAwal,'TglAkhir':TglAkhir,'Mutasi':1},
+        data: {'TglAwal':TglAwal,'TglAkhir':TglAkhir,'Mutasi':2},
         dataType: "json",
         success: function (response) {
           bindGridHeader(response.data);
@@ -238,17 +238,32 @@
         }
       }
 
-      items_data.push({
-        ItemCode : ItemCode,
-        ItemName : ItemName,
-        Qty : parseInt(prevQty) + 1,
-        Price:dflt,
-        OnHand:Stok,
-        __KEY__:create_UUID()
-      });
-      row_validate +=1;
+      if (parseInt(prevQty) + 1 > Stok) {
+        $('#modal_Lookup').modal('toggle');
+        Swal.fire({
+          type: 'error',
+          title: 'Woops...',
+          text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
+          // footer: '<a href>Why do I have this issue?</a>'
+        }).then((result)=>{
+          row_validate = 0
+          $('#modal_Lookup').modal('show');
+        });
+      }
+      else{
+        items_data.push({
+          ItemCode : ItemCode,
+          ItemName : ItemName,
+          Qty : parseInt(prevQty) + 1,
+          Price:dflt,
+          OnHand:Stok,
+          __KEY__:create_UUID()
+        });
+        row_validate +=1;
+        bindGridItem(items_data);
+      }
+      
       validation(row_validate);
-      bindGridItem(items_data);
     });
 
     $('#btn_Save').click(function () {
@@ -298,11 +313,11 @@
     $('#filterbutton').click(function () {
       var TglAwal = $('#TglAwal').val();
       var TglAkhir = $('#TglAkhir').val();
-
+      
       $.ajax({
         type: "post",
         url: "<?=base_url()?>C_MutasiBarang/ReadHeader",
-        data: {'TglAwal':TglAwal,'TglAkhir':TglAkhir,'Mutasi':1},
+        data: {'TglAwal':TglAwal,'TglAkhir':TglAkhir,'Mutasi':2},
         dataType: "json",
         success: function (response) {
           bindGridHeader(response.data);
@@ -409,7 +424,7 @@
             onRowInserted: function(e) {
               console.log();
               var grid = $("#gridContainerItem").dxDataGrid("instance");
-                if (parseInt(e.data.Qty) > 0) {
+                if (parseInt(e.data.OnHand) >= parseInt(e.data.Qty) && parseInt(e.data.Qty) > 0) {
                   var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
                   // console.log(gridItems);
                   // console.log(gridItems[0]["__KEY__"]);
@@ -442,7 +457,7 @@
                 Swal.fire({
                     type: 'error',
                     title: 'Woops...',
-                    text: 'Qty Harus Lebih dari 0',
+                    text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
                     // footer: '<a href>Why do I have this issue?</a>'
                   }).then((result)=>{
                     var button = $('.dx-link-edit');

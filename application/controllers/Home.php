@@ -129,4 +129,14 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_inventory/penerimaanbarang');
 	}
+	public function pengeluaranbarang()
+	{
+		$this->load->view('V_inventory/pengeluaranbarang');
+	}
+
+	// CRM
+	public function sales()
+	{
+		$this->load->view('V_CRM/sales');
+	}
 }

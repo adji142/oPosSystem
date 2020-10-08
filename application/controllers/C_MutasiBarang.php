@@ -100,7 +100,19 @@ class C_MutasiBarang extends CI_Controller {
 		// NoTransaksi
 		$Kolom = 'NoTransaksi';
 		$Table = 'headermutasi';
-		$Prefix = 'MTIN';
+		$Prefix = '';
+		if ($Mutasi == 1) {
+			// IN
+			$Prefix = 'MTIN';
+		}
+		elseif ($Mutasi == 2) {
+			// OUT
+			$Prefix = 'MTOT';
+		}
+		else{
+			// Manual
+			$Prefix = 'MTMN';
+		}
 
 		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
 
