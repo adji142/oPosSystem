@@ -65,7 +65,7 @@ class C_ItemMasterData extends CI_Controller {
 		$A_Sex = $this->input->post('A_Sex');
 		$DefaultPrice = $this->input->post('DefaultPrice');
 		$ItemGroup = $this->input->post('ItemGroup');
-		$KodeLokasi = $this->input->post('KodeLokasi');
+		$Satuan = $this->input->post('Satuan');
 		$Createdby = $this->session->userdata('username');
 		$Createdon = date("Y-m-d h:i:sa");
 		$isActive = 1;

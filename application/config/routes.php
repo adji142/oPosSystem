@@ -72,6 +72,7 @@ $route['lokasi'] = 'Home/lokasi';
 $route['itemmasterdata'] = 'Home/itemmasterdata';
 $route['penerimaanbarang'] = 'Home/penerimaanbarang';
 $route['pengeluaranbarang'] = 'Home/pengeluaranbarang';
+$route['bookingstok'] = 'Home/bookingstok';
 
 // CRM
 $route['sales'] = 'Home/sales';

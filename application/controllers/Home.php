@@ -133,6 +133,10 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_inventory/pengeluaranbarang');
 	}
+	public function bookingstok()
+	{
+		$this->load->view('V_inventory/bookingstok');
+	}
 
 	// CRM
 	public function sales()

@@ -103,6 +103,13 @@
                         </div>
                       </div>
                       <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Satuan <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 ">
+                          <input type="text" name="Satuan" id="Satuan" required="" placeholder="Satuan" class="form-control ">
+                        </div>
+                      </div>
+                      <div class="item form-group">
                         <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Item Group <span class="required">*</span>
                         </label>
                         <div class="col-md-12 col-sm-12 ">
@@ -284,6 +291,7 @@
             $('#A_Size').val(v.A_Size).change();
             $('#A_Sex').val(v.A_Sex).change();
             $('#DefaultPrice').val(v.DefaultPrice);
+            $('#Satuan').val(v.Satuan);
             $('#ItemGroup').val(v.ItemGroup).change();
             // $('#Nilai').val(v.Nilai);
 
@@ -347,23 +355,18 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "Warna",
-                    caption: "Warna",
+                    dataField: "Article",
+                    caption: "Article Name",
                     allowEditing:false
                 },
                 {
-                    dataField: "Motif",
-                    caption: "Motif",
+                    dataField: "Stok",
+                    caption: "Tersedia",
                     allowEditing:false
                 },
                 {
-                    dataField: "Size",
-                    caption: "Size",
-                    allowEditing:false
-                },
-                {
-                    dataField: "Sex",
-                    caption: "Sex",
+                    dataField: "Satuan",
+                    caption: "Satuan",
                     allowEditing:false
                 },
             ],
