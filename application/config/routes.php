@@ -76,3 +76,7 @@ $route['bookingstok'] = 'Home/bookingstok';
 
 // CRM
 $route['sales'] = 'Home/sales';
+
+// General
+$route['perusahaan'] = 'Home/perusahaan';
+$route['bmk'] = 'Home/bmk';

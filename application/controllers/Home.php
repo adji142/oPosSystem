@@ -143,4 +143,14 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_CRM/sales');
 	}
+
+	// General Setting
+	public function perusahaan()
+	{
+		$this->load->view('V_General/perusahaan');
+	}
+	public function bmk()
+	{
+		$this->load->view('V_General/hargabertingkat');
+	}
 }
