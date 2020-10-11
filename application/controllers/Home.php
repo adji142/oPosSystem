@@ -143,6 +143,10 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_CRM/sales');
 	}
+	public function customer()
+	{
+		$this->load->view('V_CRM/customer');
+	}
 
 	// General Setting
 	public function perusahaan()

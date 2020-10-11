@@ -53,6 +53,12 @@ class C_Perusahaan extends CI_Controller {
 		$Alamat2 = $this->input->post('Alamat2');
 		$NoTlp = $this->input->post('NoTlp');
 		$NPWP = $this->input->post('NPWP');
+		$provinsi = $this->input->post('provinsi');
+		$Kota = $this->input->post('Kota');
+		$Kelurahan = $this->input->post('Kelurahan');
+		$Kecamatan = $this->input->post('Kecamatan');
+		$KodePos = $this->input->post('KodePos');
+
 
 		// $exploder = explode("|",$ItemGroup[0]);
 		$formtype = $this->input->post('formtype');
@@ -62,7 +68,12 @@ class C_Perusahaan extends CI_Controller {
 			'Alamat1' => $Alamat1,
 			'Alamat2' => $Alamat2,
 			'NoTlp' => $NoTlp,
-			'NPWP' => $NPWP
+			'NPWP' => $NPWP,
+			'provinsi' => $provinsi,
+			'Kota' => $Kota,
+			'Kelurahan' => $Kelurahan,
+			'Kecamatan' => $Kecamatan,
+			'KodePos' => $KodePos
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();

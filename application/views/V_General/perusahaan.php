@@ -28,6 +28,55 @@
                 </div>
               </div>
               <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Provinsi <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                  <select class="js-states form-control" id="provinsi" name="provinsi" >
+                    <option value = ''>Pilih Provinsi</option>
+                    <?php
+                      $rs = $this->db->query("select * from ro_provinces")->result();
+                      foreach ($rs as $key) {
+                        echo "<option value = '".$key->id."'>".$key->name."</option>";
+                      }
+                    ?>
+                  </select>
+                </div>
+              </div>
+              <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kota <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                  <select class="js-states form-control" id="Kota" name="Kota" >
+                    <option value = ''>Pilih Kota</option>
+                  </select>
+                </div>
+              </div>
+              <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kecamatan <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                  <select class="js-states form-control" id="Kecamatan" name="Kecamatan" >
+                    <option value = ''>Pilih Kecamatan</option>
+                  </select>
+                </div>
+              </div>
+              <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kelurahan <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                  <select class="js-states form-control" id="Kelurahan" name="Kelurahan" >
+                    <option value = ''>Pilih Kelurahan</option>
+                  </select>
+                </div>
+              </div>
+              <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode POS <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                  <input type="text" name="KodePos" id="KodePos" class="form-control" placeholder="Kode Pos" required="">
+                </div>
+              </div>
+              <div class="item form-group">
                 <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Alamat Line 1 <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6 ">
@@ -71,6 +120,27 @@
 <script type="text/javascript">
   $(function () {
     $(document).ready(function () {
+
+      $('#provinsi').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Provinsi'
+      });
+
+      $('#Kota').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Kota'
+      });
+
+      $('#Kecamatan').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Kecamatan'
+      });
+
+      $('#Kelurahan').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Kecamatan'
+      });
+
       var id = $('#id').val();
 
       $.ajax({
@@ -79,6 +149,7 @@
         dataType: "json",
         success: function (response) {
           if (response.success == true) {
+            $('#formtype').val('edit');
             console.log(response.data[0]['NamaPerusahaan']);
             $('#id').val(response.data[0]['id']);
             $('#NamaPerusahaan').val(response.data[0]['NamaPerusahaan']);
@@ -86,11 +157,110 @@
             $('#Alamat2').val(response.data[0]['Alamat2']);
             $('#NoTlp').val(response.data[0]['NoTlp']);
             $('#NPWP').val(response.data[0]['NPWP']);
-            $('#formtype').val('edit');
+
+            $('#provinsi').val(response.data[0]['provinsi']).change();
+            $('#Kota').val(response.data[0]['Kota']).change();
+            $('#Kecamatan').val(response.data[0]['Kecamatan']).change();
+            $('#Kelurahan').val(response.data[0]['Kelurahan']).change();
+            $('#KodePos').val(response.data[0]['KodePos']);
+          }
+          else{
+            $('#formtype').val('add');
           }
         }
       });
     });
+    $('#provinsi').change(function () {
+      var idaddr = $('#provinsi').val();
+      var link = 'kota';
+
+      var exploded = idaddr.split('|');
+
+      // var x = exploded[1];
+      cekongkir_provinsi = exploded[1];
+      idaddr = exploded[0];
+
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kota').empty();
+            $('#Kota').append(""+
+              "<option value='0'>Pilih Kota</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kota').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+          }
+        }
+      });
+    });
+
+    $('#Kota').change(function () {
+      var idaddr = $('#Kota').val();
+      var link = 'kec';
+
+      var exploded = idaddr.split('|');
+
+      cekongkir_kota = exploded[1];
+      idaddr = exploded[0];
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kecamatan').empty();
+            $('#Kecamatan').append(""+
+              "<option value='0'>Pilih Kecamatan</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kecamatan').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+            
+          }
+        }
+      });
+    });
+
+    $('#Kecamatan').change(function () {
+      var idaddr = $('#Kecamatan').val();
+      var link = 'kel';
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kelurahan').empty();
+            $('#Kelurahan').append(""+
+              "<option value='0'>Pilih Kelurahan</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kelurahan').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+          }
+        }
+      });
+    });
+
     $('#post_').submit(function (e) {
       $('#btn_Save').text('Tunggu Sebentar.....');
       $('#btn_Save').attr('disabled',true);
