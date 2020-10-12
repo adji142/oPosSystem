@@ -81,3 +81,7 @@ $route['customer'] = 'Home/customer';
 // General
 $route['perusahaan'] = 'Home/perusahaan';
 $route['bmk'] = 'Home/bmk';
+$route['term'] = 'Home/term';
+
+// TRX
+$route['pos'] = 'Home/pos';

@@ -157,4 +157,14 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_General/hargabertingkat');
 	}
+	public function term()
+	{
+		$this->load->view('V_General/paymentterm');
+	}
+
+	// Transaction
+	public function pos()
+	{
+		$this->load->view('V_Trx/POSPenjualan');
+	}
 }
