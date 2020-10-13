@@ -121,6 +121,13 @@
                           </select>
                         </div>
                       </div>
+                      <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Berat Standar (Kg) <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 ">
+                          <input type="Number" name="BeratStandar" id="BeratStandar" required="" placeholder="BeratStandar" class="form-control " step="0.01">
+                        </div>
+                      </div>
                       <div class="item" form-group>
                         <button class="btn btn-primary" id="btn_Save">Save</button>
                       </div>
@@ -293,7 +300,7 @@
             $('#DefaultPrice').val(v.DefaultPrice);
             $('#Satuan').val(v.Satuan);
             $('#ItemGroup').val(v.ItemGroup).change();
-            // $('#Nilai').val(v.Nilai);
+            $('#BeratStandar').val(v.BeratStandar);
 
             $('#formtype').val("edit");
 
@@ -367,6 +374,11 @@
                 {
                     dataField: "Satuan",
                     caption: "Satuan",
+                    allowEditing:false
+                },
+                {
+                    dataField: "BeratStandar",
+                    caption: "Berat Standar",
                     allowEditing:false
                 },
             ],

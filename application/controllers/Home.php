@@ -161,6 +161,10 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_General/paymentterm');
 	}
+	public function xpdc()
+	{
+		$this->load->view('V_General/expedisi');
+	}
 
 	// Transaction
 	public function pos()

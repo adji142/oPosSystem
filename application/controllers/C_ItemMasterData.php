@@ -66,6 +66,7 @@ class C_ItemMasterData extends CI_Controller {
 		$DefaultPrice = $this->input->post('DefaultPrice');
 		$ItemGroup = $this->input->post('ItemGroup');
 		$Satuan = $this->input->post('Satuan');
+		$BeratStandar = $this->input->post('BeratStandar');
 		$Createdby = $this->session->userdata('username');
 		$Createdon = date("Y-m-d h:i:sa");
 		$isActive = 1;
@@ -85,10 +86,11 @@ class C_ItemMasterData extends CI_Controller {
 				'A_Sex' => $A_Sex,
 				'DefaultPrice' => $DefaultPrice,
 				'ItemGroup' => $ItemGroup,
-				'KodeLokasi' => $KodeLokasi,
+				// 'KodeLokasi' => $KodeLokasi,
 				'Createdby' => $Createdby,
 				'Createdon' => $Createdon,
 				'isActive' => $isActive,
+				'BeratStandar'=>$BeratStandar
 			);
 		}
 		elseif ($formtype == 'edit') {
@@ -101,10 +103,11 @@ class C_ItemMasterData extends CI_Controller {
 				'A_Sex' => $A_Sex,
 				'DefaultPrice' => $DefaultPrice,
 				'ItemGroup' => $ItemGroup,
-				'KodeLokasi' => $KodeLokasi,
+				// 'KodeLokasi' => $KodeLokasi,
 				'LastUpdatedby' => $Createdby,
 				'LastUpdatedon' => $Createdon,
 				'isActive' => $isActive,
+				'BeratStandar'=>$BeratStandar
 			);
 		}
 		if ($formtype == 'add') {

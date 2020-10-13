@@ -75,6 +75,10 @@
                           <option value="3">Dropship</option>
                           <option value="4">Reseller</option>
                         </select>
+                        <br><br>
+                        <div id="ClassNumTrx">
+                          
+                        </div>
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
                         <select class="js-states form-control" id="PaymentTerm" name="PaymentTerm" >
@@ -86,9 +90,115 @@
                             }
                           ?>
                         </select>
+                        <br><br>
+                        <div id="ClassNumPayment"></div>
+                      </div>
+                    </div>
+                    <center><h3>Origin Paket<h3></center>
+                    <div class="row col-md-12 col-sm-12">
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="provinsi_ori" name="provinsi_ori" disabled="" >
+                          <option value = ''>Provinsi</option>
+                          <?php
+                            $rs = $this->db->query("select * from ro_provinces")->result();
+                            foreach ($rs as $key) {
+                              echo "<option value = '".$key->id."'>".$key->name."</option>";
+                            }
+                          ?>
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="Kota_ori" name="Kota_ori" disabled="" >
+                          
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="Kecamatan_ori" name="Kecamatan_ori" disabled="" >
+                          
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="Kelurahan_ori" name="Kelurahan_ori" disabled="" >
+                          
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row col-md-12 col-sm-12">
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="KodePOS_ori" id="KodePOS_ori" class="form-control" readonly="">
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <!-- <input type="text" name="Alamat_ori" id="Alamat_ori"> -->
+                        <textarea name="Alamat_ori" id="Alamat_ori" class="form-control" rows="1" readonly=""></textarea>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="Nama_ori" id="Nama_ori" class="form-control" readonly="">
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="Notlp_Ori" id="Notlp_Ori" class="form-control" readonly="">
                       </div>
                     </div>
 
+                    <center><h3>Destination Paket<h3></center>
+                    <div class="row col-md-12 col-sm-12">
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="provinsi_dest" name="provinsi_dest">
+                          <option value = ''>Provinsi</option>
+                          <?php
+                            $rs = $this->db->query("select * from ro_provinces")->result();
+                            foreach ($rs as $key) {
+                              echo "<option value = '".$key->id."'>".$key->name."</option>";
+                            }
+                          ?>
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="Kota_dest" name="Kota_dest">
+                          
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="Kecamatan_dest" name="Kecamatan_dest">
+                          
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <select class="js-states form-control" id="Kelurahan_dest" name="Kelurahan_dest">
+                          
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row col-md-12 col-sm-12">
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="KodePOS_dest" id="KodePOS_dest" class="form-control">
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <!-- <input type="text" name="Alamat_ori" id="Alamat_ori"> -->
+                        <textarea name="Alamat_dest" id="Alamat_dest" class="form-control" rows="1"></textarea>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="Nama_dest" id="Nama_dest" class="form-control">
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="Notlp_dest" id="Notlp_dest" class="form-control">
+                      </div>
+                    </div>
+
+                    <div class="row col-md-12 col-sm-12">
+                      <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Expedisi <span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 ">
+                        <select class="js-states form-control" id="Expedisi" name="Expedisi">
+                          <option value = ''>Expedisi</option>
+                          <?php
+                            $rs = $this->db->query("select * from texpdc")->result();
+                            foreach ($rs as $key) {
+                              echo "<option value = '".$key->KodeExpdc."'>".$key->NamaExpdc."</option>";
+                            }
+                          ?>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -323,11 +433,246 @@
         placeholder: 'Pilih Kecamatan'
       });
 
+      $('#provinsi_dest').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Provinsi'
+      });
+
+      $('#Kota_dest').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Kota'
+      });
+
+      $('#Kecamatan_dest').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Kecamatan'
+      });
+
+      $('#Kelurahan_dest').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Kecamatan'
+      });
+
+      $('#Expedisi').select2({
+        width : 'resolve',
+        placeholder: 'Expedisi'
+      });
+
 
       // Call Function Form Load
       GetCustomer();
     });
+    $('#TransactionType').change(function () {
+      GetOrigin($('#TransactionType').val());
+      GetDestination($('#TransactionType').val());
+      if ($('#TransactionType').val() == "1") {
+        $('#ClassNumTrx').empty();
+        $('#ClassNumTrx').append(""+
+          "<input type = 'text' name = 'RefNumberTrx' id = 'RefNumberTrx' class = 'form-control' placeholder='Ref Number'>"
+        );
+      }
+      else{
+        $('#ClassNumTrx').empty();        
+      }
+    });
+    $('#PaymentTerm').change(function () {
+      if ($('#PaymentTerm').val() == "3" || $('#PaymentTerm').val() == "4") {
+        $('#ClassNumPayment').empty();
+        $('#ClassNumPayment').append(""+
+          "<input type = 'text' name = 'RefNumberPayment' id = 'RefNumberPayment' class = 'form-control' placeholder='Ref Number'>"
+        );
+      }
+      else{
+        $('#ClassNumPayment').empty();
+      }
 
+      if ($('#PaymentTerm').val() == "1") {
+        $("#Expedisi").attr("disabled", true);
+      }
+      else{
+        $("#Expedisi").attr("disabled", false);
+      }
+
+    });
+    $('#KodeCustomerPOS').change(function () {
+      var KodeCustomer = $('#KodeCustomerPOS').val();
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_Customer/Read",
+        data: {'KodeCustomer':KodeCustomer},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#TransactionType').val(response.data[0]['CustGroup']).change();
+          }
+        }
+      });
+    });
+    // Origin
+    $('#provinsi_ori').change(function () {
+      var idaddr = $('#provinsi_ori').val();
+      var link = 'kota';
+
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kota_ori').empty();
+            $('#Kota_ori').append(""+
+              "<option value='0'>Pilih Kota</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kota_ori').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+          }
+        }
+      });
+    });
+
+    $('#Kota_ori').change(function () {
+      var idaddr = $('#Kota_ori').val();
+      var link = 'kec';
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kecamatan_ori').empty();
+            $('#Kecamatan_ori').append(""+
+              "<option value='0'>Pilih Kecamatan</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kecamatan_ori').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+            
+          }
+        }
+      });
+    });
+
+    $('#Kecamatan_ori').change(function () {
+      var idaddr = $('#Kecamatan_ori').val();
+      var link = 'kel';
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kelurahan_ori').empty();
+            $('#Kelurahan_ori').append(""+
+              "<option value='0'>Pilih Kelurahan</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kelurahan_ori').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+          }
+        }
+      });
+    });
+
+    // Destination
+
+    $('#provinsi_dest').change(function () {
+      var idaddr = $('#provinsi_dest').val();
+      var link = 'kota';
+
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kota_dest').empty();
+            $('#Kota_dest').append(""+
+              "<option value='0'>Pilih Kota</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kota_dest').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+          }
+        }
+      });
+    });
+
+    $('#Kota_dest').change(function () {
+      var idaddr = $('#Kota_dest').val();
+      var link = 'kec';
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kecamatan_dest').empty();
+            $('#Kecamatan_dest').append(""+
+              "<option value='0'>Pilih Kecamatan</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kecamatan_dest').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+            
+          }
+        }
+      });
+    });
+
+    $('#Kecamatan_dest').change(function () {
+      var idaddr = $('#Kecamatan_dest').val();
+      var link = 'kel';
+
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetInfoAddr",
+        data: {link:link,idaddr:idaddr},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            $('#Kelurahan_dest').empty();
+            $('#Kelurahan_dest').append(""+
+              "<option value='0'>Pilih Kelurahan</option>"
+            );
+            $.each(response.data,function (k,v) {
+              $('#Kelurahan_dest').append(""+
+                "<option value='"+v.id+"'>"+v.name+"</option>"
+              );
+            });
+          }
+        }
+      });
+    });
+
+    // Customer
     $('#provinsi').change(function () {
       var idaddr = $('#provinsi').val();
       var link = 'kota';
@@ -496,5 +841,85 @@
       });
 
     }
+
+    function GetOrigin(Type) {
+      if (Type != 3) {
+        $.ajax({
+          async: false,
+          type: "post",
+          url: "<?=base_url()?>C_Perusahaan/Read",
+          data: {'id':''},
+          dataType: "json",
+          success: function (response) {
+            if(response.success == true){
+              $('#provinsi_ori').val(response.data[0]['provinsi']).change();
+              $('#Kota_ori').val(response.data[0]['Kota']).change();
+              $('#Kecamatan_ori').val(response.data[0]['Kecamatan']).change();
+              $('#Kelurahan_ori').val(response.data[0]['Kelurahan']).change();
+              $('#KodePOS_ori').val(response.data[0]['KodePos']);
+              $('#Alamat_ori').val(response.data[0]['Alamat1']);
+              $('#Nama_ori').val(response.data[0]['NamaPerusahaan']);
+              $('#Notlp_Ori').val(response.data[0]['NoTlp']);
+            }
+          }
+        });
+      }
+      else{
+        $.ajax({
+          async: false,
+          type: "post",
+          url: "<?=base_url()?>C_Customer/Read",
+          data: {'KodeCustomer':$('#KodeCustomerPOS').val()},
+          dataType: "json",
+          success: function (response) {
+            if(response.success == true){
+              $('#provinsi_ori').val(response.data[0]['provinsi']).change();
+              $('#Kota_ori').val(response.data[0]['Kota']).change();
+              $('#Kecamatan_ori').val(response.data[0]['Kecamatan']).change();
+              $('#Kelurahan_ori').val(response.data[0]['Kelurahan']).change();
+              $('#KodePOS_ori').val(response.data[0]['KodePos']);
+              $('#Alamat_ori').val(response.data[0]['AlamatCustomer']);
+              $('#Nama_ori').val(response.data[0]['NamaCustomer']);
+              $('#Notlp_Ori').val(response.data[0]['NoTlp']);
+            }
+          }
+        });
+      }
+    }
+
+    function GetDestination(Type) {
+      if (Type != 3) {
+        $.ajax({
+          async: false,
+          type: "post",
+          url: "<?=base_url()?>C_Customer/Read",
+          data: {'KodeCustomer':$('#KodeCustomerPOS').val()},
+          dataType: "json",
+          success: function (response) {
+            if(response.success == true){
+              $('#provinsi_dest').val(response.data[0]['provinsi']).change();
+              $('#Kota_dest').val(response.data[0]['Kota']).change();
+              $('#Kecamatan_dest').val(response.data[0]['Kecamatan']).change();
+              $('#Kelurahan_dest').val(response.data[0]['Kelurahan']).change();
+              $('#KodePOS_dest').val(response.data[0]['KodePos']);
+              $('#Alamat_dest').val(response.data[0]['AlamatCustomer']);
+              $('#Nama_dest').val(response.data[0]['NamaCustomer']);
+              $('#Notlp_dest').val(response.data[0]['NoTlp']);
+            }
+          }
+        });
+      }
+      else{
+        $('#provinsi_dest').val('').change();
+        $('#Kota_dest').val('').change();
+        $('#Kecamatan_dest').val('').change();
+        $('#Kelurahan_dest').val('').change();
+        $('#KodePOS_dest').val('');
+        $('#Alamat_dest').val('');
+        $('#Nama_dest').val('');
+        $('#Notlp_dest').val('');
+      }
+    }
+
   });
 </script>
