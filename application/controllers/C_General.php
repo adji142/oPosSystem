@@ -148,7 +148,7 @@ class C_General extends CI_Controller {
 	{
 		$data = array('success' => true ,'message'=>array(),'data' =>array(),'masteralat'=>array());
 
-		$call = $this->db->query("select '' ItemCode,'' ItemName,0 Qty,'' Satuan,0 Price");
+		$call = $this->db->query("select '' ItemCode,'' ItemName,0 Qty,'' Satuan,0 Price, 0 Diskon,0 Total");
 
 		$data['data'] = array();
 

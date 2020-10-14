@@ -201,13 +201,13 @@
                     </div>
                     <br><br><br><br>
                     <div class="row col-md-12 col-sm-12">
-                      <label class="col-md-2 col-sm-12 form-group" for="first-name">Barcode <span class="required">*</span>
+                      <label class="col-md-2 col-sm-12 form-group" for="first-name">Item Barang <span class="required">*</span>
                       </label>
                       <div class="col-md-3 col-sm-12 form-group">
                         <input type="text" name="Barcode" id="Barcode" class="form-control">
                       </div>
-                      <div class="col-md-1 col-sm-12 form-group">
-                        <button class="form-control btb btn-primary">Search</button>
+                      <div class="col-md-2 col-sm-12 form-group">
+                        <button class="form-control btb btn-primary" id="FindItem">Search</button>
                       </div>
                       <div class="row col-md-12 col-sm-12">
                         <div class="col-md-2 col-sm-12 form-group">
@@ -418,10 +418,54 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Lookup -->
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_Lookup">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Item Master Data</h4>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="item form-group">
+          <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Search <span class="required">*</span>
+          </label>
+          <div class="col-md-8 col-sm-8 ">
+            <input type="text" name="mySearch" id="mySearch" placeholder="Search" class="form-control ">
+          </div>
+        </div>
+        <table class="table table-striped table-bordered" id="ItemLookup">
+          <thead>
+              <tr>
+                <th>Kode Item</th>
+                <th>Nama Item</th>
+                <th>Article</th>
+                <th>Stok Akhir</th>
+                <th>Default Price</th>
+                <th>Satuan</th>
+              </tr>
+            </thead>
+            <tbody id="load_Lookup">
+              
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 <?php
   require_once(APPPATH."views/parts/Footer.php");
 ?>
 <script type="text/javascript">
+  var items_data;
   $(function () {
     $(document).ready(function () {
       // Initialize Select 2
@@ -502,6 +546,13 @@
             bindGridItem(items_data);
           }
         }
+      });
+
+      $("#mySearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#load_Lookup tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
       });
       // Call Function Form Load
       GetCustomer();
@@ -860,6 +911,62 @@
         }
       });
     });
+
+    $('#Barcode').keyup(function (x) {
+      if (x.keyCode === 13) {
+        GetItemRow()
+      }
+    });
+
+    $('#ItemLookup').on('click','tr',function () {
+      var ItemCode = $(this).find("#ItemCode").text();
+      var ItemName = $(this).find("#ItemName").text();
+      var Stok = $(this).find("#Stok").text();
+      var dflt = $(this).find("#dflt").text();
+      var Satuan = $(this).find("#Satuan").text();
+
+      var prevQty = 0;
+      // console.log(items_data);
+      for (var i = 0; i < items_data.length; i++) {
+        if (items_data[i]["ItemCode"] == ItemCode) {
+          prevQty = items_data[i]["Qty"];
+          // items_data.remove(i);
+          items_data.splice(i, 1);
+        }
+        else{
+          prevQty = 0;
+        }
+      }
+
+      if (parseInt(prevQty) + 1 > Stok) {
+        $('#modal_Lookup').modal('toggle');
+        Swal.fire({
+          type: 'error',
+          title: 'Woops...',
+          text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
+          // footer: '<a href>Why do I have this issue?</a>'
+        }).then((result)=>{
+          $('#modal_Lookup').modal('show');
+        });
+      }
+      else{
+        items_data.push({
+          ItemCode : ItemCode,
+          ItemName : ItemName,
+          Qty : parseInt(prevQty) + 1,
+          Price:dflt,
+          OnHand:Stok,
+          Satuan:Satuan,
+          Diskon : 0,
+          Total : (parseInt(prevQty) + 1) * dflt,
+          __KEY__:create_UUID()
+        });
+        bindGridItem(items_data);
+      }
+    });
+    $('#FindItem').click(function () {
+      GetItemRow()
+    })
     // ================================= FUNCTION =================================
 
     function GetCustomer() {
@@ -965,6 +1072,84 @@
       }
     }
 
+    function GetItemRow() {
+      var id = '';
+      if ($('#Barcode').val() != '') {
+        id = '1';
+      }
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_ItemMasterData/Read",
+        data: {'kriteria':$('#Barcode').val(),'id':id},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            var html = '';
+            $.each(response.data,function (k,v) {
+              var prevQty = 0;
+              // console.log(items_data);
+              for (var i = 0; i < items_data.length; i++) {
+                if (items_data[i]["ItemCode"] == v.ItemCode) {
+                  prevQty = items_data[i]["Qty"];
+                  // items_data.remove(i);
+                  items_data.splice(i, 1);
+                }
+                else{
+                  prevQty = 0;
+                }
+              }
+              if (response.data.length == 1) {
+                if (parseInt(prevQty) + 1 > v.Stok) {
+                  Swal.fire({
+                    type: 'error',
+                    title: 'Woops...',
+                    text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
+                    // footer: '<a href>Why do I have this issue?</a>'
+                  });
+                }
+                else{
+                  items_data.push({
+                    ItemCode : v.ItemCode,
+                    ItemName : v.ItemName,
+                    Qty : parseInt(prevQty) + 1,
+                    Satuan : v.Satuan,
+                    Price: v.DefaultPrice,
+                    Diskon : 0,
+                    Total : (parseInt(prevQty) + 1) * v.DefaultPrice,
+                    __KEY__:create_UUID()
+                  });
+                  bindGridItem(items_data);
+                }
+              }
+              else{
+                html += '<tr>' +
+                          '<td id = "ItemCode">' + v.ItemCode+'</td>' +
+                          '<td id = "ItemName">' + v.ItemName + '</td>' +
+                          '<td id = "Article">' + v.Article + '</td>' +
+                          '<td id = "Stok">' + v.Stok + '</td>' +
+                          '<td id = "dflt">' + v.DefaultPrice + '</td>' +
+                          '<td id = "Satuan">' + v.Satuan + '</td>' +
+                        '<tr>';
+                $('#load_Lookup').html(html);
+                items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+                $('#modal_Lookup').modal('show');
+              }
+            });
+          }
+          else{
+            Swal.fire({
+              type: 'error',
+              title: 'Woops...',
+              text: 'Item '+ $('#Barcode').val() + ' Tidak ditemukan. ',
+              // footer: '<a href>Why do I have this issue?</a>'
+            });
+          }
+          $('#Barcode').val('');
+        }
+      });
+    }
+
     function bindGridItem(data) {
       var store = new DevExpress.data.ArrayStore(data);
       $("#gridContainerItem").dxDataGrid({
@@ -1016,6 +1201,18 @@
                     allowEditing:true,
                     allowSorting: false
                 },
+                {
+                    dataField: "Diskon",
+                    caption: "Diskon",
+                    allowEditing:true,
+                    allowSorting: false
+                },
+                {
+                    dataField: "Total",
+                    caption: "Total",
+                    allowEditing:true,
+                    allowSorting: false
+                },
             ],
             onEditingStart: function(e) {
             },
@@ -1044,6 +1241,14 @@
         // add dx-toolbar-after
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }
-
+    function create_UUID(){
+      var dt = new Date().getTime();
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (dt + Math.random()*16)%16 | 0;
+          dt = Math.floor(dt/16);
+          return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+      });
+      return uuid;
+    }
   });
 </script>
