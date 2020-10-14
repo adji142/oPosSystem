@@ -185,9 +185,9 @@
                     </div>
 
                     <div class="row col-md-12 col-sm-12">
-                      <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Expedisi <span class="required">*</span>
+                      <label class="col-md-2 col-sm-12 form-group" for="first-name">Expedisi <span class="required">*</span>
                       </label>
-                      <div class="col-md-6 col-sm-6 ">
+                      <div class="col-md-3 col-sm-12 form-group">
                         <select class="js-states form-control" id="Expedisi" name="Expedisi">
                           <option value = ''>Expedisi</option>
                           <?php
@@ -199,6 +199,38 @@
                         </select>
                       </div>
                     </div>
+                    <br><br><br><br>
+                    <div class="row col-md-12 col-sm-12">
+                      <label class="col-md-2 col-sm-12 form-group" for="first-name">Barcode <span class="required">*</span>
+                      </label>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="Barcode" id="Barcode" class="form-control">
+                      </div>
+                      <div class="col-md-1 col-sm-12 form-group">
+                        <button class="form-control btb btn-primary">Search</button>
+                      </div>
+                      <div class="row col-md-12 col-sm-12">
+                        <div class="col-md-2 col-sm-12 form-group">
+                          <button class="form-control btb btn-danger">Bayar (F-)</button>
+                        </div>
+                        <div class="col-md-2 col-sm-12 form-group">
+                          <button class="form-control btb btn-danger">Bayar Lunas (F-)</button>
+                        </div>
+                        <div class="col-md-2 col-sm-12 form-group">
+                          <button class="form-control btb btn-danger">Diskon (F-)</button>
+                        </div>
+                        <div class="col-md-2 col-sm-12 form-group">
+                          <button class="form-control btb btn-danger">Qty (F-)</button>
+                        </div>
+                      </div>
+                      <div class="dx-viewport demo-container">
+                        <div id="data-grid-demo">
+                          <div id="gridContainerItem">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -458,7 +490,19 @@
         placeholder: 'Expedisi'
       });
 
-
+      $.ajax({
+        type    :'post',
+        url     : '<?=base_url()?>C_General/getDummy',
+        dataType: 'json',
+        success:function (response) {
+          if(response.success == true){
+          // console.log(response);
+            // returnjson = response.data;
+            items_data = response.data;
+            bindGridItem(items_data);
+          }
+        }
+      });
       // Call Function Form Load
       GetCustomer();
     });
@@ -919,6 +963,86 @@
         $('#Nama_dest').val('');
         $('#Notlp_dest').val('');
       }
+    }
+
+    function bindGridItem(data) {
+      var store = new DevExpress.data.ArrayStore(data);
+      $("#gridContainerItem").dxDataGrid({
+            dataSource: store,
+            showBorders: true,
+            allowColumnReordering: false,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            showBorders: true,
+            paging: {
+                enabled: false
+            },
+            editing: {
+                mode: "row",
+                allowUpdating: true,
+                allowDeleting: true,
+                texts: {
+                    confirmDeleteMessage: ''  
+                }
+            },
+            columns: [
+                {
+                    dataField: "ItemCode",
+                    caption: "Kode Item",
+                    allowEditing:true,
+                    allowSorting: false
+                },
+                {
+                    dataField: "ItemName",
+                    caption: "Nama Item",
+                    allowEditing:false,
+                    allowSorting: false
+                },
+                {
+                    dataField: "Qty",
+                    caption: "Jumlah",
+                    allowEditing:true,
+                    allowSorting: false
+                },
+                {
+                    dataField: "Satuan",
+                    caption: "Satuan",
+                    allowEditing:true,
+                    allowSorting: false
+                },
+                {
+                    dataField: "Price",
+                    caption: "Price",
+                    allowEditing:true,
+                    allowSorting: false
+                },
+            ],
+            onEditingStart: function(e) {
+            },
+            onInitNewRow: function(e) {
+            },
+            onRowInserting: function(e) {
+            },
+            onRowInserted: function(e) {
+            },
+            onRowUpdating: function(e) {
+            },
+            onRowUpdated: function(e) {
+            },
+            onRowRemoving: function(e) {
+            },
+            onRowRemoved: function(e) {
+            },
+            onEditorPrepared: function (e) {
+            },
+            onRowValidating:function(e) {
+            },
+            onCellPrepared:function (e) {
+            }
+        });
+
+        // add dx-toolbar-after
+        // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }
 
   });

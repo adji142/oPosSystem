@@ -144,5 +144,14 @@ class C_General extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
-	
+	public function getDummy()
+	{
+		$data = array('success' => true ,'message'=>array(),'data' =>array(),'masteralat'=>array());
+
+		$call = $this->db->query("select '' ItemCode,'' ItemName,0 Qty,'' Satuan,0 Price");
+
+		$data['data'] = array();
+
+		echo json_encode($data);
+	}
 }
