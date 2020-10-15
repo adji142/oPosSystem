@@ -220,7 +220,7 @@
                           <button class="form-control btb btn-danger">Diskon (F-)</button>
                         </div>
                         <div class="col-md-2 col-sm-12 form-group">
-                          <button class="form-control btb btn-danger">Qty (F-)</button>
+                          <button class="form-control btb btn-danger" id="EditQty">Qty (F-)</button>
                         </div>
                       </div>
                       <div class="dx-viewport demo-container">
@@ -229,8 +229,54 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                      <label><center>_______</center></label>
+                      <div class="row col-md-12 col-sm-12">
+                        <div class="col-md-8 col-sm-12 form-group">
+                          <button class="form-control btb btn-danger" id="EditQty">Qty (F-)</button>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                          <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Sub Total
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="text" name="T_SubTotal" id="T_SubTotal" class="form-control" readonly="">
+                          </div>
 
+                          <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Total Diskon
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="text" name="T_DiskTotal" id="T_DiskTotal" class="form-control" readonly="">
+                          </div>
+
+                          <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Grand Total
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="text" name="T_GrandTotal" id="T_GrandTotal" class="form-control" readonly="">
+                          </div>
+
+                          <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Bayar
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="text" name="T_Bayar" id="T_Bayar" class="form-control">
+                          </div>
+
+                          <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Kembalian
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="text" name="T_Kembali" id="T_Kembali" class="form-control" readonly="">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -962,10 +1008,21 @@
           __KEY__:create_UUID()
         });
         bindGridItem(items_data);
+        addSubTotal();
       }
     });
     $('#FindItem').click(function () {
       GetItemRow()
+    });
+    $('#EditQty').click(function function_name(argument) {
+      var button = $('.dx-link-edit');
+      button.click();
+    });
+    $('#T_SubTotal').focus(function () {
+      $('#T_SubTotal').val($('#T_SubTotal').val().replace(',',''));
+    })
+    $('#T_SubTotal').focusout(function () {
+      $('#T_SubTotal').val(addCommas($('#T_SubTotal').val()));
     })
     // ================================= FUNCTION =================================
 
@@ -1120,6 +1177,7 @@
                     __KEY__:create_UUID()
                   });
                   bindGridItem(items_data);
+                  addSubTotal();
                 }
               }
               else{
@@ -1174,7 +1232,7 @@
                 {
                     dataField: "ItemCode",
                     caption: "Kode Item",
-                    allowEditing:true,
+                    allowEditing:false,
                     allowSorting: false
                 },
                 {
@@ -1192,13 +1250,13 @@
                 {
                     dataField: "Satuan",
                     caption: "Satuan",
-                    allowEditing:true,
+                    allowEditing:false,
                     allowSorting: false
                 },
                 {
                     dataField: "Price",
                     caption: "Price",
-                    allowEditing:true,
+                    allowEditing:false,
                     allowSorting: false
                 },
                 {
@@ -1210,7 +1268,7 @@
                 {
                     dataField: "Total",
                     caption: "Total",
-                    allowEditing:true,
+                    allowEditing:false,
                     allowSorting: false
                 },
             ],
@@ -1225,6 +1283,24 @@
             onRowUpdating: function(e) {
             },
             onRowUpdated: function(e) {
+              var grid = $("#gridContainerItem").dxDataGrid("instance");
+              var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+
+              var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":""}
+              for (var i = 0; i < gridItems.length; i++) {
+                arr["ItemCode"] = gridItems[i]["ItemCode"];
+                arr["ItemName"] = gridItems[i]["ItemName"];
+                arr["Satuan"]   = gridItems[i]["Satuan"];
+                arr["Price"]    = gridItems[i]["Price"];
+                arr["Qty"]      = parseInt(e.data.Qty);
+                arr["Diskon"]   = e.data.Diskon,
+                arr['Total']    = (e.data.Price * parseInt(e.data.Qty)) - (e.data.Total / 100) * e.data.Diskon;
+                arr["__KEY__"]  = gridItems[i]["__KEY__"];
+                console.log((parseFloat(e.data.Price) / 100));
+                store.update(gridItems[i],arr)
+                grid.refresh();
+              }
+              addSubTotal();
             },
             onRowRemoving: function(e) {
             },
@@ -1249,6 +1325,27 @@
           return (c=='x' ? r :(r&0x3|0x8)).toString(16);
       });
       return uuid;
+    }
+    function addCommas(nStr)
+    {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    function addSubTotal() {
+
+      var subtotal = 0;
+      for (var i = 0; i < items_data.length; i++) {
+
+        subtotal =subtotal + parseInt(items_data[i]["Total"]);
+      }
+      $('#T_SubTotal').val(addCommas(subtotal));
     }
   });
 </script>

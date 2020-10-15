@@ -461,7 +461,7 @@
             onRowUpdated: function(e) {
                 // logEvent(e);
                 var grid = $("#gridContainerItem").dxDataGrid("instance");
-                if (e.data.OnHand >= e.data.Qty && e.data.Qty > 0) {
+                if (e.data.Qty > 0) {
                   var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
                   // console.log(gridItems);
                   // console.log(gridItems[0]["__KEY__"]);
@@ -494,7 +494,7 @@
                 Swal.fire({
                     type: 'error',
                     title: 'Woops...',
-                    text: 'Jumlah Tersedia Lebih kecil dari jumlah yang di Keluarkan',
+                    text: 'Qty Harus di isi',
                     // footer: '<a href>Why do I have this issue?</a>'
                   }).then((result)=>{
                     var button = $('.dx-link-edit');
