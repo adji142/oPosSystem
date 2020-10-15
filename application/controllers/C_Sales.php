@@ -56,8 +56,15 @@ class C_Sales extends CI_Controller {
 		$Alamat = $this->input->post('Alamat');
 		$Email = $this->input->post('Email');
 		$NoTlp = $this->input->post('NoTlp');
+		$LevelingPrice = $this->input->post('LevelingPrice');
 		$isActive = 1;
 
+		// if ($LevelingPrice == "On") {
+		// 	$LevelingPrice = 1;
+		// }
+		// else{
+		// 	$LevelingPrice = 0;
+		// }
 		// $exploder = explode("|",$ItemGroup[0]);
 		$formtype = $this->input->post('formtype');
 
@@ -67,7 +74,8 @@ class C_Sales extends CI_Controller {
 			'Alamat' => $Alamat,
 			'Email' => $Email,
 			'NoTlp' => $NoTlp,
-			'isActive' => $isActive
+			'isActive' => $isActive,
+			'LevelingPrice' => $LevelingPrice
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();

@@ -154,4 +154,18 @@ class C_General extends CI_Controller {
 
 		echo json_encode($data);
 	}
+	public function GetLevelingHarga()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$Qty = $this->input->post('Qty');
+
+		$SQL = "SELECT * FROM tbmk WHERE ".$Qty." BETWEEN QtyStart AND QtyEnd;";
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows() > 0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		echo json_encode($data);
+	}
 }

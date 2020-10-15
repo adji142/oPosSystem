@@ -8,6 +8,7 @@
   width: 100% !important;
   }
 </style>
+<input type="text" name="LevelingPrice" id="LevelingPrice">
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
@@ -512,6 +513,7 @@
 ?>
 <script type="text/javascript">
   var items_data;
+  var isLevelingPrice = 0;
   $(function () {
     $(document).ready(function () {
       // Initialize Select 2
@@ -634,6 +636,21 @@
         $("#Expedisi").attr("disabled", false);
       }
 
+    });
+    $('#KodeSales').change(function () {
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_Sales/Read",
+        data: {'KodeSales':$('KodeSales').val()},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            isLevelingPrice = response.data[0]['LevelingPrice'];
+          }
+        }
+      });
+      var harga = 0;
     });
     $('#KodeCustomerPOS').change(function () {
       var KodeCustomer = $('#KodeCustomerPOS').val();
@@ -996,6 +1013,10 @@
         });
       }
       else{
+        if (isLevelingPrice == 1) {
+          GetLevelingHarga(parseInt(parseInt(prevQty) + 1));
+          dflt = $('#LevelingPrice').val();
+        }
         items_data.push({
           ItemCode : ItemCode,
           ItemName : ItemName,
@@ -1143,6 +1164,7 @@
         success: function (response) {
           if(response.success == true){
             var html = '';
+            var dflt = 0;
             $.each(response.data,function (k,v) {
               var prevQty = 0;
               // console.log(items_data);
@@ -1166,14 +1188,26 @@
                   });
                 }
                 else{
+                  // var dflt;
+                  // dflt = GetLevelingHarga(parseInt(prevQty) + 1,function (output) {
+                  //   return output;
+                  // });
+                  if (isLevelingPrice == 1) {
+                    GetLevelingHarga(parseInt(prevQty) + 1);
+                    dflt = $('#LevelingPrice').val();
+                  }
+                  else{
+                    dflt = v.DefaultPrice;
+                  }
+                  console.log(dflt);
                   items_data.push({
                     ItemCode : v.ItemCode,
                     ItemName : v.ItemName,
                     Qty : parseInt(prevQty) + 1,
                     Satuan : v.Satuan,
-                    Price: v.DefaultPrice,
+                    Price: dflt,
                     Diskon : 0,
-                    Total : (parseInt(prevQty) + 1) * v.DefaultPrice,
+                    Total : (parseInt(prevQty) + 1) * dflt,
                     __KEY__:create_UUID()
                   });
                   bindGridItem(items_data);
@@ -1287,14 +1321,24 @@
               var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
 
               var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":""}
+            
+              var dflt = 0;
               for (var i = 0; i < gridItems.length; i++) {
+                console.log(isLevelingPrice);
+                if (isLevelingPrice == 1) {
+                  GetLevelingHarga(parseInt(e.data.Qty));
+                  dflt = $('#LevelingPrice').val();
+                }
+                else{
+                  dflt = v.DefaultPrice;
+                }
                 arr["ItemCode"] = gridItems[i]["ItemCode"];
                 arr["ItemName"] = gridItems[i]["ItemName"];
                 arr["Satuan"]   = gridItems[i]["Satuan"];
-                arr["Price"]    = gridItems[i]["Price"];
+                arr["Price"]    = dflt;
                 arr["Qty"]      = parseInt(e.data.Qty);
-                arr["Diskon"]   = e.data.Diskon,
-                arr['Total']    = (e.data.Price * parseInt(e.data.Qty)) - (e.data.Total / 100) * e.data.Diskon;
+                arr["Diskon"]   = gridItems[i]['Diskon'],
+                arr['Total']    = (dflt * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
                 arr["__KEY__"]  = gridItems[i]["__KEY__"];
                 console.log((parseFloat(e.data.Price) / 100));
                 store.update(gridItems[i],arr)
@@ -1341,11 +1385,30 @@
     function addSubTotal() {
 
       var subtotal = 0;
+      var Diskon = 0;
       for (var i = 0; i < items_data.length; i++) {
 
-        subtotal =subtotal + parseInt(items_data[i]["Total"]);
+        subtotal = subtotal + parseInt(items_data[i]["Total"]);
       }
       $('#T_SubTotal').val(addCommas(subtotal));
+    }
+    function GetLevelingHarga(Qty) {
+      var hasil = [];
+      var arr = {};
+      var rs;
+      $.ajax({
+        async:false,
+        type: "post",
+        url: "<?=base_url()?>C_General/GetLevelingHarga",
+        data: {'Qty':Qty},
+        dataType: "json",
+        success: function (response) {
+          if (response.success == true) {
+            // handleData(response.data[0]['Harga']);
+            $('#LevelingPrice').val(response.data[0]['Harga']);
+          }
+        }
+      });
     }
   });
 </script>

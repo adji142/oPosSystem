@@ -78,6 +78,13 @@
                       <input type="text" name="NoTlp" id="NoTlp" placeholder="No Tlp" class="form-control ">
                     </div>
                   </div>
+                  <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Default Harga <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                      <input type="checkbox" name="LevelingPrice" id="LevelingPrice" class="form-control" value="1">
+                    </div>
+                  </div>
                   <div class="item" form-group>
                     <button class="btn btn-primary" id="btn_Save">Save</button>
                   </div>
@@ -172,6 +179,13 @@
                 $('#Alamat').val(v.Alamat);
                 $('#Email').val(v.Email);
                 $('#NoTlp').val(v.NoTlp);
+                
+                if (v.LevelingPrice == 1) {
+                  $("#LevelingPrice").prop("checked", true);
+                }
+                else{
+                  $("#LevelingPrice").prop("checked", false); 
+                }
 
                 $('#formtype').val("edit");
 
