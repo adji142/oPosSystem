@@ -54,7 +54,7 @@ class C_Booking extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 		$HeaderID = $this->input->post('HeaderID');
 
-		$SQL = "SELECT A.*,B.ItemName,B.Article FROM bookdetail A 
+		$SQL = "SELECT A.*,B.ItemName,B.Article,B.Stok,B.Satuan FROM bookdetail A 
 				LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
 				where A.NoTransaksi = '".$HeaderID."' ORDER BY A.LineNum";
 
@@ -177,6 +177,33 @@ class C_Booking extends CI_Controller {
 		}
 
 		jump:
+		echo json_encode($data);
+	}
+
+	public function GetLookup()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$KodeSales = $this->input->post('KodeSales');
+
+		$SQL = "SELECT DISTINCT a.NoTransaksi,a.TglTransaksi,a.KodeSales,d.NamaSales FROM bookheader a
+			LEFT JOIN bookdetail b on a.NoTransaksi = b.NoTransaksi
+			LEFT JOIN(
+				SELECT x.BaseRef,SUM(x.Qty) Qty FROM penjualandetail x
+				GROUP BY x.BaseRef
+			) c on b.NoTransaksi = c.BaseRef
+			LEFT JOIN tsales d on a.KodeSales = d.KodeSales
+			WHERE a.StatusTransaksi = 'O' AND COALESCE(b.Qty,0) - COALESCE(c.Qty,0) > 0 AND a.KodeSales = '".$KodeSales."'";
+
+		$rs = $this->db->query($SQL);
+		if ($rs->num_rows() > 0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$undone = $this->db->error();
+			$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : No Record Found ";
+		}
 		echo json_encode($data);
 	}
 

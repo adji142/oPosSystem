@@ -8,7 +8,7 @@
   width: 100% !important;
   }
 </style>
-<input type="text" name="LevelingPrice" id="LevelingPrice">
+<input type="hidden" name="LevelingPrice" id="LevelingPrice">
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
@@ -210,20 +210,10 @@
                       <div class="col-md-2 col-sm-12 form-group">
                         <button class="form-control btb btn-primary" id="FindItem">Search</button>
                       </div>
-                      <div class="row col-md-12 col-sm-12">
-                        <div class="col-md-2 col-sm-12 form-group">
-                          <button class="form-control btb btn-danger">Bayar (F-)</button>
-                        </div>
-                        <div class="col-md-2 col-sm-12 form-group">
-                          <button class="form-control btb btn-danger">Bayar Lunas (F-)</button>
-                        </div>
-                        <div class="col-md-2 col-sm-12 form-group">
-                          <button class="form-control btb btn-danger">Diskon (F-)</button>
-                        </div>
-                        <div class="col-md-2 col-sm-12 form-group">
-                          <button class="form-control btb btn-danger" id="EditQty">Qty (F-)</button>
-                        </div>
+                      <div class="col-md-2 col-sm-12 form-group">
+                        <button class="form-control btb btn-default" id="FindKeep">Copy Keep</button>
                       </div>
+                      
                       <div class="dx-viewport demo-container">
                         <div id="data-grid-demo">
                           <div id="gridContainerItem">
@@ -233,15 +223,40 @@
                       <label><center>_______</center></label>
                       <div class="row col-md-12 col-sm-12">
                         <div class="col-md-8 col-sm-12 form-group">
-                          <button class="form-control btb btn-danger" id="EditQty">Qty (F-)</button>
+                          <button class="btn btn-app" id="amt1" disabled="">
+                            <h4>5.000</h4>
+                          </button>
+                          <button class="btn btn-app" id="amt2" disabled="">
+                            <h4>10.000</h4>
+                          </button>
+                          <button class="btn btn-app" id="amt3" disabled="">
+                            <h4>20.000</h4>
+                          </button>
+                          <button class="btn btn-app" id="amt4" disabled="">
+                            <h4>50.000</h4>
+                          </button>
+                          <button class="btn btn-app" id="amt5" disabled="">
+                            <h4>100.000</h4>
+                          </button>
+                          <button class="btn btn-app" id="amt6" disabled="">
+                            <h4>LUNAS</h4>
+                          </button>
                         </div>
                         <div class="col-md-4 col-sm-12">
+                          <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Bayar Sekarang
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="checkbox" name="T_Paynow" id="T_Paynow" class="form-control"value="1">
+                          </div>
+
                           <div class="col-md-5 col-sm-12 form-group">
                             <label class="col-form-label label-align" for="first-name">Sub Total
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="text" name="T_SubTotal" id="T_SubTotal" class="form-control" readonly="">
+                            <input type="text" name="T_SubTotal" id="T_SubTotal" class="form-control" readonly="" value="0">
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
@@ -249,7 +264,7 @@
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="text" name="T_DiskTotal" id="T_DiskTotal" class="form-control" readonly="">
+                            <input type="text" name="T_DiskTotal" id="T_DiskTotal" class="form-control" readonly="" value="0">
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
@@ -257,7 +272,7 @@
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="text" name="T_GrandTotal" id="T_GrandTotal" class="form-control" readonly="">
+                            <input type="text" name="T_GrandTotal" id="T_GrandTotal" class="form-control" readonly="" value="0">
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
@@ -265,7 +280,7 @@
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="text" name="T_Bayar" id="T_Bayar" class="form-control">
+                            <input type="text" name="T_Bayar" id="T_Bayar" class="form-control" value="0">
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
@@ -273,7 +288,7 @@
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="text" name="T_Kembali" id="T_Kembali" class="form-control" readonly="">
+                            <input type="text" name="T_Kembali" id="T_Kembali" class="form-control" readonly="" value="0">
                           </div>
                         </div>
                       </div>
@@ -293,46 +308,6 @@
   </div>
 </div>
 <!-- /page content -->
-
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Article - Warna</h4>
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="post_" data-parsley-validate class="form-horizontal form-label-left">
-          <div class="item form-group">
-            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode Article <span class="required">*</span>
-            </label>
-            <div class="col-md-6 col-sm-6 ">
-              <input type="text" name="ArticleCode" id="ArticleCode" required="" placeholder="Kode Artikel" class="form-control " readonly="">
-              <input type="hidden" name="formtype" id="formtype" value="add">
-            </div>
-          </div>
-          <div class="item form-group">
-            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Article <span class="required">*</span>
-            </label>
-            <div class="col-md-6 col-sm-6 ">
-              <input type="text" name="ArticleName" id="ArticleName" required="" placeholder="Nama Artikel" class="form-control ">
-            </div>
-          </div>
-          <div class="item" form-group>
-            <button class="btn btn-primary" id="btn_Save">Save</button>
-          </div>
-        </form>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        
-      </div> -->
-
-    </div>
-  </div>
-</div>
 
 <!-- Modal Customer -->
 
@@ -508,12 +483,39 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_Lookup_keep">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Daftar Keep Barang</h4>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="dx-viewport demo-container">
+          <div id="data-grid-demo">
+            <div id="gridContainerKeepBarang">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" id="choseKeep">Chose</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 <?php
   require_once(APPPATH."views/parts/Footer.php");
 ?>
 <script type="text/javascript">
   var items_data;
   var isLevelingPrice = 0;
+  var NoTransaksiBooking = '';
   $(function () {
     $(document).ready(function () {
       // Initialize Select 2
@@ -631,11 +633,28 @@
 
       if ($('#PaymentTerm').val() == "1") {
         $("#Expedisi").attr("disabled", true);
+        $("#T_Bayar").attr("disabled", false);
+        $("#T_Paynow").prop("checked", true);
+        
+        $('#amt1').attr('disabled',false);
+        $('#amt2').attr('disabled',false);
+        $('#amt3').attr('disabled',false);
+        $('#amt4').attr('disabled',false);
+        $('#amt5').attr('disabled',false);
+        $('#amt6').attr('disabled',false);
       }
       else{
         $("#Expedisi").attr("disabled", false);
-      }
+        $("#T_Bayar").attr("disabled", true);
+        $("#T_Paynow").prop("checked", false);
 
+        $('#amt1').attr('disabled',true);
+        $('#amt2').attr('disabled',true);
+        $('#amt3').attr('disabled',true);
+        $('#amt4').attr('disabled',true);
+        $('#amt5').attr('disabled',true);
+        $('#amt6').attr('disabled',true);
+      }
     });
     $('#KodeSales').change(function () {
       $.ajax({
@@ -991,7 +1010,7 @@
       var prevQty = 0;
       // console.log(items_data);
       for (var i = 0; i < items_data.length; i++) {
-        if (items_data[i]["ItemCode"] == ItemCode) {
+        if (items_data[i]["ItemCode"] == ItemCode && items_data[i]["BaseRef"] == '') {
           prevQty = items_data[i]["Qty"];
           // items_data.remove(i);
           items_data.splice(i, 1);
@@ -1026,7 +1045,8 @@
           Satuan:Satuan,
           Diskon : 0,
           Total : (parseInt(prevQty) + 1) * dflt,
-          __KEY__:create_UUID()
+          __KEY__:create_UUID(),
+          BaseRef : ''
         });
         bindGridItem(items_data);
         addSubTotal();
@@ -1044,7 +1064,103 @@
     })
     $('#T_SubTotal').focusout(function () {
       $('#T_SubTotal').val(addCommas($('#T_SubTotal').val()));
-    })
+    });
+    $("#T_Bayar").on("keyup", function() {
+      console.log($('#T_Bayar').val());
+      // $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','')) ));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
+    });
+    $('#amt1').click(function () {
+      $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 5000));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+    });
+
+    $('#amt2').click(function () {
+      $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 10000));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+    });
+
+    $('#amt3').click(function () {
+      $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 20000));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+    });
+
+    $('#amt4').click(function () {
+      $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 50000));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+    });
+
+    $('#amt5').click(function () {
+      $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 100000));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+    });
+
+    $('#amt6').click(function () {
+      $('#T_Bayar').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',',''))));
+    });
+
+    $('#FindKeep').click(function () {
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_Booking/GetLookup",
+        data: {'KodeSales':$('#KodeSales').val()},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            bindGridItemBooking(response.data);
+            $('#modal_Lookup_keep').modal('show');
+          }
+          else{
+            Swal.fire({
+              type: 'error',
+              title: 'Woops...',
+              text: response.message,
+              // footer: '<a href>Why do I have this issue?</a>'
+            });
+          }
+        }
+      });
+    });
+    $("#choseKeep").click(function () {
+      if (NoTransaksiBooking != "") {
+        $.ajax({
+          type    :'post',
+          url     : '<?=base_url()?>C_Booking/ReadDetail',
+          data    : {'HeaderID':NoTransaksiBooking},
+          dataType: 'json',
+          success:function (response) {
+            if(response.success == true){
+              var dflt = 0;
+              $.each(response.data,function (k,v) {
+                if (isLevelingPrice == 1) {
+                  GetLevelingHarga(parseInt(v.Qty));
+                  dflt = $('#LevelingPrice').val();
+                }
+                else{
+                  dflt = v.Price
+                }
+                items_data.push({
+                  ItemCode : v.KodeItem,
+                  ItemName : v.ItemName,
+                  Qty : parseInt(v.Qty),
+                  Price:dflt,
+                  OnHand:v.Stok,
+                  Satuan:v.Satuan,
+                  Diskon : 0,
+                  Total : parseInt(v.Qty) * dflt,
+                  __KEY__:create_UUID(),
+                  BaseRef : v.NoTransaksi
+                });
+                bindGridItem(items_data);
+                addSubTotal();
+              });
+              $('#modal_Lookup_keep').modal('toggle');
+            }
+          }
+        });
+      }
+    });
     // ================================= FUNCTION =================================
 
     function GetCustomer() {
@@ -1169,7 +1285,7 @@
               var prevQty = 0;
               // console.log(items_data);
               for (var i = 0; i < items_data.length; i++) {
-                if (items_data[i]["ItemCode"] == v.ItemCode) {
+                if (items_data[i]["ItemCode"] == v.ItemCode && items_data[i]["BaseRef"] == '') {
                   prevQty = items_data[i]["Qty"];
                   // items_data.remove(i);
                   items_data.splice(i, 1);
@@ -1208,7 +1324,8 @@
                     Price: dflt,
                     Diskon : 0,
                     Total : (parseInt(prevQty) + 1) * dflt,
-                    __KEY__:create_UUID()
+                    __KEY__:create_UUID(),
+                    BaseRef : ''
                   });
                   bindGridItem(items_data);
                   addSubTotal();
@@ -1305,6 +1422,12 @@
                     allowEditing:false,
                     allowSorting: false
                 },
+                {
+                    dataField: "BaseRef",
+                    caption: "BaseRef",
+                    allowEditing:false,
+                    allowSorting: false
+                },
             ],
             onEditingStart: function(e) {
             },
@@ -1320,27 +1443,29 @@
               var grid = $("#gridContainerItem").dxDataGrid("instance");
               var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
 
-              var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":""}
+              var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
             
               var dflt = 0;
               for (var i = 0; i < gridItems.length; i++) {
                 console.log(isLevelingPrice);
                 if (isLevelingPrice == 1) {
-                  GetLevelingHarga(parseInt(e.data.Qty));
+                  GetLevelingHarga(parseInt(gridItems[i]["Qty"]));
                   dflt = $('#LevelingPrice').val();
                 }
                 else{
                   dflt = v.DefaultPrice;
                 }
+                console.log(dflt);
                 arr["ItemCode"] = gridItems[i]["ItemCode"];
                 arr["ItemName"] = gridItems[i]["ItemName"];
                 arr["Satuan"]   = gridItems[i]["Satuan"];
                 arr["Price"]    = dflt;
-                arr["Qty"]      = parseInt(e.data.Qty);
+                arr["Qty"]      = parseInt(gridItems[i]["Qty"]);
                 arr["Diskon"]   = gridItems[i]['Diskon'],
                 arr['Total']    = (dflt * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
                 arr["__KEY__"]  = gridItems[i]["__KEY__"];
-                console.log((parseFloat(e.data.Price) / 100));
+                arr["BaseRef"]  = gridItems[i]["BaseRef"];
+                
                 store.update(gridItems[i],arr)
                 grid.refresh();
               }
@@ -1349,6 +1474,7 @@
             onRowRemoving: function(e) {
             },
             onRowRemoved: function(e) {
+              addSubTotal();
             },
             onEditorPrepared: function (e) {
             },
@@ -1386,11 +1512,19 @@
 
       var subtotal = 0;
       var Diskon = 0;
+      var grandTotal = 0;
+      var changeDue = 0;
       for (var i = 0; i < items_data.length; i++) {
-
-        subtotal = subtotal + parseInt(items_data[i]["Total"]);
+        subtotal = subtotal + (parseFloat(items_data[i]["Price"]) * parseInt(items_data[i]["Qty"]));
+        Diskon = Diskon + (subtotal /100 ) * parseFloat(items_data[i]["Diskon"])
       }
       $('#T_SubTotal').val(addCommas(subtotal));
+      $('#T_DiskTotal').val(addCommas(Diskon));
+      $('#T_GrandTotal').val(addCommas(subtotal - Diskon));
+      if ($('#PaymentTerm').val() != '1') {
+        $('#T_Bayar').val(addCommas(subtotal - Diskon));
+      }
+      // $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
     }
     function GetLevelingHarga(Qty) {
       var hasil = [];
@@ -1409,6 +1543,116 @@
           }
         }
       });
+    }
+
+    function bindGridItemBooking(data) {
+      $("#gridContainerKeepBarang").dxDataGrid({
+          dataSource: {
+              store: {
+                type: "array",
+                key: "NoTransaksi",
+                data: data
+                // Other LocalStore options go here
+            },
+            select: [
+              'NoTransaksi',
+              'TglTransaksi',
+              'KodeSales',
+              'NamaSales'
+            ]
+          },
+          showBorders: true,
+          allowColumnReordering: true,
+          allowColumnResizing: true,
+          columnAutoWidth: true,
+          showBorders: true,
+          focusedRowEnabled: true,
+          paging: {
+              pageSize: 10,
+              enabled: true
+          },
+          searchPanel: {
+              visible: true,
+              width: 240,
+              placeholder: "Search..."
+          },
+          columns: [
+              {
+                  dataField: "NoTransaksi",
+                  caption: "No Booking",
+                  allowEditing:false,
+                  allowSorting: false
+              },
+              {
+                  dataField: "TglTransaksi",
+                  caption: "Tanggal Booking",
+                  allowEditing:false,
+                  allowSorting: false
+              },
+              {
+                  dataField: "KodeSales",
+                  caption: "Kode Item",
+                  allowEditing:false,
+                  allowSorting: false
+              },
+              {
+                  dataField: "NamaSales",
+                  caption: "Nama Item",
+                  allowEditing:false,
+                  allowSorting: false
+              }
+          ],
+          onEditingStart: function(e) {
+          },
+          onInitNewRow: function(e) {
+          },
+          onRowInserting: function(e) {
+          },
+          onRowInserted: function(e) {
+          },
+          onRowUpdating: function(e) {  
+          },
+          onRowUpdated: function(e) {
+          },
+          onRowRemoving: function(e) {
+          },
+          onRowRemoved: function(e) {
+          },
+          onEditorPrepared: function (e) {
+          },
+          onRowValidating:function(e) {
+          },
+          onCellPrepared:function (e) {
+          },
+          onFocusedRowChanging: function(e) {
+              var rowsCount = e.component.getVisibleRows().length,
+                  pageCount = e.component.pageCount(),
+                  pageIndex = e.component.pageIndex(),
+                  key = e.event && e.event.key;
+
+              if(key && e.prevRowIndex === e.newRowIndex) {
+                  if(e.newRowIndex === rowsCount - 1 && pageIndex < pageCount - 1) {
+                      e.component.pageIndex(pageIndex + 1).done(function() {
+                          e.component.option("focusedRowIndex", 0);
+                      });
+                  } else if(e.newRowIndex === 0 && pageIndex > 0) {
+                      e.component.pageIndex(pageIndex - 1).done(function() {
+                          e.component.option("focusedRowIndex", rowsCount - 1);
+                      });
+                  }
+              }
+          },
+          onFocusedRowChanged: function(e) {
+            const row = e.row;
+            const rowData = row && row.data;
+            const xdata = rowData && rowData.NoTransaksi
+
+            NoTransaksiBooking = xdata;
+          }
+      }).dxDataGrid("instance");
+
+        // add dx-toolbar-after
+        // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }
   });
 </script>
