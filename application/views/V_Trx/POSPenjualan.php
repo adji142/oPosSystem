@@ -222,7 +222,7 @@
                       </div>
                       <label><center>_______</center></label>
                       <div class="row col-md-12 col-sm-12">
-                        <div class="col-md-8 col-sm-12 form-group">
+                        <div class="col-md-7 col-sm-12 form-group">
                           <button class="btn btn-app" id="amt1" disabled="">
                             <h4>5.000</h4>
                           </button>
@@ -280,7 +280,7 @@
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="text" name="T_Bayar" id="T_Bayar" class="form-control" value="0">
+                            <input type="text" name="T_Bayar" id="T_Bayar" class="form-control" value="0" onclick="this.select()">
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
@@ -290,6 +290,9 @@
                           <div class="col-md-7 col-sm-12 form-group">
                             <input type="text" name="T_Kembali" id="T_Kembali" class="form-control" readonly="" value="0">
                           </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                          <button class="btn btn-primary" id="SubmitPOS" disabled="">Proses [F9]</button>
                         </div>
                       </div>
                     </div>
@@ -516,6 +519,8 @@
   var items_data;
   var isLevelingPrice = 0;
   var NoTransaksiBooking = '';
+
+  var $field = $('#TglTransaksi, #KodeSales, #KodeCustomerPOS, #TransactionType ,#PaymentTerm, #provinsi_ori, #Kota_ori,#Kecamatan_ori, #Kelurahan_ori, #KodePOS_ori, #Alamat_ori,#Nama_ori, #Notlp_Ori, #provinsi_dest, #Kota_dest, #Kecamatan_dest, #Kelurahan_dest, #KodePOS_dest, #Alamat_dest, #Nama_dest, #Notlp_dest, #T_Bayar')
   $(function () {
     $(document).ready(function () {
       // Initialize Select 2
@@ -1065,38 +1070,106 @@
     $('#T_SubTotal').focusout(function () {
       $('#T_SubTotal').val(addCommas($('#T_SubTotal').val()));
     });
-    $("#T_Bayar").on("keyup", function() {
-      console.log($('#T_Bayar').val());
-      // $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','')) ));
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
+
+    $('#T_DiskTotal').focus(function () {
+      $('#T_DiskTotal').val($('#T_DiskTotal').val().replace(',',''));
+    })
+    $('#T_DiskTotal').focusout(function () {
+      $('#T_DiskTotal').val(addCommas($('#T_DiskTotal').val()));
     });
+
+    $('#T_GrandTotal').focus(function () {
+      $('#T_GrandTotal').val($('#T_GrandTotal').val().replace(',',''));
+    })
+    $('#T_GrandTotal').focusout(function () {
+      $('#T_GrandTotal').val(addCommas($('#T_GrandTotal').val()));
+    });
+
+    $('#T_Bayar').focus(function () {
+      $('#T_Bayar').val($('#T_Bayar').val().replace(',',''));
+    })
+    $('#T_Bayar').focusout(function () {
+      $('#T_Bayar').val(addCommas($('#T_Bayar').val()));
+    });
+
+    $('#T_Kembali').focus(function () {
+      $('#T_Kembali').val($('#T_Kembali').val().replace(',',''));
+    })
+    $('#T_Kembali').focusout(function () {
+      $('#T_Kembali').val(addCommas($('#T_Kembali').val()));
+    });
+
+    $("#T_Bayar").on("keyup", function() {
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
+      if ($('#T_Bayar').val() == '') {
+        $('#T_Bayar').val(0);
+      }
+    });
+
     $('#amt1').click(function () {
       $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 5000));
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',','') ) ));
+      if (parseFloat($('#T_Kembali').val().replace(',','')) >= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
     });
 
     $('#amt2').click(function () {
       $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 10000));
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',','') ) ));
+      if (parseFloat($('#T_Kembali').val().replace(',','')) >= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
     });
 
     $('#amt3').click(function () {
       $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 20000));
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',','') ) ));
+      if (parseFloat($('#T_Kembali').val().replace(',','')) >= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
     });
 
     $('#amt4').click(function () {
       $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 50000));
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',','') ) ));
+      if (parseFloat($('#T_Kembali').val().replace(',','')) >= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
     });
 
     $('#amt5').click(function () {
       $('#T_Bayar').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) + 100000));
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',','')) - parseFloat($('#T_Bayar').val().replace(',','') ) ));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',','') ) ));
+      if (parseFloat($('#T_Kembali').val().replace(',','')) >= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
     });
 
     $('#amt6').click(function () {
       $('#T_Bayar').val(addCommas(parseFloat($('#T_GrandTotal').val().replace(',',''))));
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',','') ) ));
+      if (parseFloat($('#T_Kembali').val().replace(',','')) >= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
     });
 
     $('#FindKeep').click(function () {
@@ -1161,8 +1234,121 @@
         });
       }
     });
-    // ================================= FUNCTION =================================
+    $field.on('key change',function () {
+      console.log(parseFloat($('#T_Kembali').val().replace(',','')));
+      if (allFilled($field) && parseFloat($('#T_Kembali').val().replace(',','')) <= 0) {
+        $('#SubmitPOS').attr('disabled',false);
+      }
+      else{
+        $('#SubmitPOS').attr('disabled',true);
+      }
+    });
+    $('#SubmitPOS').click(function () {
+      $('#SubmitPOS').text('Tunggu Sebentar');
+      $('#SubmitPOS').attr('disabled',true);
+      var reftrx = '';
+      var refpay = '';
 
+      if ($('#TransactionType').val() == '1') {
+        reftrx = $('#RefNumberTrx').val();
+      }
+
+      if ($('#PaymentTerm').val() == "3" || $('#PaymentTerm').val() == "4") {
+        refpay = $('#RefNumberPayment').val();
+      }
+      if (parseFloat($('#T_Bayar').val().replace(',','')) == 0) {
+        Swal.fire({
+          type: 'error',
+          title: 'Woops...',
+          text: 'Belum ada Nominal Bayar',
+          // footer: '<a href>Why do I have this issue?</a>'
+        }).then((result)=>{
+          $('#SubmitPOS').text('Tunggu Sebentar');
+          $('#SubmitPOS').attr('disabled',false);
+        });
+      }
+      else{
+        var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+        var array_detail  = JSON.stringify(gridItems);
+        var arrx = [];
+        var arr = {
+          'TglTransaksi' : $('#TglTransaksi').val(),
+          'TglPencatatan' : $('#TglPencatatan').val(),
+          'KodeSales' : $('#KodeSales').val(),
+          'TransactionType' : $('#TransactionType').val(),
+          'RefNumberTrx' : reftrx,
+          'KodeCustomerPOS' : $('#KodeCustomerPOS').val(),
+          'PaymentTerm' : $('#PaymentTerm').val(),
+          'RefNumberPayment' : refpay,
+          'Createdby' : $('#Createdby').val(),
+          'Createdon' : $('#Createdon').val(),
+          'provinsi_dest' : $('#provinsi_dest').val(),
+          'Kota_dest' : $('#Kota_dest').val(),
+          'Kelurahan_dest' : $('#Kelurahan_dest').val(),
+          'Kecamatan_dest' : $('#Kecamatan_dest').val(),
+          'KodePOS_dest' : $('#KodePOS_dest').val(),
+          'Alamat_dest' : $('#Alamat_dest').val(),
+          'Nama_dest' : $('#Nama_dest').val(),
+          'Notlp_dest' : $('#Notlp_dest').val(),
+          'provinsi_ori' : $('#provinsi_ori').val(),
+          'Kota_ori' : $('#Kota_ori').val(),
+          'Kelurahan_ori' : $('#Kelurahan_ori').val(),
+          'Kecamatan_ori' : $('#Kecamatan_ori').val(),
+          'KodePOS_ori' : $('#KodePOS_ori').val(),
+          'Alamat_ori' : $('#Alamat_ori').val(),
+          'Nama_ori' : $('#Nama_ori').val(),
+          'Notlp_Ori' : $('#Notlp_Ori').val(),
+          'Expedisi' : $('#Expedisi').val(),
+          'PayNow' : $('#T_Paynow').val(),
+          'T_SubTotal' : $('#T_SubTotal').val(),
+          'T_DiskTotal' : $('#T_DiskTotal').val(),
+          'T_GrandTotal' : $('#T_GrandTotal').val(),
+          'T_Bayar' : $('#T_Bayar').val(),
+          'T_Kembali' : $('#T_Kembali').val(),
+        }
+        arrx.push(arr);
+        var array_header  = JSON.stringify(arrx);
+
+        // console.log(arr);
+        $.ajax({
+          async: false,
+          type: "post",
+          url: "<?=base_url()?>C_POS/CRUD",
+          data: {'array_header':array_header,'array_detail':array_detail},
+          dataType: "json",
+          success: function (response) {
+            if(response.success == true){
+              Swal.fire({
+                type: 'success',
+                title: 'Woops...',
+                text: 'Data Berhasil diproses',
+                // footer: '<a href>Why do I have this issue?</a>'
+              }).then((result)=>{
+                location.reload();
+              });
+            }
+            else{
+              Swal.fire({
+                type: 'error',
+                title: 'Woops...',
+                text: response.message,
+                // footer: '<a href>Why do I have this issue?</a>'
+              }).then((result)=>{
+                $('#SubmitPOS').text('Save');
+                $('#SubmitPOS').attr('disabled',false);
+              });
+            }
+          }
+        });
+      }
+    })
+    // ================================= FUNCTION =================================
+      function allFilled($fields) 
+      {
+        return $fields.filter(function() {
+          return this.value === ''; 
+        }).length == 0;
+      }
     function GetCustomer() {
       $.ajax({
         async: false,
@@ -1524,7 +1710,7 @@
       if ($('#PaymentTerm').val() != '1') {
         $('#T_Bayar').val(addCommas(subtotal - Diskon));
       }
-      // $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
     }
     function GetLevelingHarga(Qty) {
       var hasil = [];

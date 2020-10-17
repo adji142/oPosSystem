@@ -43,11 +43,9 @@ class home extends CI_Controller {
 		// 	print_r('undone'.$undone['message']);
 		// }
 		// $data = array('success' => false ,'message'=>array(),'Nomor' => '');
-		$my_report = "C:/xampp/htdocs/oPos/Report1.rpt";
-		$COM_Object = "CrystalReports115.ObjectFactory.1";
-		$objCom = new COM($COM_Object, "localhost", 0, "");
-		$crapp = $objCom->CreateObject("CrystalDesignRunTime.Application");
-		$creport = $crapp->OpenReport($my_report, 1);
+		$CreatedOn = date("Y-m-d h:i:sa");
+		// echo (substr(date("Y",$CreatedOn), 2,4).date("m",$CreatedOn)."1");
+		echo date("m");
 
 		// $Kolom = $this->input->post('Kolom');
 		// $Table = $this->input->post('Table');
