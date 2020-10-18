@@ -1300,11 +1300,11 @@
           'Notlp_Ori' : $('#Notlp_Ori').val(),
           'Expedisi' : $('#Expedisi').val(),
           'PayNow' : $('#T_Paynow').val(),
-          'T_SubTotal' : $('#T_SubTotal').val(),
-          'T_DiskTotal' : $('#T_DiskTotal').val(),
-          'T_GrandTotal' : $('#T_GrandTotal').val(),
-          'T_Bayar' : $('#T_Bayar').val(),
-          'T_Kembali' : $('#T_Kembali').val(),
+          'T_SubTotal' : $('#T_SubTotal').val().replace(',',''),
+          'T_DiskTotal' : $('#T_DiskTotal').val().replace(',',''),
+          'T_GrandTotal' : $('#T_GrandTotal').val().replace(',',''),
+          'T_Bayar' : $('#T_Bayar').val().replace(',',''),
+          'T_Kembali' : $('#T_Kembali').val().replace(',',''),
         }
         arrx.push(arr);
         var array_header  = JSON.stringify(arrx);
