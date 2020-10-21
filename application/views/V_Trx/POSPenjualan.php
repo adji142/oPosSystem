@@ -9,6 +9,8 @@
   }
 </style>
 <input type="hidden" name="LevelingPrice" id="LevelingPrice">
+<input type="hidden" name="beratStandar" id="beratStandar" value="0">
+<input type="hidden" name="ServiceXPDC" id="ServiceXPDC" value="0">
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
@@ -95,7 +97,7 @@
                         <div id="ClassNumPayment"></div>
                       </div>
                     </div>
-                    <center><h3>Origin Paket<h3></center>
+                    <center><h3>Origin Paket</h3></center>
                     <div class="row col-md-12 col-sm-12">
                       <div class="col-md-3 col-sm-12 form-group">
                         <select class="js-states form-control" id="provinsi_ori" name="provinsi_ori" disabled="" >
@@ -140,7 +142,7 @@
                       </div>
                     </div>
 
-                    <center><h3>Destination Paket<h3></center>
+                    <center><h3>Destination Paket</h3></center>
                     <div class="row col-md-12 col-sm-12">
                       <div class="col-md-3 col-sm-12 form-group">
                         <select class="js-states form-control" id="provinsi_dest" name="provinsi_dest">
@@ -171,17 +173,17 @@
                     </div>
                     <div class="row col-md-12 col-sm-12">
                       <div class="col-md-3 col-sm-12 form-group">
-                        <input type="text" name="KodePOS_dest" id="KodePOS_dest" class="form-control">
+                        <input type="text" name="KodePOS_dest" id="KodePOS_dest" class="form-control" placeholder="Kode POS">
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
                         <!-- <input type="text" name="Alamat_ori" id="Alamat_ori"> -->
-                        <textarea name="Alamat_dest" id="Alamat_dest" class="form-control" rows="1"></textarea>
+                        <textarea name="Alamat_dest" id="Alamat_dest" class="form-control" rows="1" placeholder="Alamat Lengkp"></textarea>
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
-                        <input type="text" name="Nama_dest" id="Nama_dest" class="form-control">
+                        <input type="text" name="Nama_dest" id="Nama_dest" class="form-control" placeholder="Nama Penerima">
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
-                        <input type="text" name="Notlp_dest" id="Notlp_dest" class="form-control">
+                        <input type="text" name="Notlp_dest" id="Notlp_dest" class="form-control" placeholder="No Tlp Penerima">
                       </div>
                     </div>
 
@@ -196,6 +198,12 @@
                             foreach ($rs as $key) {
                               echo "<option value = '".$key->KodeExpdc."'>".$key->NamaExpdc."</option>";
                             }
+                          ?>
+                        </select>
+                      </div>
+                      <div class="col-md-6 col-sm-12 form-group">
+                        <select id="cekongkir_TableInfo" name="cekongkir_TableInfo" class="js-states form-control">
+                          <option value="0">Pilih Service Pengiriman</option>
                           ?>
                         </select>
                       </div>
@@ -268,6 +276,14 @@
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
+                            <label class="col-form-label label-align" for="first-name">Ongkir
+                            </label>
+                          </div>
+                          <div class="col-md-7 col-sm-12 form-group">
+                            <input type="text" name="T_Ongkir" id="T_Ongkir" class="form-control" value="0">
+                          </div>
+
+                          <div class="col-md-5 col-sm-12 form-group">
                             <label class="col-form-label label-align" for="first-name">Grand Total
                             </label>
                           </div>
@@ -299,8 +315,66 @@
                   </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                  Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-                      booth letterpress, commodo enim craft beer mlkshk aliquip
+                  <!-- <div class="row col-md-12 col-sm-12">
+                    <div class="form-label-left input_mask">
+                      <div class="col-md-2 col-sm-12 form-group">
+                        <label class="col-form-label label-align" for="first-name">Tanggal
+                        </label>
+                      </div>
+                      <div class="col-md-4 col-sm-12  form-group">
+                        <input type="date" id="TglAwal" name="TglAwal" placeholder="dd-mm-yyyy" dateformat="dd-mm-yyyy" class="form-control" value="<?php echo date("Y-m-d");?>">
+                      </div>
+                      <div class="col-md-4 col-sm-12 form-group">
+                        <input type="date" id="TglAkhir" name="TglAkhir" placeholder=".col-md-12" class="form-control" value="<?php echo date("Y-m-d");?>">
+                      </div>
+                      <div class="col-md-2 col-sm-12 form-group">
+                        <button name="filterbutton" id="filterbutton" class="form-control btn btn-primary">Search</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row col-md-12 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="dx-viewport demo-container">
+                      <div id="data-grid-demo">
+                        <div id="gridContainerHeader">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="dx-viewport demo-container">
+                      <div id="data-grid-demo">
+                        <div id="gridContainerDetail">
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div> -->
+                  <div class="row col-md-12 col-sm-12">
+                      <label class="col-md-2 col-sm-12 form-group" for="first-name">Tanggal <span class="required">*</span>
+                      </label>
+                      <div class="col-md-4 col-sm-12 form-group">
+                        <input type="date" name="TglAwal" id="TglAwal" class="form-control"  value="<?php echo date("Y-m-d");?>">
+                      </div>
+                      <div class="col-md-4 col-sm-12 form-group">
+                        <input type="date" name="TglAkhir" id="TglAkhir" class="form-control"  value="<?php echo date("Y-m-d");?>">
+                      </div>
+                      <div class="col-md-2 col-sm-12 form-group">
+                        <button class="form-control btb btn-primary" id="filterbutton">Search</button>
+                      </div>
+                      
+                      <div class="dx-viewport demo-container">
+                        <div id="data-grid-demo">
+                          <div id="gridContainerHeader">
+                          </div>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="dx-viewport demo-container">
+                        <div id="data-grid-demo">
+                          <div id="gridContainerDetail">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -512,6 +586,100 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Payment -->
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_Payment">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Bayar Tagihan Customer</h4>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="post_Bayar" data-parsley-validate class="form-horizontal form-label-left">
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nomor Transaksi <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="text" name="NoTransaksiPay" id="NoTransaksiPay" required="" placeholder="No Transaksi" class="form-control " readonly="">
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Tgl Transaksi <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="date" name="TglTransaksiPay" id="TglTransaksiPay" required="" placeholder="No Transaksi" class="form-control " readonly="">
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Customer <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="text" name="NamaCustomerPay" id="NamaCustomerPay" required="" placeholder="Nama Customer" class="form-control " readonly="">
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Total Tagihan <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="text" name="TotalTagihanPay" id="TotalTagihanPay" required="" placeholder="Total Tagihan" class="form-control " readonly="" value="0">
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Jenis Pembayaran <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <select class="js-states form-control" id="PaymentTermPay" name="PaymentTermPay" >
+                <option value = ''>Jenis Pembayaran</option>
+                <?php
+                  $rs = $this->db->query("select * from tpayment")->result();
+                  foreach ($rs as $key) {
+                    echo "<option value = '".$key->id."'>".$key->PaymentTerm."</option>";
+                  }
+                ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">No. Ref <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="text" name="NoRefPay" id="NoRefPay" placeholder="No Ref" class="form-control ">
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Bayar <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="text" name="BayarPay" id="BayarPay" required="" placeholder="Bayar" class="form-control " value="0" onclick="this.select()">
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kembalian <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 ">
+              <input type="text" name="KembalianPay" id="KembalianPay" required="" placeholder="Kembalian" class="form-control " readonly="" value="0">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-warning" id="btnBayar">Bayar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
 <?php
   require_once(APPPATH."views/parts/Footer.php");
 ?>
@@ -519,6 +687,7 @@
   var items_data;
   var isLevelingPrice = 0;
   var NoTransaksiBooking = '';
+  var TotalBerat = 0;
 
   var $field = $('#TglTransaksi, #KodeSales, #KodeCustomerPOS, #TransactionType ,#PaymentTerm, #provinsi_ori, #Kota_ori,#Kecamatan_ori, #Kelurahan_ori, #KodePOS_ori, #Alamat_ori,#Nama_ori, #Notlp_Ori, #provinsi_dest, #Kota_dest, #Kecamatan_dest, #Kelurahan_dest, #KodePOS_dest, #Alamat_dest, #Nama_dest, #Notlp_dest, #T_Bayar')
   $(function () {
@@ -602,7 +771,8 @@
           }
         }
       });
-
+      var button = $('#filterbutton');
+      button.click();
       $("#mySearch").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#load_Lookup tr").filter(function() {
@@ -1055,10 +1225,11 @@
         });
         bindGridItem(items_data);
         addSubTotal();
+        // GetBeratStandar();
       }
     });
     $('#FindItem').click(function () {
-      GetItemRow()
+      GetItemRow();
     });
     $('#EditQty').click(function function_name(argument) {
       var button = $('.dx-link-edit');
@@ -1076,6 +1247,13 @@
     })
     $('#T_DiskTotal').focusout(function () {
       $('#T_DiskTotal').val(addCommas($('#T_DiskTotal').val()));
+    });
+
+    $('#T_Ongkir').focus(function () {
+      $('#T_Ongkir').val($('#T_Ongkir').val().replace(',',''));
+    })
+    $('#T_Ongkir').focusout(function () {
+      $('#T_Ongkir').val(addCommas($('#T_Ongkir').val()));
     });
 
     $('#T_GrandTotal').focus(function () {
@@ -1099,10 +1277,43 @@
       $('#T_Kembali').val(addCommas($('#T_Kembali').val()));
     });
 
+    $('#T_Ongkir').on("keyup",function () {
+      addSubTotal();
+    })
+
     $("#T_Bayar").on("keyup", function() {
       $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
       if ($('#T_Bayar').val() == '') {
         $('#T_Bayar').val(0);
+      }
+    });
+
+
+    $('#TotalTagihanPay').focus(function () {
+      $('#TotalTagihanPay').val($('#TotalTagihanPay').val().replace(',',''));
+    })
+    $('#TotalTagihanPay').focusout(function () {
+      $('#TotalTagihanPay').val(addCommas($('#TotalTagihanPay').val()));
+    });
+
+    $('#BayarPay').focus(function () {
+      $('#BayarPay').val($('#BayarPay').val().replace(',',''));
+    })
+    $('#BayarPay').focusout(function () {
+      $('#BayarPay').val(addCommas($('#BayarPay').val()));
+    });
+
+    $('#KembalianPay').focus(function () {
+      $('#KembalianPay').val($('#KembalianPay').val().replace(',',''));
+    })
+    $('#KembalianPay').focusout(function () {
+      $('#KembalianPay').val(addCommas($('#KembalianPay').val()));
+    });
+
+    $("#BayarPay").on("keyup", function() {
+      $('#KembalianPay').val(addCommas(parseFloat($('#BayarPay').val()) - parseFloat($('#TotalTagihanPay').val().replace(',',''))) );
+      if ($('#BayarPay').val() == '') {
+        $('#BayarPay').val(0);
       }
     });
 
@@ -1235,7 +1446,7 @@
       }
     });
     $field.on('key change',function () {
-      console.log(parseFloat($('#T_Kembali').val().replace(',','')));
+      // console.log(parseFloat($('#T_Kembali').val().replace(',','')));
       if (allFilled($field) && parseFloat($('#T_Kembali').val().replace(',','')) <= 0) {
         $('#SubmitPOS').attr('disabled',false);
       }
@@ -1256,7 +1467,7 @@
       if ($('#PaymentTerm').val() == "3" || $('#PaymentTerm').val() == "4") {
         refpay = $('#RefNumberPayment').val();
       }
-      if (parseFloat($('#T_Bayar').val().replace(',','')) == 0) {
+      if (parseFloat($('#T_Kembali').val().replace(',','')) < 0) {
         Swal.fire({
           type: 'error',
           title: 'Woops...',
@@ -1271,6 +1482,11 @@
         var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
         var array_detail  = JSON.stringify(gridItems);
         var arrx = [];
+        var PayNow = 0;
+        console.log($("#T_Paynow").prop('checked'));
+        if ($("#T_Paynow").is(":checked")) {
+          PayNow = 1;
+        }
         var arr = {
           'TglTransaksi' : $('#TglTransaksi').val(),
           'TglPencatatan' : $('#TglPencatatan').val(),
@@ -1299,12 +1515,14 @@
           'Nama_ori' : $('#Nama_ori').val(),
           'Notlp_Ori' : $('#Notlp_Ori').val(),
           'Expedisi' : $('#Expedisi').val(),
-          'PayNow' : $('#T_Paynow').val(),
+          'PayNow' : PayNow,
           'T_SubTotal' : $('#T_SubTotal').val().replace(',',''),
           'T_DiskTotal' : $('#T_DiskTotal').val().replace(',',''),
           'T_GrandTotal' : $('#T_GrandTotal').val().replace(',',''),
           'T_Bayar' : $('#T_Bayar').val().replace(',',''),
           'T_Kembali' : $('#T_Kembali').val().replace(',',''),
+          'T_Ongkir' : $('#T_Ongkir').val().replace(',',''),
+          'Servicexpdc' : $('#cekongkir_TableInfo').val(),
         }
         arrx.push(arr);
         var array_header  = JSON.stringify(arrx);
@@ -1341,14 +1559,171 @@
           }
         });
       }
-    })
-    // ================================= FUNCTION =================================
-      function allFilled($fields) 
-      {
-        return $fields.filter(function() {
-          return this.value === ''; 
-        }).length == 0;
+    });
+
+    // Generate Ongkir
+
+    $('#Expedisi').change(function () {
+      // getberat
+      GetBeratStandar();
+    });
+    $('#cekongkir_TableInfo').change(function () {
+      var srv = $('#cekongkir_TableInfo').val();
+
+      var exploded = srv.split('|');
+
+      var jnssrv = exploded[0];
+      var value = exploded[1];
+
+      $('#ServiceXPDC').val(jnssrv);
+
+      $('#T_Ongkir').val(addCommas(value));
+      addSubTotal();
+    });
+
+    $('#filterbutton').click(function () {
+      var TglAwal = $('#TglAwal').val();
+      var TglAkhir = $('#TglAkhir').val();
+
+      $.ajax({
+        type: "post",
+        url: "<?=base_url()?>C_POS/ReadHeader",
+        data: {'TglAwal':TglAwal,'TglAkhir':TglAkhir},
+        dataType: "json",
+        success: function (response) {
+          bindGridHeader(response.data);
+          // bindGridDetail(response.data);
+        }
+      });
+    });
+
+    $('#PaymentTermPay').change(function () {
+      if ($('#PaymentTermPay').val() == 3 || $('#PaymentTermPay').val() == 4) {
+        $('#BayarPay').val($('#TotalTagihanPay').val());
       }
+      else{
+        $('#BayarPay').val("0");
+      }
+    });
+
+    $('#post_Bayar').submit(function (e) {
+      $('#btnBayar').text('Tunggu Sebentar.....');
+      $('#btnBayar').attr('disabled',true);
+
+      if ($('#KembalianPay').val() >= 0) {
+        e.preventDefault();
+        var me = $(this);
+
+        $.ajax({
+          async   : false,
+          type    :'post',
+          url     : '<?=base_url()?>C_POS/Bayar',
+          data    : me.serialize(),
+          dataType: 'json',
+          success : function (response) {
+            if(response.success == true){
+              $('#modal_Payment').modal('toggle');
+              Swal.fire({
+                type: 'success',
+                title: 'Horay..',
+                text: 'Data Berhasil disimpan!',
+                // footer: '<a href>Why do I have this issue?</a>'
+              }).then((result)=>{
+                // location.reload();
+                $('#modal_Payment').modal('toggle');
+              });
+            }
+            else{
+              $('#modal_Payment').modal('toggle');
+              Swal.fire({
+                type: 'error',
+                title: 'Woops...',
+                text: response.message,
+                // footer: '<a href>Why do I have this issue?</a>'
+              }).then((result)=>{
+                $('#modal_Payment').modal('show');
+                $('#btnBayar').text('Save');
+                $('#btnBayar').attr('disabled',false);
+              });
+            }
+          }
+        });
+      }
+      else{
+        $('#modal_Payment').modal('toggle');
+          Swal.fire({
+            type: 'error',
+            title: 'Woops...',
+            text: 'Nilai Bayar tidak boleh kurang dari Nilai Tagihan',
+            // footer: '<a href>Why do I have this issue?</a>'
+          }).then((result)=>{
+            $('#modal_Payment').modal('show');
+            $('#btnBayar').text('Save');
+            $('#btnBayar').attr('disabled',false);
+          });
+          return false;
+      }
+    });
+    // ================================= FUNCTION =================================
+    function GetBeratStandar() {
+      var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+      // console.log(items_data);
+      // $('#beratStandar').val("0");
+      for (var i = 0; i < items_data.length; i++) {
+        $.ajax({
+          async: false,
+          type: "post",
+          url: "<?=base_url()?>C_General/GetBerat",
+          data: {'KodeItem':items_data[i]['ItemCode']},
+          dataType: "json",
+          success: function (response) {
+            var TotalBerat = $('#beratStandar').val();
+            console.log(TotalBerat);
+            if(response.Berat > 0){
+              $('#beratStandar').val((parseFloat(response.Berat) * parseFloat(items_data[i]['Qty'])));
+            }
+          }
+        });
+      }
+      // console.log(TotalBerat);
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_General/cekongkir",
+        data: {'Kota_origin':$('#Kota_ori').val(),'Kota_Destination':$('#Kota_dest').val(),'xpdc':$('#Expedisi').val(),'berat':$('#beratStandar').val()},
+        dataType: "json",
+        success: function (response) {
+          for (i =0; i< response.data.length ;i++) {
+            // console.log(response.data[i]);
+            $('#cekongkir_TableInfo').empty();
+            $('#cekongkir_TableInfo').append("<option value='0'>Pilih Service Pengiriman</option>")
+            var j;
+            for (j =0;j< response.data[i]['costs'].length;j++) {
+              // console.log(response.data[i]['costs'][j]);
+              // $('#cekongkir_TableInfo').append(""+
+              //   "<option value='"+response.data[i]['costs'][j].service+"|'>"+response.data[i]['costs'][j].service+" | "+response.data[i]['costs'][j].description+"</option>"
+              //   );
+              // info service
+              var k;
+              for (k=0;k< response.data[i]['costs'][j]['cost'].length;k++) {
+                // console.log(response.data[i]['costs'][j]['cost'][k].value);
+                $('#cekongkir_TableInfo').append(""+
+                "<option value='"+response.data[i]['costs'][j].service+"|"+response.data[i]['costs'][j]['cost'][k].value+"'>"+response.data[i]['costs'][j].service+" | "+response.data[i]['costs'][j].description+" | "+addCommas(response.data[i]['costs'][j]['cost'][k].value)+"</option>"
+                );
+                // info harga
+              }
+
+            }
+          }
+        }
+      });
+    }
+    function allFilled($fields) 
+    {
+      return $fields.filter(function() {
+        return this.value === ''; 
+      }).length == 0;
+    }
     function GetCustomer() {
       $.ajax({
         async: false,
@@ -1501,7 +1876,7 @@
                   else{
                     dflt = v.DefaultPrice;
                   }
-                  console.log(dflt);
+                  // console.log(dflt);
                   items_data.push({
                     ItemCode : v.ItemCode,
                     ItemName : v.ItemName,
@@ -1515,6 +1890,7 @@
                   });
                   bindGridItem(items_data);
                   addSubTotal();
+                  // GetBeratStandar();
                 }
               }
               else{
@@ -1633,15 +2009,15 @@
             
               var dflt = 0;
               for (var i = 0; i < gridItems.length; i++) {
-                console.log(isLevelingPrice);
+                // console.log(isLevelingPrice);
                 if (isLevelingPrice == 1) {
                   GetLevelingHarga(parseInt(gridItems[i]["Qty"]));
                   dflt = $('#LevelingPrice').val();
                 }
                 else{
-                  dflt = v.DefaultPrice;
+                  dflt = gridItems[i]["Price"];
                 }
-                console.log(dflt);
+                // console.log(dflt);
                 arr["ItemCode"] = gridItems[i]["ItemCode"];
                 arr["ItemName"] = gridItems[i]["ItemName"];
                 arr["Satuan"]   = gridItems[i]["Satuan"];
@@ -1656,11 +2032,13 @@
                 grid.refresh();
               }
               addSubTotal();
+              // GetBeratStandar();
             },
             onRowRemoving: function(e) {
             },
             onRowRemoved: function(e) {
               addSubTotal();
+              // GetBeratStandar();
             },
             onEditorPrepared: function (e) {
             },
@@ -1706,11 +2084,11 @@
       }
       $('#T_SubTotal').val(addCommas(subtotal));
       $('#T_DiskTotal').val(addCommas(Diskon));
-      $('#T_GrandTotal').val(addCommas(subtotal - Diskon));
+      $('#T_GrandTotal').val(addCommas((subtotal + parseFloat($('#T_Ongkir').val().replace(',',''))) - Diskon));
       if ($('#PaymentTerm').val() != '1') {
-        $('#T_Bayar').val(addCommas(subtotal - Diskon));
+        $('#T_Bayar').val(addCommas((subtotal + parseFloat($('#T_Ongkir').val().replace(',',''))) - Diskon));
       }
-      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val()) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
+      $('#T_Kembali').val(addCommas(parseFloat($('#T_Bayar').val().replace(',','')) - parseFloat($('#T_GrandTotal').val().replace(',',''))) );
     }
     function GetLevelingHarga(Qty) {
       var hasil = [];
@@ -1840,5 +2218,314 @@
         // add dx-toolbar-after
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }
+
+    // header
+    function bindGridHeader(data) {
+
+      $("#gridContainerHeader").dxDataGrid({
+        allowColumnResizing: true,
+            dataSource: {
+                store: {
+                  type: "array",
+                  key: "NoTransaksi",
+                  data: data
+                  // Other LocalStore options go here
+              },
+              select: [
+                'NoTransaksi',
+                'TglTransaksi',
+                'Sales',
+                'Createdby',
+                'TransactionType',
+                'PaymentTerm',
+                'PayNow',
+                'Action'
+              ]
+            },
+            showBorders: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            showBorders: true,
+            paging: {
+                pageSize: 10,
+                enabled: true
+            },
+            editing: {
+                mode: "row",
+                texts: {
+                    confirmDeleteMessage: ''  
+                }
+            },
+            searchPanel: {
+                visible: true,
+                width: 240,
+                placeholder: "Search..."
+            },
+            columns: [
+                {
+                    dataField: "NoTransaksi",
+                    caption: "#",
+                    allowEditing:false
+                },
+                {
+                    dataField: "TglTransaksi",
+                    caption: "Tanggal Transaksi",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Sales",
+                    caption: "Nama Sales",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Createdby",
+                    caption: "Cashier",
+                    allowEditing:false
+                },
+                {
+                    dataField: "TransactionType",
+                    caption: "Tipe Transaksi",
+                    allowEditing:false
+                },
+                {
+                    dataField: "PaymentTerm",
+                    caption: "Jenis Pembayaran",
+                    allowEditing:false
+                },
+                {
+                    dataField: "PayNow",
+                    caption: "PayNow",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Action",
+                    caption: "Action",
+                    allowEditing:false,
+                    cellTemplate: function(cellElement, cellInfo) {
+                      var LinkAccess = "<button class='badge badge-primary' onClick =Reprint('"+cellInfo.data.NoTransaksi+"')>Reprint</button><br>";
+                      
+                      if (cellInfo.data.PayNow == 0) {
+                        LinkAccess += "<button class='badge badge-danger StartPay' id='"+cellInfo.data.NoTransaksi+"' onClick =Payment('"+cellInfo.data.NoTransaksi+"')>Bayar Sekarang</button>";
+                      }
+                      cellElement.append(LinkAccess);
+                  }
+                },
+            ],
+            focusedRowEnabled: true,
+            focusedRowKey: 1,
+            onEditingStart: function(e) {
+                GetData(e.data.ItemCode);
+            },
+            onInitNewRow: function(e) {
+            },
+            onRowInserting: function(e) {
+                // logEvent("RowInserting");
+            },
+            onRowInserted: function(e) {
+                // logEvent("RowInserted");
+                // alert('');
+                // console.log(e.data.onhand);
+                // var index = e.row.rowIndex;
+            },
+            onRowUpdating: function(e) {
+                // logEvent("RowUpdating");
+                
+            },
+            onRowUpdated: function(e) {
+                // logEvent(e);
+            },
+            onRowRemoving: function(e) {
+            },
+            onRowRemoved: function(e) {
+              // console.log(e);
+            },
+            onEditorPrepared: function (e) {
+              // console.log(e);
+            },
+            onFocusedRowChanging: function(e) {
+              var rowsCount = e.component.getVisibleRows().length,
+                  pageCount = e.component.pageCount(),
+                  pageIndex = e.component.pageIndex(),
+                  key = e.event && e.event.key;
+
+              if(key && e.prevRowIndex === e.newRowIndex) {
+                  if(e.newRowIndex === rowsCount - 1 && pageIndex < pageCount - 1) {
+                      e.component.pageIndex(pageIndex + 1).done(function() {
+                          e.component.option("focusedRowIndex", 0);
+                      });
+                  } else if(e.newRowIndex === 0 && pageIndex > 0) {
+                      e.component.pageIndex(pageIndex - 1).done(function() {
+                          e.component.option("focusedRowIndex", rowsCount - 1);
+                      });
+                  }
+              }
+          },
+          onFocusedRowChanged: function(e) {
+            const row = e.row;
+            const rowData = row && row.data;
+            const xdata = rowData && rowData.NoTransaksi
+            
+            if (xdata != "") {
+              $.ajax({
+                type    :'post',
+                url     : '<?=base_url()?>C_POS/ReadDetail',
+                data    : {'HeaderID':xdata},
+                dataType: 'json',
+                success:function (response) {
+                  if(response.success == true){
+                    bindGridDetail(response.data);
+                  }
+                }
+              });
+            }
+          }
+        }).dxDataGrid("instance");
+
+        // add dx-toolbar-after
+        // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
+    }
+
+    // Detail
+
+    function bindGridDetail(data) {
+
+      $("#gridContainerDetail").dxDataGrid({
+        allowColumnResizing: true,
+            dataSource: data,
+            keyExpr: "KodeItem",
+            showBorders: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            showBorders: true,
+            editing: {
+                mode: "row",
+                texts: {
+                    confirmDeleteMessage: ''  
+                }
+            },
+            columns: [
+                {
+                    dataField: "KodeItem",
+                    caption: "Kode Item",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Article",
+                    caption: "Article",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Qty",
+                    caption: "Qty",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Harga",
+                    caption: "Harga",
+                    allowEditing:false
+                },
+                {
+                    dataField: "LineTotal",
+                    caption: "Total",
+                    allowEditing:false
+                }
+            ],
+            onEditingStart: function(e) {
+                GetData(e.data.ItemCode);
+            },
+            onInitNewRow: function(e) {
+            },
+            onRowInserting: function(e) {
+                // logEvent("RowInserting");
+            },
+            onRowInserted: function(e) {
+                // logEvent("RowInserted");
+                // alert('');
+                // console.log(e.data.onhand);
+                // var index = e.row.rowIndex;
+            },
+            onRowUpdating: function(e) {
+                // logEvent("RowUpdating");
+                
+            },
+            onRowUpdated: function(e) {
+                // logEvent(e);
+            },
+            onRowRemoving: function(e) {
+            },
+            onRowRemoved: function(e) {
+              // console.log(e);
+            },
+            onEditorPrepared: function (e) {
+              // console.log(e);
+            }
+        });
+
+        // add dx-toolbar-after
+        // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
+    }
   });
+
+function Reprint(NoTransaksi) {
+  $.ajax({
+    type    :'post',
+    url     : '<?=base_url()?>C_General/Reprint',
+    data    : {'NoTransaksi':NoTransaksi},
+    dataType: 'json',
+    success:function (response) {
+      if(response.success == true){
+        Swal.fire({
+          type: 'success',
+          title: 'Woops...',
+          text: 'Data Berhasil diproses',
+          // footer: '<a href>Why do I have this issue?</a>'
+        }).then((result)=>{
+          location.reload();
+        });
+      }
+      else{
+        Swal.fire({
+          type: 'error',
+          title: 'Woops...',
+          text: response.message,
+          // footer: '<a href>Why do I have this issue?</a>'
+        }).then((result)=>{
+          location.reload();
+        });
+      }
+    }
+  });
+}
+function Payment(NoTransaksi) {
+  // modal_Payment
+  $.ajax({
+    type    :'post',
+    url     : '<?=base_url()?>C_POS/ReadTagihan',
+    data    : {'NoTransaksi':NoTransaksi},
+    dataType: 'json',
+    success:function (response) {
+      if(response.success == true){
+        $('#NoTransaksiPay') .val(response.data[0]['NoTransaksi']);
+        $('#NamaCustomerPay') .val(response.data[0]['NamaCustomer']);
+        $('#TglTransaksiPay') .val(response.data[0]['TglTransaksi']);
+        $('#TotalTagihanPay') .val(addCommasOuter(response.data[0]['T_GrandTotal']));
+        $('#modal_Payment').modal('show');
+      }
+    }
+  });
+}
+function addCommasOuter(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 </script>

@@ -32,11 +32,26 @@ class C_POS extends CI_Controller {
 
 		$TglAwal = $this->input->post('TglAwal');
 		$TglAkhir = $this->input->post('TglAkhir');
-		$Mutasi = $this->input->post('Mutasi');
 
-		$SQL = "SELECT a.*,b.NamaSales FROM bookheader a 
-				LEFT JOIN tsales b on a.KodeSales = b.KodeSales
-				where a.TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."' AND a.StatusTransaksi = 'O'";
+		$SQL = "SELECT 
+				a.NoTransaksi,a.TglTransaksi,c.NamaSales as Sales,a.Createdby,
+				CASE WHEN a.TransactionType = 1 THEN 'Ecomerce' ELSE 
+					CASE WHEN a.TransactionType = 2 THEN 'Direct Sales' ELSE 
+						CASE WHEN A.TransactionType = 3 THEN 'DropShip' ELSE 
+							CASE WHEN a.TransactionType = 4 THEN 'Reseller' ELSE '' END
+						END
+					END
+				END TransactionType,
+				a.RefNumberTrx,
+				d.PaymentTerm,
+				a.RefNumberPayment,
+				a.PayNow
+			FROM penjualanheader a
+			LEFT JOIN tcustomer b on a.KodeCustomer = b.KodeCustomer
+			LEFT JOIN tsales c on a.KodeSales = c.KodeSales
+			LEFT JOIN tpayment d on a.PaymentTerm = d.id
+			WHERE a.TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."'
+			";
 
 		$rs = $this->db->query($SQL);
 		if ($rs->num_rows() > 0) {
@@ -54,9 +69,40 @@ class C_POS extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 		$HeaderID = $this->input->post('HeaderID');
 
-		$SQL = "SELECT A.*,B.ItemName,B.Article,B.Stok,B.Satuan FROM bookdetail A 
-				LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
-				where A.NoTransaksi = '".$HeaderID."' ORDER BY A.LineNum";
+		$SQL = "
+			SELECT A.KodeItem,B.Article,A.Qty,A.Harga,
+			COALESCE(A.Qty,0) * COALESCE(A.Harga,0) AS LineTotal FROM penjualandetail A 
+			LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
+			WHERE A.NoTransaksi = '".$HeaderID."'
+		";
+
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows() > 0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$undone = $this->db->error();
+			$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+		}
+		echo json_encode($data);
+	}
+	public function ReadTagihan()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$NoTransaksi = $this->input->post('NoTransaksi');
+
+		$SQL = "
+			SELECT
+				a.NoTransaksi,
+				a.TglTransaksi,
+				c.NamaCustomer,
+				ROUND(a.T_GrandTotal) T_GrandTotal
+			FROM penjualanheader a
+			LEFT JOIN tcustomer c on a.KodeCustomer = c.KodeCustomer
+			WHERE A.NoTransaksi = '".$NoTransaksi."'
+		";
 
 		$rs = $this->db->query($SQL);
 
@@ -184,6 +230,8 @@ class C_POS extends CI_Controller {
 					'T_GrandTotal' => $header[0]->T_GrandTotal,
 					'T_Bayar' => $header[0]->T_Bayar,
 					'T_Kembali' => $header[0]->T_Kembali,
+					'T_Ongkir' => $header[0]->T_Ongkir,
+					'Servicexpdc' => $header[0]->Servicexpdc
 				);
 				$PayNow = $header[0]->PayNow;
 				$appendHeader = $this->ModelsExecuteMaster->ExecInsert($paramheader,'penjualanheader');
@@ -228,10 +276,11 @@ class C_POS extends CI_Controller {
 						'NoTransaksi' => $NoCashflow,
 						'BaseRef' => $NoTransaksi,
 						'Comment' => 'Base on '.$NoTransaksi.'',
-						'Debet' => $lineTotal,
+						'Debet' => $lineTotal + $header[0]->T_Ongkir,
 						'Credit' => 0,
 						'ExternalNote' => '',
 						'Source' => 1,
+						'TglTransaksi' => $header[0]->TglTransaksi
 					);
 					$appendCashflow = $this->ModelsExecuteMaster->ExecInsert($paramcashflow,'cashflow');
 					if ($appendCashflow) {
@@ -297,6 +346,85 @@ class C_POS extends CI_Controller {
 		else{
 			$undone = $this->db->error();
 			$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : No Record Found ";
+		}
+		echo json_encode($data);
+	}
+	public function Bayar()
+	{
+		$data = array('success' => false ,'message'=>array());
+
+		$errorCount = 0;
+
+		$NoTransaksiPay = $this->input->post('NoTransaksiPay');
+		$TglTransaksiPay = $this->input->post('TglTransaksiPay');
+		$NamaCustomerPay = $this->input->post('NamaCustomerPay');
+		$TotalTagihanPay = $this->input->post('TotalTagihanPay');
+		$PaymentTermPay = $this->input->post('PaymentTermPay');
+		$NoRefPay = $this->input->post('NoRefPay');
+		$BayarPay = $this->input->post('BayarPay');
+		$KembalianPay = $this->input->post('KembalianPay');
+
+		$NoCashflow = '';
+		// NoCashFlow
+		$Kolom = 'NoTransaksi';
+		$Table = 'cashflow';
+		$Prefix = substr(date("Y"), 2,4).date("m")."2";
+
+		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+
+		// var_dump($SQL);
+		$rs = $this->db->query($SQL);
+
+		$temp = $rs->row()->Total + 1;
+
+		$nomor = $Prefix.str_pad($temp, 7,"0",STR_PAD_LEFT);
+		if ($nomor != '') {
+			$NoCashflow = $nomor;
+		}
+		else{
+			$data['message'] = "Nomor Transaksi Gagal generate";
+		}
+
+		$paramcashflow = array(
+			'NoTransaksi' => $NoCashflow,
+			'BaseRef' => $NoTransaksiPay,
+			'Comment' => 'Pembayaran '.$NoTransaksiPay.'',
+			'Debet' => str_replace(',', '', $BayarPay),
+			'Credit' => 0,
+			'ExternalNote' => '',
+			'Source' => 1,
+			'TglTransaksi' => date("Y-m-d")
+		);
+		try {
+			$this->db->trans_begin();
+			$appendCashflow = $this->ModelsExecuteMaster->ExecInsert($paramcashflow,'cashflow');
+			if ($appendCashflow) {
+				$paramUpdate = array(
+					'PaymentTerm'		=> $PaymentTermPay,
+					'RefNumberPayment'	=> $NoRefPay,
+					'PayNow'			=> 1,
+					'T_Bayar' 			=> str_replace(',', '', $BayarPay),
+					'T_Kembali' 		=> str_replace('.', '', $KembalianPay)
+				);
+				$updatePenjualan = $this->ModelsExecuteMaster->ExecUpdate($paramUpdate,array('NoTransaksi'=>$NoTransaksiPay),'penjualanheader');
+				if ($updatePenjualan) {
+					$data['success'] = true;
+					$this->db->trans_commit();
+				}
+				else{
+					goto catchjump;	
+				}
+			}
+			else{
+				goto catchjump;
+			}
+		}
+		catch (Exception $e) {
+			catchjump:
+			$undone = $this->db->error();
+			$data['success'] = false;
+			$data['message'] = "Sistem Gagal Melakukan Pemrossan Data: ".$undone['message'];
+			$this->db->trans_rollback();
 		}
 		echo json_encode($data);
 	}

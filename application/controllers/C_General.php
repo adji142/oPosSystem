@@ -168,4 +168,100 @@ class C_General extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+
+	function cekongkir()
+	{
+		$data = array('success' => false ,'message'=>array(),'origin_det'=>array(),'dest_det'=>array(),'data'=>array());
+
+		$Kota_origin = $this->input->post('Kota_origin');
+		$Kota_Destination = $this->input->post('Kota_Destination');
+		$xpdc = $this->input->post('xpdc');
+		$berat = $this->input->post('berat');
+
+		$user_id = $this->session->userdata('userid');
+
+		$ro_kotaOri = $this->ModelsExecuteMaster->FindData(array('id'=>$Kota_origin),'ro_regencies')->row()->id_RO;
+		$ro_kotaDest = $this->ModelsExecuteMaster->FindData(array('id'=>$Kota_Destination),'ro_regencies')->row()->id_RO;
+
+		if ($berat == 0 ) {
+			$berat = 1;
+		}
+		// var_dump(ROUND($berat);
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "POST",
+		  CURLOPT_POSTFIELDS => "origin=".$ro_kotaOri."&destination=".$ro_kotaDest."&weight=".$berat."&courier=".$xpdc,
+		  CURLOPT_HTTPHEADER => array(
+		    "content-type: application/x-www-form-urlencoded",
+		    "key: 66f09fcb700162bd339a522699dd8215"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+		// var_dump($response);
+		if ($err) {
+		  echo "cURL Error #:" . $err;
+		} else {
+			$result = json_decode($response, true);
+		  if ($result['rajaongkir']['status']['code'] == 200){
+		  	$data['success'] = true;
+		  	$data['data'] = $result['rajaongkir']['results'];
+		  	$data['origin_det'] = $result['rajaongkir']['origin_details'];
+		  	$data['dest_det'] = $result['rajaongkir']['destination_details'];
+		  }
+		  else{
+		  	$data['message'] = $result['rajaongkir']['results'];
+		  }
+		}
+		echo json_encode($data);
+	}
+	public function GetBerat()
+	{
+		$data = array('success' => false ,'message'=>array(),'Berat'=>0);
+
+		$KodeItem = $this->input->post('KodeItem');
+
+		$SQL = "SELECT COALESCE(BeratStandar,0) BeratStandar FROM itemmasterdata WHERE ItemCode = '".$KodeItem."' ";
+
+		$rs = $this->db->query($SQL);
+		if ($rs->num_rows() > 0) {
+			$data['success'] = true;
+			$data['Berat'] = $rs->row()->BeratStandar;
+		}
+		echo json_encode($data);
+	}
+	public function Reprint()
+	{
+		$data = array('success' => false ,'message'=>array());
+
+		$NoTransaksi = $this->input->post('NoTransaksi');
+
+		try {
+			$this->db->trans_begin();
+			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('Printed'=>0),array('NoTransaksi'=> $NoTransaksi),'printinglog');
+			if ($rs) {
+				$this->db->trans_commit();
+				$data['success'] = true;
+			}
+			else{
+				goto catchjump;
+			}
+		} catch (Exception $e) {
+			catchjump:
+			$undone = $this->db->error();
+			$data['success'] = false;
+			$data['message'] = "Sistem Gagal Melakukan Pemrossan Data: ".$undone['message'];
+			$this->db->trans_rollback();
+		}
+		echo json_encode($data);
+	}
 }

@@ -167,7 +167,7 @@
                 mode: "row",
                 allowAdding:true,
                 allowUpdating: true,
-                allowDeleting: true,
+                // allowDeleting: true,
                 texts: {
                     confirmDeleteMessage: ''  
                 }
