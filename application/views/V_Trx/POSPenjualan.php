@@ -1176,7 +1176,9 @@
 
     $('#Barcode').keyup(function (x) {
       if (x.keyCode === 13) {
-        GetItemRow()
+        GetItemRow();
+        items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+        console.log(items_data);
       }
     });
 
@@ -1188,7 +1190,12 @@
       var Satuan = $(this).find("#Satuan").text();
 
       var prevQty = 0;
-      // console.log(items_data);
+      var akumulasiQty = 1;
+      // items_data =$("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+      console.log(items_data);
+      for (var i = 0; i < items_data.length; i++) {
+        akumulasiQty += parseInt(items_data[i]["Qty"]);
+      }
       for (var i = 0; i < items_data.length; i++) {
         if (items_data[i]["ItemCode"] == ItemCode && items_data[i]["BaseRef"] == '') {
           prevQty = items_data[i]["Qty"];
@@ -1213,28 +1220,54 @@
       }
       else{
         if (isLevelingPrice == 1) {
-          GetLevelingHarga(parseInt(parseInt(prevQty) + 1));
+          console.log(akumulasiQty)
+          GetLevelingHarga(parseInt(akumulasiQty));
           dflt = $('#LevelingPrice').val();
+
+          items_data.push({
+            ItemCode : ItemCode,
+            ItemName : ItemName,
+            Qty : parseInt(prevQty) + 1,
+            Satuan : Satuan,
+            Price: dflt,
+            OnHand:Stok,
+            Diskon : 0,
+            Total : (parseInt(prevQty) + 1) * dflt,
+            __KEY__:create_UUID(),
+            BaseRef : ''
+          });
+          // console.log(items_data.length);
+          for (var i = 0 ; i<items_data.length; i++) {
+            // items_data.splice(i, dflt);
+            items_data[i].Price = dflt;
+            console.log(items_data[i].Price);
+          }
+          // console.log(items_data);
+          bindGridItem(items_data);
+          addSubTotal();
         }
-        items_data.push({
-          ItemCode : ItemCode,
-          ItemName : ItemName,
-          Qty : parseInt(prevQty) + 1,
-          Price:dflt,
-          OnHand:Stok,
-          Satuan:Satuan,
-          Diskon : 0,
-          Total : (parseInt(prevQty) + 1) * dflt,
-          __KEY__:create_UUID(),
-          BaseRef : ''
-        });
-        bindGridItem(items_data);
-        addSubTotal();
-        // GetBeratStandar();
+        else{
+          items_data.push({
+            ItemCode : ItemCode,
+            ItemName : ItemName,
+            Qty : parseInt(prevQty) + 1,
+            Price:dflt,
+            OnHand:Stok,
+            Satuan:Satuan,
+            Diskon : 0,
+            Total : (parseInt(prevQty) + 1) * dflt,
+            __KEY__:create_UUID(),
+            BaseRef : ''
+          });
+          bindGridItem(items_data);
+          addSubTotal();
+          // GetBeratStandar();
+        }
       }
     });
     $('#FindItem').click(function () {
       GetItemRow();
+      console.log(items_data)
     });
     $('#EditQty').click(function function_name(argument) {
       var button = $('.dx-link-edit');
@@ -1421,9 +1454,13 @@
           success:function (response) {
             if(response.success == true){
               var dflt = 0;
+              var akumulasiQty = 0;
+              $.each(response.data,function (j,z) {
+                akumulasiQty += parseInt(z.Qty);
+              });
               $.each(response.data,function (k,v) {
                 if (isLevelingPrice == 1) {
-                  GetLevelingHarga(parseInt(v.Qty));
+                  GetLevelingHarga(parseInt(akumulasiQty));
                   dflt = $('#LevelingPrice').val();
                 }
                 else{
@@ -1684,38 +1721,51 @@
             });
           }
           else {
-            $.ajax({
-              async: false,
-              type: "post",
-              url: "<?=base_url()?>C_Customer/Read",
-              data: {'KodeCustomer':$('#KodeCustomerPOS').val()},
-              dataType: "json",
-              success: function (response) {
-                if(response.success == true){
-                  $('#provinsi_ori').val(response.data[0]['provinsi']).change();
-                  $('#Kota_ori').val(response.data[0]['Kota']).change();
-                  $('#Kecamatan_ori').val(response.data[0]['Kecamatan']).change();
-                  $('#Kelurahan_ori').val(response.data[0]['Kelurahan']).change();
-                  $('#KodePOS_ori').val(response.data[0]['KodePos']);
-                  $('#Alamat_ori').val(response.data[0]['AlamatCustomer']);
-                  $('#Nama_ori').val(response.data[0]['NamaCustomer']);
-                  $('#Notlp_Ori').val(response.data[0]['NoTlp']);
+            // $.ajax({
+            //   async: false,
+            //   type: "post",
+            //   url: "<?=base_url()?>C_Customer/Read",
+            //   data: {'KodeCustomer':$('#KodeCustomerPOS').val()},
+            //   dataType: "json",
+            //   success: function (response) {
+            //     if(response.success == true){
+            //       $('#provinsi_ori').val(response.data[0]['provinsi']).change();
+            //       $('#Kota_ori').val(response.data[0]['Kota']).change();
+            //       $('#Kecamatan_ori').val(response.data[0]['Kecamatan']).change();
+            //       $('#Kelurahan_ori').val(response.data[0]['Kelurahan']).change();
+            //       $('#KodePOS_ori').val(response.data[0]['KodePos']);
+            //       $('#Alamat_ori').val(response.data[0]['AlamatCustomer']);
+            //       $('#Nama_ori').val(response.data[0]['NamaCustomer']);
+            //       $('#Notlp_Ori').val(response.data[0]['NoTlp']);
 
-                  $('#provinsi_dest').val('').change();
-                  $('#Kota_dest').val('').change();
-                  $('#Kecamatan_dest').val('').change();
-                  $('#Kelurahan_dest').val('').change();
-                  $('#KodePOS_dest').val('');
-                  $('#Alamat_dest').val('');
-                  $('#Nama_dest').val('');
-                  $('#Notlp_dest').val('');
-                }
-              }
-            });
+            //       $('#provinsi_dest').val('').change();
+            //       $('#Kota_dest').val('').change();
+            //       $('#Kecamatan_dest').val('').change();
+            //       $('#Kelurahan_dest').val('').change();
+            //       $('#KodePOS_dest').val('');
+            //       $('#Alamat_dest').val('');
+            //       $('#Nama_dest').val('');
+            //       $('#Notlp_dest').val('');
+            //     }
+            //   }
+            // });
+            $('#Nama_ori').attr('disabled',false);
+
+            $('#provinsi_dest').val('').change();
+            $('#Kota_dest').val('').change();
+            $('#Kecamatan_dest').val('').change();
+            $('#Kelurahan_dest').val('').change();
+            $('#KodePOS_dest').val('');
+            $('#Alamat_dest').val('');
+            $('#Nama_dest').val('');
+            $('#Notlp_dest').val('');
           }
       }
     })
     // ================================= FUNCTION =================================
+    function useReturnData(data){
+      items_data = data;
+    };
     function GetBeratStandar() {
       var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
       // console.log(items_data);
@@ -1768,6 +1818,24 @@
           }
         }
       });
+    }
+    function UpdateHarga(harga) {
+      var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
+      var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+      for (var i = 0; i < gridItems.length; i++) {
+        arr["ItemCode"] = gridItems[i]["ItemCode"];
+        arr["ItemName"] = gridItems[i]["ItemName"];
+        arr["Satuan"]   = gridItems[i]["Satuan"];
+        arr["Price"]    = harga;
+        arr["Qty"]      = parseInt(gridItems[i]["Qty"]);
+        arr["Diskon"]   = gridItems[i]['Diskon'],
+        arr['Total']    = (harga * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
+        arr["__KEY__"]  = gridItems[i]["__KEY__"];
+        arr["BaseRef"]  = gridItems[i]["BaseRef"];
+        
+        gridItems.update(gridItems[i],arr)
+        grid.refresh();
+      }
     }
     function allFilled($fields) 
     {
@@ -1879,6 +1947,8 @@
     }
 
     function GetItemRow() {
+      // items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items; 
+
       var id = '';
       if ($('#Barcode').val() != '') {
         id = '1';
@@ -1893,8 +1963,13 @@
           if(response.success == true){
             var html = '';
             var dflt = 0;
+            var akumulasiQty = 1;
+            for (var i = 0; i < items_data.length; i++) {
+              akumulasiQty += parseInt(items_data[i]["Qty"]);
+            }
             $.each(response.data,function (k,v) {
               var prevQty = 0;
+              
               // console.log(items_data);
               for (var i = 0; i < items_data.length; i++) {
                 if (items_data[i]["ItemCode"] == v.ItemCode && items_data[i]["BaseRef"] == '') {
@@ -1905,6 +1980,7 @@
                 else{
                   prevQty = 0;
                 }
+                // console.log(items_data[i]);
               }
               if (response.data.length == 1) {
                 if (parseInt(prevQty) + 1 > v.Stok) {
@@ -1920,27 +1996,50 @@
                   // dflt = GetLevelingHarga(parseInt(prevQty) + 1,function (output) {
                   //   return output;
                   // });
-                  if (isLevelingPrice == 1) {
-                    GetLevelingHarga(parseInt(prevQty) + 1);
+                  // console.log(akumulasiQty);
+                  if (isLevelingPrice == 1)  {
+                    GetLevelingHarga(parseInt(akumulasiQty));
                     dflt = $('#LevelingPrice').val();
+                    // UpdateHarga(dflt);
+                    items_data.push({
+                      ItemCode : v.ItemCode,
+                      ItemName : v.ItemName,
+                      Qty : parseInt(prevQty) + 1,
+                      Satuan : v.Satuan,
+                      Price: dflt,
+                      Diskon : 0,
+                      Total : (parseInt(prevQty) + 1) * dflt,
+                      __KEY__:create_UUID(),
+                      BaseRef : ''
+                    });
+                    // console.log(items_data.length);
+                    for (var i = 0 ; i<items_data.length; i++) {
+                      // items_data.splice(i, dflt);
+                      items_data[i].Price = dflt;
+                      console.log(items_data[i].Price);
+                    }
+                    // console.log(items_data);
+                    bindGridItem(items_data);
+                    addSubTotal();
                   }
                   else{
                     dflt = v.DefaultPrice;
+                    items_data.push({
+                      ItemCode : v.ItemCode,
+                      ItemName : v.ItemName,
+                      Qty : parseInt(prevQty) + 1,
+                      Satuan : v.Satuan,
+                      Price: dflt,
+                      Diskon : 0,
+                      Total : (parseInt(prevQty) + 1) * dflt,
+                      __KEY__:create_UUID(),
+                      BaseRef : ''
+                    });
+                    bindGridItem(items_data);
+                    addSubTotal();
                   }
+                  useReturnData(items_data);
                   // console.log(dflt);
-                  items_data.push({
-                    ItemCode : v.ItemCode,
-                    ItemName : v.ItemName,
-                    Qty : parseInt(prevQty) + 1,
-                    Satuan : v.Satuan,
-                    Price: dflt,
-                    Diskon : 0,
-                    Total : (parseInt(prevQty) + 1) * dflt,
-                    __KEY__:create_UUID(),
-                    BaseRef : ''
-                  });
-                  bindGridItem(items_data);
-                  addSubTotal();
                   // GetBeratStandar();
                 }
               }
@@ -1955,6 +2054,7 @@
                         '<tr>';
                 $('#load_Lookup').html(html);
                 items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+                useReturnData(items_data);
                 $('#modal_Lookup').modal('show');
               }
             });
@@ -2049,26 +2149,53 @@
             onRowInserting: function(e) {
             },
             onRowInserted: function(e) {
+              if (isLevelingPrice == 1) {
+                GetLevelingHarga(parseInt(akumulasiQty));
+                dflt = $('#LevelingPrice').val();
+                // UpdateHarga(dflt);
+                var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
+
+                var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+
+                for (var i = 0; i < gridItems.length; i++) {
+                  arr["ItemCode"] = gridItems[i]["ItemCode"];
+                  arr["ItemName"] = gridItems[i]["ItemName"];
+                  arr["Satuan"]   = gridItems[i]["Satuan"];
+                  arr["Price"]    = dflt;
+                  arr["Qty"]      = parseInt(gridItems[i]["Qty"]);
+                  arr["Diskon"]   = gridItems[i]['Diskon'],
+                  arr['Total']    = (dflt * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
+                  arr["__KEY__"]  = gridItems[i]["__KEY__"];
+                  arr["BaseRef"]  = gridItems[i]["BaseRef"];
+                  
+                  store.update(gridItems[i],arr)
+                  grid.refresh();
+                }
+              }
             },
             onRowUpdating: function(e) {
             },
             onRowUpdated: function(e) {
               var grid = $("#gridContainerItem").dxDataGrid("instance");
               var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
-
+              console.log(gridItems);
               var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
             
               var dflt = 0;
+              var akumulasiQty = 0;
+              for (var i = 0; i < gridItems.length; i++) {
+                akumulasiQty += parseInt(gridItems[i]["Qty"]);
+              }
               for (var i = 0; i < gridItems.length; i++) {
                 // console.log(isLevelingPrice);
                 if (isLevelingPrice == 1) {
-                  GetLevelingHarga(parseInt(gridItems[i]["Qty"]));
+                  GetLevelingHarga(akumulasiQty);
                   dflt = $('#LevelingPrice').val();
                 }
                 else{
                   dflt = gridItems[i]["Price"];
                 }
-                // console.log(dflt);
+                console.log(dflt);
                 arr["ItemCode"] = gridItems[i]["ItemCode"];
                 arr["ItemName"] = gridItems[i]["ItemName"];
                 arr["Satuan"]   = gridItems[i]["Satuan"];
