@@ -86,3 +86,6 @@ $route['xpdc'] = 'Home/xpdc';
 
 // TRX
 $route['pos'] = 'Home/pos';
+
+// Finance
+$route['CashFlow'] = 'Home/CashFlow';

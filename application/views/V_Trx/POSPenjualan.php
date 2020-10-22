@@ -75,7 +75,7 @@
                           <option value = ''>Pilih Tipe Transaksi</option>
                           <option value="1">Ecommerce</option>
                           <option value="2">Direct Sales</option>
-                          <option value="3">Dropship</option>
+                          <!-- <option value="3">Dropship</option> -->
                           <option value="4">Reseller</option>
                         </select>
                         <br><br>
@@ -221,7 +221,11 @@
                       <div class="col-md-2 col-sm-12 form-group">
                         <button class="form-control btb btn-default" id="FindKeep">Copy Keep</button>
                       </div>
-                      
+                      <label class="col-md-1 col-sm-12 form-group" for="first-name">DropShip <span class="required">*</span>
+                      </label>
+                      <div class="col-md-1 col-sm-12 form-group">
+                        <input type="checkbox" name="chkdropship" id="chkdropship" class="form-control">
+                      </div>
                       <div class="dx-viewport demo-container">
                         <div id="data-grid-demo">
                           <div id="gridContainerItem">
@@ -860,6 +864,7 @@
           }
         }
       });
+      $("#chkdropship").prop("checked", false);
     });
     // Origin
     $('#provinsi_ori').change(function () {
@@ -1664,6 +1669,52 @@
           return false;
       }
     });
+    $('#chkdropship').click(function () {
+      if($('#chkdropship').is(":checked")) // "this" refers to the element that fired the event
+      {
+          // alert('home is checked');
+          if ($('#KodeCustomerPOS').val() == '') {
+            Swal.fire({
+              type: 'error',
+              title: 'Woops...',
+              text: 'Pilih Customer Terlebih dahulu',
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              $("#chkdropship").prop("checked", false);
+            });
+          }
+          else {
+            $.ajax({
+              async: false,
+              type: "post",
+              url: "<?=base_url()?>C_Customer/Read",
+              data: {'KodeCustomer':$('#KodeCustomerPOS').val()},
+              dataType: "json",
+              success: function (response) {
+                if(response.success == true){
+                  $('#provinsi_ori').val(response.data[0]['provinsi']).change();
+                  $('#Kota_ori').val(response.data[0]['Kota']).change();
+                  $('#Kecamatan_ori').val(response.data[0]['Kecamatan']).change();
+                  $('#Kelurahan_ori').val(response.data[0]['Kelurahan']).change();
+                  $('#KodePOS_ori').val(response.data[0]['KodePos']);
+                  $('#Alamat_ori').val(response.data[0]['AlamatCustomer']);
+                  $('#Nama_ori').val(response.data[0]['NamaCustomer']);
+                  $('#Notlp_Ori').val(response.data[0]['NoTlp']);
+
+                  $('#provinsi_dest').val('').change();
+                  $('#Kota_dest').val('').change();
+                  $('#Kecamatan_dest').val('').change();
+                  $('#Kelurahan_dest').val('').change();
+                  $('#KodePOS_dest').val('');
+                  $('#Alamat_dest').val('');
+                  $('#Nama_dest').val('');
+                  $('#Notlp_dest').val('');
+                }
+              }
+            });
+          }
+      }
+    })
     // ================================= FUNCTION =================================
     function GetBeratStandar() {
       var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;

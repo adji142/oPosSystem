@@ -51,6 +51,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>Assets/devexpress/dx.light.css" />
     <script src="<?php echo base_url();?>Assets/devexpress/jszip.min.js"></script>
     <script src="<?php echo base_url();?>Assets/devexpress/dx.all.js"></script>
+    <!-- <script src="https://cdn3.devexpress.com/jslib/20.1.8/js/dx.all.js"></script> -->
     
     <!-- Select 2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
