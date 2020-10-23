@@ -46,74 +46,100 @@ class C_CashFlow extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
-	public function CRUD()
+	public function pencairan()
 	{
 		$data = array('success' => false ,'message'=>array());
-		$ArticleCode = $this->input->post('ArticleCode');
-		$ArticleName = $this->input->post('ArticleName');
-		$ArticleTable = $this->input->post('ArticleTable');
+		$NoTransaksi = '';
+		$NoPenjualan = $this->input->post('NoPenjualan');
+		$NoCashFlow = $this->input->post('NoCashFlow');
+		$TotalPenjualan = $this->input->post('TotalPenjualan');
+		$TglPenjualan = $this->input->post('TglPenjualan');
+		$NoRefPenjualan = $this->input->post('NoRefPenjualan');
+		$NamaEcommerce = $this->input->post('NamaEcommerce');
+		$NominalCair = $this->input->post('NominalCair');
+		$Selisih = $this->input->post('Selisih');
+		$Keterangan = $this->input->post('Keterangan');
 
-		// $exploder = explode("|",$ItemGroup[0]);
-		$formtype = $this->input->post('formtype');
+		$Kolom = 'NoTransaksi';
+		$Table = 'pencairanecomerce';
+		$Prefix = substr(date("Y"), 2,4).date("m")."PD";
 
+		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
+
+		// var_dump($SQL);
+		$rs = $this->db->query($SQL);
+
+		$temp = $rs->row()->Total + 1;
+
+		$nomor = $Prefix.str_pad($temp, 8,"0",STR_PAD_LEFT);
+		if ($nomor != '') {
+			$NoTransaksi = $nomor;
+		}
+		else{
+			$data['message'] = "Nomor Transaksi Gagal generate";
+			goto jump;
+		}
+		$ecomDesc = "";
+
+		switch ($NamaEcommerce) {
+			case '1':
+				$ecomDesc = "Shopee";
+				break;
+			case '2':
+				$ecomDesc = "Tokopedia";
+				break;
+			case '3':
+				$ecomDesc = "Bukalapak";
+				break;
+			case '4':
+				$ecomDesc = "Lazada";
+				break;
+			case '5':
+				$ecomDesc = "bli bli";
+				break;
+		}
 		$param = array(
-			'ArticleCode' => $ArticleCode,
-			'ArticleName' => $ArticleName
+			'NoTransaksi' => $NoTransaksi,
+			'TglTransaksi' => date("Y-m-d"),
+			'BaseRef' => $NoCashFlow,
+			'NominalCair' => str_replace(',','',$NominalCair), 
+			'NamaEcommerce' => $ecomDesc,
+			'NoRef' => $NoRefPenjualan,
+			'Keterangan' => $Keterangan,
+			'Createdby' => $this->session->userdata('username'),
+			'Createon' => date("Y-m-d h:i:sa")
 		);
-		if ($formtype == 'add') {
-			$this->db->trans_begin();
-			try {
-				$call_x = $this->ModelsExecuteMaster->ExecInsert($param,$ArticleTable);
-				if ($call_x) {
+		$this->db->trans_begin();
+		try {
+			$call_x = $this->ModelsExecuteMaster->ExecInsert($param,'pencairanecomerce');
+			if ($call_x) {
+				$paramupdatecashflow = array(
+					'Credit' 		=> str_replace(',','',$Selisih),
+					'ExternalNote'	=> 'Selisih pencairan'
+				);
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($paramupdatecashflow,array('NoTransaksi'=>$NoCashFlow),'cashflow');
+				if ($rs) {
 					$this->db->trans_commit();
 					$data['success'] = true;
 				}
 				else{
+					$this->db->trans_rollback();
 					$undone = $this->db->error();
 					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
 					goto jump;
 				}
-			} catch (Exception $e) {
-				jump:
+			}
+			else{
 				$this->db->trans_rollback();
-				// $data['success'] = false;
-				// $data['message'] = "Gagal memproses data ". $e->getMessage();
+				$undone = $this->db->error();
+				$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
+				goto jump;
 			}
-		}
-		elseif ($formtype == 'edit') {
-			try {
-				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('ArticleCode'=> $ArticleCode),$ArticleTable);
-				if ($rs) {
-					$data['success'] = true;
-				}
-				else{
-					$undone = $this->db->error();
-					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
-				}
-			} catch (Exception $e) {
-				$data['success'] = false;
-				$data['message'] = "Gagal memproses data ". $e->getMessage();
-			}
-		}
-		elseif ($formtype == 'delete') {
-			try {
-				$SQL = "UPDATE ".$ArticleTable." SET isActive = 0 WHERE ArticleCode = '".$ArticleCode."'";
-				$rs = $this->db->query($SQL);
-				if ($rs) {
-					$data['success'] = true;
-				}
-				else{
-					$undone = $this->db->error();
-					$data['message'] = "Sistem Gagal Melakukan Pemrosesan Data : ".$undone['message'];
-				}
-			} catch (Exception $e) {
-				$data['success'] = false;
-				$data['message'] = "Gagal memproses data ". $e->getMessage();
-			}
-		}
-		else{
-			$data['success'] = false;
-			$data['message'] = "Invalid Form Type";
+		} catch (Exception $e) {
+			jump:
+			$this->db->trans_rollback();
+			// $data['success'] = false;
+			// $data['message'] = "Gagal memproses data ". $e->getMessage();
 		}
 		echo json_encode($data);
 	}

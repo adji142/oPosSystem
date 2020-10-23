@@ -260,7 +260,7 @@
                             </label>
                           </div>
                           <div class="col-md-7 col-sm-12 form-group">
-                            <input type="checkbox" name="T_Paynow" id="T_Paynow" class="form-control"value="1">
+                            <input type="checkbox" name="T_Paynow" id="T_Paynow" class="form-control"value="1"  checked="">
                           </div>
 
                           <div class="col-md-5 col-sm-12 form-group">
@@ -813,7 +813,7 @@
       if ($('#PaymentTerm').val() == "1") {
         $("#Expedisi").attr("disabled", true);
         $("#T_Bayar").attr("disabled", false);
-        $("#T_Paynow").prop("checked", true);
+        // $("#T_Paynow").prop("checked", true);
         
         $('#amt1').attr('disabled',false);
         $('#amt2').attr('disabled',false);
@@ -825,7 +825,7 @@
       else{
         $("#Expedisi").attr("disabled", false);
         $("#T_Bayar").attr("disabled", true);
-        $("#T_Paynow").prop("checked", false);
+        // $("#T_Paynow").prop("checked", false);
 
         $('#amt1').attr('disabled',true);
         $('#amt2').attr('disabled',true);
@@ -1525,7 +1525,6 @@
         var array_detail  = JSON.stringify(gridItems);
         var arrx = [];
         var PayNow = 0;
-        console.log($("#T_Paynow").prop('checked'));
         if ($("#T_Paynow").is(":checked")) {
           PayNow = 1;
         }
@@ -1794,28 +1793,47 @@
         data: {'Kota_origin':$('#Kota_ori').val(),'Kota_Destination':$('#Kota_dest').val(),'xpdc':$('#Expedisi').val(),'berat':$('#beratStandar').val()},
         dataType: "json",
         success: function (response) {
-          for (i =0; i< response.data.length ;i++) {
-            // console.log(response.data[i]);
-            $('#cekongkir_TableInfo').empty();
-            $('#cekongkir_TableInfo').append("<option value='0'>Pilih Service Pengiriman</option>")
-            var j;
-            for (j =0;j< response.data[i]['costs'].length;j++) {
-              // console.log(response.data[i]['costs'][j]);
-              // $('#cekongkir_TableInfo').append(""+
-              //   "<option value='"+response.data[i]['costs'][j].service+"|'>"+response.data[i]['costs'][j].service+" | "+response.data[i]['costs'][j].description+"</option>"
-              //   );
-              // info service
-              var k;
-              for (k=0;k< response.data[i]['costs'][j]['cost'].length;k++) {
-                // console.log(response.data[i]['costs'][j]['cost'][k].value);
-                $('#cekongkir_TableInfo').append(""+
-                "<option value='"+response.data[i]['costs'][j].service+"|"+response.data[i]['costs'][j]['cost'][k].value+"'>"+response.data[i]['costs'][j].service+" | "+response.data[i]['costs'][j].description+" | "+addCommas(response.data[i]['costs'][j]['cost'][k].value)+"</option>"
-                );
-                // info harga
-              }
+          if (response.data.length > 0) {
+            for (i =0; i< response.data.length ;i++) {
+              // console.log(response.data[i]);
+              $('#cekongkir_TableInfo').empty();
+              $('#cekongkir_TableInfo').append("<option value='0'>Pilih Service Pengiriman</option>")
+              var j;
+              for (j =0;j< response.data[i]['costs'].length;j++) {
+                // console.log(response.data[i]['costs'][j]);
+                // $('#cekongkir_TableInfo').append(""+
+                //   "<option value='"+response.data[i]['costs'][j].service+"|'>"+response.data[i]['costs'][j].service+" | "+response.data[i]['costs'][j].description+"</option>"
+                //   );
+                // info service
+                var k;
+                for (k=0;k< response.data[i]['costs'][j]['cost'].length;k++) {
+                  // console.log(response.data[i]['costs'][j]['cost'][k].value);
+                  $('#cekongkir_TableInfo').append(""+
+                  "<option value='"+response.data[i]['costs'][j].service+"|"+response.data[i]['costs'][j]['cost'][k].value+"'>"+response.data[i]['costs'][j].service+" | "+response.data[i]['costs'][j].description+" | "+addCommas(response.data[i]['costs'][j]['cost'][k].value)+"</option>"
+                  );
+                  // info harga
+                }
 
+              }
             }
           }
+          else{
+            $.ajax({
+              async: false,
+              type: "post",
+              url: "<?=base_url()?>C_General/GetBerat",
+              data: {'KodeItem':items_data[i]['ItemCode']},
+              dataType: "json",
+              success: function (response) {
+                var TotalBerat = $('#beratStandar').val();
+                console.log(TotalBerat);
+                if(response.Berat > 0){
+                  $('#beratStandar').val((parseFloat(response.Berat) * parseFloat(items_data[i]['Qty'])));
+                }
+              }
+            });
+          }
+
         }
       });
     }
@@ -1947,8 +1965,6 @@
     }
 
     function GetItemRow() {
-      // items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items; 
-
       var id = '';
       if ($('#Barcode').val() != '') {
         id = '1';
@@ -2016,7 +2032,7 @@
                     for (var i = 0 ; i<items_data.length; i++) {
                       // items_data.splice(i, dflt);
                       items_data[i].Price = dflt;
-                      console.log(items_data[i].Price);
+                      // console.log(items_data[i].Price);
                     }
                     // console.log(items_data);
                     bindGridItem(items_data);
@@ -2038,8 +2054,9 @@
                     bindGridItem(items_data);
                     addSubTotal();
                   }
+                  items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items; 
                   useReturnData(items_data);
-                  // console.log(dflt);
+                  console.log(items_data);
                   // GetBeratStandar();
                 }
               }

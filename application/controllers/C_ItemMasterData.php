@@ -37,7 +37,7 @@ class C_ItemMasterData extends CI_Controller {
 			$rs = $this->db->query($SQL);
 		}
 		elseif ($kriteria <> '') {
-			$SQL = "SELECT * FROM vw_stok WHERE CONCAT(ItemCode,' ',Article) LIKE '%".$kriteria."%'";
+			$SQL = "SELECT * FROM vw_stok WHERE CONCAT(ItemCode,' ',Article,' ', KodeItemLama) LIKE '%".$kriteria."%'";
 			$rs = $this->db->query($SQL);	
 		}
 		else{

@@ -3,6 +3,11 @@
     require_once(APPPATH."views/parts/Sidebar.php");
     $active = 'dashboard';
 ?>
+<style type="text/css">
+  .select2-container {
+  width: 100% !important;
+  }
+</style>
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
@@ -47,34 +52,81 @@
 </div>
 <!-- /page content -->
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_pencairan">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Article - Warna</h4>
+        <h4 class="modal-title" id="myModalLabel">Pencairan</h4>
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
-        <form id="post_" data-parsley-validate class="form-horizontal form-label-left">
+        <form id="post_pencairan" data-parsley-validate class="form-horizontal form-label-left">
           <div class="item form-group">
-            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode Article <span class="required">*</span>
-            </label>
-            <div class="col-md-6 col-sm-6 ">
-              <input type="text" name="ArticleCode" id="ArticleCode" required="" placeholder="Kode Artikel" class="form-control " readonly="">
-              <input type="hidden" name="formtype" id="formtype" value="add">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Penjualan <span class="required">*</span>
+              </label>
+              <div class="col-md-3 col-sm-12 ">
+                <input type="text" name="NoPenjualan" id="NoPenjualan" required="" placeholder="NoPenjualan" class="form-control " readonly="">
+                <input type="hidden" name="NoCashFlow" id="NoCashFlow" required="" placeholder="NoPenjualan" class="form-control " readonly="">
+              </div>
+              <div class="col-md-3 col-sm-12 ">
+                <input type="text" name="TotalPenjualan" id="TotalPenjualan" required="" placeholder="TotalPenjualan" class="form-control " readonly="">
+              </div>
+              <div class="col-md-3 col-sm-12 ">
+                <input type="date" name="TglPenjualan" id="TglPenjualan" required="" placeholder="TotalPenjualan" class="form-control " readonly="">
+              </div>
             </div>
           </div>
           <div class="item form-group">
-            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nama Article <span class="required">*</span>
-            </label>
-            <div class="col-md-6 col-sm-6 ">
-              <input type="text" name="ArticleName" id="ArticleName" required="" placeholder="Nama Artikel" class="form-control ">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">No Ref Ecommerce <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <input type="text" name="NoRefPenjualan" id="NoRefPenjualan" required="" placeholder="NoRefPenjualan" class="form-control " readonly="">
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Nama Ecommerce <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <select class="js-states form-control" id="NamaEcommerce" name="NamaEcommerce" >
+                  <option value = ''>Pilih Ecommerce</option>
+                  <option value="1">Shopee</option>
+                  <option value="2">Tokopedia</option>
+                  <option value="3">Bukalapak</option>
+                  <option value="4">Lazada</option>
+                  <option value="5">bli bli</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Nominal Cair <span class="required">*</span>
+              </label>
+              <div class="col-md-4 col-sm-12 ">
+                <input type="text" name="NominalCair" id="NominalCair" required="" placeholder="NominalCair" class="form-control " value="0">
+              </div>
+              <div class="col-md-4 col-sm-12 ">
+                <input type="text" name="Selisih" id="Selisih" required="" placeholder="Selisih" class="form-control " readonly="">
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Keterangan <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <input type="text" name="Keterangan" id="Keterangan" required="" placeholder="Keterangan" class="form-control ">
+              </div>
             </div>
           </div>
           <div class="item" form-group>
-            <button class="btn btn-primary" id="btn_Save">Save</button>
+            <button class="btn btn-primary" id="btn_Save_pencairan">Save</button>
           </div>
         </form>
       </div>
@@ -94,22 +146,27 @@
     $(document).ready(function () {
       var button = $('#filterbutton');
       button.click();
+
+      $('#NamaEcommerce').select2({
+        width : 'resolve',
+        placeholder: 'Pilih Ecommerce'
+      });
     });
-    $('#post_').submit(function (e) {
-      $('#btn_Save').text('Tunggu Sebentar.....');
-      $('#btn_Save').attr('disabled',true);
+    $('#post_pencairan').submit(function (e) {
+      $('#btn_Save_pencairan').text('Tunggu Sebentar.....');
+      $('#btn_Save_pencairan').attr('disabled',true);
 
       e.preventDefault();
       var me = $(this);
 
       $.ajax({
             type    :'post',
-            url     : '<?=base_url()?>C_Atribut/CRUD',
+            url     : '<?=base_url()?>C_CashFlow/pencairan',
             data    : me.serialize(),
             dataType: 'json',
             success : function (response) {
               if(response.success == true){
-                $('#modal_').modal('toggle');
+                $('#modal_pencairan').modal('toggle');
                 Swal.fire({
                   type: 'success',
                   title: 'Horay..',
@@ -120,21 +177,26 @@
                 });
               }
               else{
-                $('#modal_').modal('toggle');
+                $('#modal_pencairan').modal('toggle');
                 Swal.fire({
                   type: 'error',
                   title: 'Woops...',
                   text: response.message,
                   // footer: '<a href>Why do I have this issue?</a>'
                 }).then((result)=>{
-                  $('#modal_').modal('show');
-                  $('#btn_Save').text('Save');
-                  $('#btn_Save').attr('disabled',false);
+                  $('#modal_pencairan').modal('show');
+                  $('#btn_Save_pencairan').text('Save');
+                  $('#btn_Save_pencairan').attr('disabled',false);
                 });
               }
             }
           });
         });
+    $('#NominalCair').on("keyup",function () {
+      var Penjualan = parseFloat($('#TotalPenjualan').val().replace(',',''));
+
+      $('#Selisih').val(Penjualan - parseFloat($('#NominalCair').val()) );
+    })
     $('.close').click(function() {
       location.reload();
     });
@@ -228,6 +290,25 @@
                     caption: "Saldo",
                     allowEditing:false
                 },
+                {
+                    dataField: "TransactionType",
+                    caption: "TransactionType",
+                    allowEditing:false,
+                    visible: false
+                },
+                {
+                    dataField: "Action",
+                    caption: "Action",
+                    allowEditing:false,
+                    cellTemplate: function(cellElement, cellInfo) {
+                      var LinkAccess = "";
+                      
+                      if (cellInfo.data.TransactionType == 1 && cellInfo.data.Refrensicair == '') {
+                        LinkAccess += "<button class='badge badge-danger StartPay' onClick =Pencairan('"+cellInfo.data.NoTransaksi+"','"+cellInfo.data.NoPenjualan+"')>Pencairan</button>";
+                      }
+                      cellElement.append(LinkAccess);
+                  }
+                },
             ],
             onEditingStart: function(e) {
                 GetData(e.data.ArticleCode);
@@ -311,4 +392,33 @@
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
     }
   });
+function Pencairan(NoTransaksi,NoPenjualan) {
+  $.ajax({
+    type: "post",
+    url: "<?=base_url()?>C_POS/ReadTagihan",
+    data: {'NoTransaksi':NoPenjualan},
+    dataType: "json",
+    success: function (response) {
+      $('#NoCashFlow').val(NoTransaksi);
+      $('#NoPenjualan').val(response.data[0]['NoTransaksi']);
+      $('#TotalPenjualan').val(addCommasOuter(response.data[0]['T_GrandTotal']));
+      $('#TglPenjualan').val(response.data[0]['TglTransaksi']);
+      $('#NoRefPenjualan').val(response.data[0]['RefNumberTrx']);
+      $('#Selisih').val(addCommasOuter(parseFloat(response.data[0]['T_GrandTotal']) * -1));
+      $('#modal_pencairan').modal('show');
+    }
+  });
+}
+function addCommasOuter(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 </script>

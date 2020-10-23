@@ -98,6 +98,7 @@ class C_POS extends CI_Controller {
 				a.NoTransaksi,
 				a.TglTransaksi,
 				c.NamaCustomer,
+				a.RefNumberTrx,
 				ROUND(a.T_GrandTotal) T_GrandTotal
 			FROM penjualanheader a
 			LEFT JOIN tcustomer c on a.KodeCustomer = c.KodeCustomer
