@@ -26,7 +26,7 @@
               <label class="col-form-label label-align" for="first-name">Tanggal <span class="required">*</span>
               </label>
               <div class="col-md-3 col-sm-3  form-group">
-                <input type="date" id="TglAwal" name="TglAwal" placeholder="dd-mm-yyyy" dateformat="dd-mm-yyyy" class="form-control" value="<?php echo date("Y-m-d");?>">
+                <input type="date" id="TglAwal" name="TglAwal" placeholder="dd-mm-yyyy" dateformat="dd-mm-yyyy" class="form-control" value="<?php echo date("Y-m-01");?>">
               </div>
                <label class="col-form-label label-align" for="first-name">s/d </label>
                <!-- end -->
@@ -51,6 +51,76 @@
   </div>
 </div>
 <!-- /page content -->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_adj">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Adjustment</h4>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="post_adj" data-parsley-validate class="form-horizontal form-label-left">
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Tanggal <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <input type="date" name="TglTransaksi" id="TglTransaksi" required="" class="form-control " value="<?php echo date("Y-m-d"); ?>">
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">No. Refrensi <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <input type="text" name="BaseRef" id="BaseRef" required="" class="form-control " readonly="">
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Mutasi <span class="required">*</span>
+              </label>
+              <div class="col-md-4 col-sm-12 ">
+                <input type="text" name="Debet" id="Debet" required="" class="form-control " placeholder="Debet">
+              </div>
+              <div class="col-md-4 col-sm-12 ">
+                <input type="text" name="Credit" id="Credit" required="" class="form-control " placeholder="Credit">
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Keterangan <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <input type="text" name="ExternalNote" id="ExternalNote" required="" class="form-control " placeholder="Keterangan">
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <div class="row col-md-12 col-sm-12">
+              <label class="col-md-3 col-sm-12" for="first-name">Jenis Pencatatan <span class="required">*</span>
+              </label>
+              <div class="col-md-9 col-sm-12 ">
+                <select class="js-states form-control" id="JenisPencatatan" name="JenisPencatatan" >
+                  <option value = ''>Pilih Pencatatan</option>
+                  <option value="1">Koreksi Ongkir</option>
+                  <option value="2">Koreksi Penjualan</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="item form-group">
+            <button class="btn btn-primary" id="btn_Save_adj">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="modal_pencairan">
   <div class="modal-dialog modal-lg">
@@ -143,6 +213,7 @@
 ?>
 <script type="text/javascript">
   $(function () {
+    var NoRefcashflow = '';
     $(document).ready(function () {
       var button = $('#filterbutton');
       button.click();
@@ -160,38 +231,80 @@
       var me = $(this);
 
       $.ajax({
-            type    :'post',
-            url     : '<?=base_url()?>C_CashFlow/pencairan',
-            data    : me.serialize(),
-            dataType: 'json',
-            success : function (response) {
-              if(response.success == true){
-                $('#modal_pencairan').modal('toggle');
-                Swal.fire({
-                  type: 'success',
-                  title: 'Horay..',
-                  text: 'Data Berhasil disimpan!',
-                  // footer: '<a href>Why do I have this issue?</a>'
-                }).then((result)=>{
-                  location.reload();
-                });
-              }
-              else{
-                $('#modal_pencairan').modal('toggle');
-                Swal.fire({
-                  type: 'error',
-                  title: 'Woops...',
-                  text: response.message,
-                  // footer: '<a href>Why do I have this issue?</a>'
-                }).then((result)=>{
-                  $('#modal_pencairan').modal('show');
-                  $('#btn_Save_pencairan').text('Save');
-                  $('#btn_Save_pencairan').attr('disabled',false);
-                });
-              }
-            }
-          });
-        });
+        type    :'post',
+        url     : '<?=base_url()?>C_CashFlow/pencairan',
+        data    : me.serialize(),
+        dataType: 'json',
+        success : function (response) {
+          if(response.success == true){
+            $('#modal_pencairan').modal('toggle');
+            Swal.fire({
+              type: 'success',
+              title: 'Horay..',
+              text: 'Data Berhasil disimpan!',
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              location.reload();
+            });
+          }
+          else{
+            $('#modal_pencairan').modal('toggle');
+            Swal.fire({
+              type: 'error',
+              title: 'Woops...',
+              text: response.message,
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              $('#modal_pencairan').modal('show');
+              $('#btn_Save_pencairan').text('Save');
+              $('#btn_Save_pencairan').attr('disabled',false);
+            });
+          }
+        }
+      });
+    });
+
+    $('#post_adj').submit(function (e) {
+      $('#btn_Save_adj').text('Tunggu Sebentar.....');
+      $('#btn_Save_adj').attr('disabled',true);
+
+      e.preventDefault();
+      var me = $(this);
+
+      $.ajax({
+        type    :'post',
+        url     : '<?=base_url()?>C_CashFlow/Adjustment',
+        data    : me.serialize(),
+        dataType: 'json',
+        success : function (response) {
+          if(response.success == true){
+            $('#modal_adj').modal('toggle');
+            Swal.fire({
+              type: 'success',
+              title: 'Horay..',
+              text: 'Data Berhasil disimpan!',
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              location.reload();
+            });
+          }
+          else{
+            $('#modal_adj').modal('toggle');
+            Swal.fire({
+              type: 'error',
+              title: 'Woops...',
+              text: response.message,
+              // footer: '<a href>Why do I have this issue?</a>'
+            }).then((result)=>{
+              $('#modal_adj').modal('show');
+              $('#btn_Save_adj').text('Save');
+              $('#btn_Save_adj').attr('disabled',false);
+            });
+          }
+        }
+      });
+    });
+
     $('#NominalCair').on("keyup",function () {
       var Penjualan = parseFloat($('#TotalPenjualan').val().replace(',',''));
 
@@ -222,6 +335,8 @@
             allowColumnResizing: true,
             columnAutoWidth: true,
             showBorders: true,
+            focusedRowEnabled: true,
+            focusedRowKey: 0,
             paging: {
                 enabled: false
             },
@@ -254,7 +369,7 @@
                 },
                 {
                     dataField: "NoPenjualan",
-                    caption: "No Penjualan",
+                    caption: "No Ref",
                     allowEditing:false
                 },
                 {
@@ -311,11 +426,22 @@
                 },
             ],
             onEditingStart: function(e) {
-                GetData(e.data.ArticleCode);
             },
             onInitNewRow: function(e) {
                 // logEvent("InitNewRow");
-                $('#modal_').modal('show');
+                // console.log(NoRefcashflow)
+                if (typeof NoRefcashflow == 'undefined') {
+                  Swal.fire({
+                    type: 'error',
+                    title: 'Woops...',
+                    text: 'Pilih Item Cash Flow terlebih dahulu',
+                    // footer: '<a href>Why do I have this issue?</a>'
+                  });
+                }
+                else{
+                  $('#BaseRef').val(NoRefcashflow);
+                  $('#modal_adj').modal('show');
+                }
             },
             onRowInserting: function(e) {
                 // logEvent("RowInserting");
@@ -334,59 +460,35 @@
                 // logEvent(e);
             },
             onRowRemoving: function(e) {
-              id = e.data.ArticleCode;
-              Swal.fire({
-                title: 'Apakah anda yakin?',
-                text: "anda akan menghapus data di baris ini !",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-              }).then((result) => {
-                if (result.value) {
-                  var table = 'app_setting';
-                  var field = 'id';
-                  var value = id;
-
-                  $.ajax({
-                      type    :'post',
-                      url     : '<?=base_url()?>C_Article/CRUD',
-                      data    : {'ArticleCode':id,'formtype':'delete'},
-                      dataType: 'json',
-                      success : function (response) {
-                        if(response.success == true){
-                          Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                      ).then((result)=>{
-                            location.reload();
-                          });
-                        }
-                        else{
-                          Swal.fire({
-                            type: 'error',
-                            title: 'Woops...',
-                            text: response.message,
-                            // footer: '<a href>Why do I have this issue?</a>'
-                          }).then((result)=>{
-                            location.reload();
-                          });
-                        }
-                      }
-                    });
-                  
-                }
-                else{
-                  location.reload();
-                }
-              })
             },
             onRowRemoved: function(e) {
               // console.log(e);
             },
-        });
+            onFocusedRowChanging: function(e) {
+              var rowsCount = e.component.getVisibleRows().length,
+                  pageCount = e.component.pageCount(),
+                  pageIndex = e.component.pageIndex(),
+                  key = e.event && e.event.key;
+
+              if(key && e.prevRowIndex === e.newRowIndex) {
+                  if(e.newRowIndex === rowsCount - 1 && pageIndex < pageCount - 1) {
+                      e.component.pageIndex(pageIndex + 1).done(function() {
+                          e.component.option("focusedRowIndex", 0);
+                      });
+                  } else if(e.newRowIndex === 0 && pageIndex > 0) {
+                      e.component.pageIndex(pageIndex - 1).done(function() {
+                          e.component.option("focusedRowIndex", rowsCount - 1);
+                      });
+                  }
+              }
+          },
+          onFocusedRowChanged: function(e) {
+            const row = e.row;
+            const rowData = row && row.data;
+            const xdata = rowData && rowData.NoPenjualan;
+            NoRefcashflow = xdata
+          }
+        }).dxDataGrid("instance");
 
         // add dx-toolbar-after
         // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
