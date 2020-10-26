@@ -45,7 +45,9 @@ class C_POS extends CI_Controller {
 				a.RefNumberTrx,
 				d.PaymentTerm,
 				a.RefNumberPayment,
-				a.PayNow
+				a.PayNow,
+				b.NamaCustomer,
+				a.T_GrandTotal
 			FROM penjualanheader a
 			LEFT JOIN tcustomer b on a.KodeCustomer = b.KodeCustomer
 			LEFT JOIN tsales c on a.KodeSales = c.KodeSales

@@ -338,7 +338,7 @@
             focusedRowEnabled: true,
             focusedRowKey: 0,
             paging: {
-                enabled: false
+                enabled: true
             },
             editing: {
                 mode: "row",

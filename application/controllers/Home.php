@@ -169,6 +169,10 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Trx/POSPenjualan');
 	}
+	public function return()
+	{
+		$this->load->view('V_Trx/ReturPenjualan');
+	}
 
 	// Finance
 	public function CashFlow()
