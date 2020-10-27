@@ -2617,6 +2617,11 @@
                     allowEditing:false
                 },
                 {
+                    dataField: "QtyRetur",
+                    caption: "Qty Retur",
+                    allowEditing:false
+                },
+                {
                     dataField: "Harga",
                     caption: "Harga",
                     allowEditing:false

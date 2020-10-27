@@ -47,12 +47,24 @@ class C_POS extends CI_Controller {
 				a.RefNumberPayment,
 				a.PayNow,
 				b.NamaCustomer,
-				a.T_GrandTotal
+				a.T_GrandTotal,
+				e.QtyJual,
+				f.QtyRetur
 			FROM penjualanheader a
 			LEFT JOIN tcustomer b on a.KodeCustomer = b.KodeCustomer
 			LEFT JOIN tsales c on a.KodeSales = c.KodeSales
 			LEFT JOIN tpayment d on a.PaymentTerm = d.id
+			LEFT JOIN(
+				SELECT z.NoTransaksi,SUM(z.Qty) QtyJual FROM penjualandetail z
+				GROUP BY z.NoTransaksi
+			)e on e.NoTransaksi = a.NoTransaksi
+			LEFT JOIN (
+				SELECT y.BaseRef,SUM(x.QtyRetur) QtyRetur, SUM(x.QtyRetur * x.Price) LineTotal FROM returdetail x
+				LEFT JOIN returheader y on x.NoTransaksi = y.NoTransaksi
+				GROUP BY y.BaseRef
+			)f on f.BaseRef = a.NoTransaksi
 			WHERE a.TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."'
+			AND COALESCE(e.QtyJual,0) - COALESCE(f.QtyRetur,0) > 0
 			";
 
 		$rs = $this->db->query($SQL);
@@ -73,8 +85,15 @@ class C_POS extends CI_Controller {
 
 		$SQL = "
 			SELECT A.KodeItem,B.Article,A.Qty,A.Harga,
-			COALESCE(A.Qty,0) * COALESCE(A.Harga,0) AS LineTotal FROM penjualandetail A 
+			(COALESCE(A.Qty,0) - COALESCE(f.QtyRetur,0)) * COALESCE(A.Harga,0) AS LineTotal,
+			f.QtyRetur
+			FROM penjualandetail A 
 			LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
+			LEFT JOIN (
+				SELECT y.BaseRef,x.KodeItemLama,SUM(x.QtyRetur) QtyRetur, SUM(x.QtyRetur * x.Price) LineTotal FROM returdetail x
+				LEFT JOIN returheader y on x.NoTransaksi = y.NoTransaksi
+				GROUP BY y.BaseRef,x.KodeItemLama
+			)f on f.BaseRef = A.NoTransaksi AND f.KodeItemLama = A.KodeItem
 			WHERE A.NoTransaksi = '".$HeaderID."'
 		";
 
