@@ -61,6 +61,7 @@ class C_POS extends CI_Controller {
 			LEFT JOIN (
 				SELECT y.BaseRef,SUM(x.QtyRetur) QtyRetur, SUM(x.QtyRetur * x.Price) LineTotal FROM returdetail x
 				LEFT JOIN returheader y on x.NoTransaksi = y.NoTransaksi
+				WHERE y.JenisTransaksi = 2
 				GROUP BY y.BaseRef
 			)f on f.BaseRef = a.NoTransaksi
 			WHERE a.TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."'
@@ -92,6 +93,7 @@ class C_POS extends CI_Controller {
 			LEFT JOIN (
 				SELECT y.BaseRef,x.KodeItemLama,SUM(x.QtyRetur) QtyRetur, SUM(x.QtyRetur * x.Price) LineTotal FROM returdetail x
 				LEFT JOIN returheader y on x.NoTransaksi = y.NoTransaksi
+				WHERE y.JenisTransaksi = 2
 				GROUP BY y.BaseRef,x.KodeItemLama
 			)f on f.BaseRef = A.NoTransaksi AND f.KodeItemLama = A.KodeItem
 			WHERE A.NoTransaksi = '".$HeaderID."'

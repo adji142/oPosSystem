@@ -272,14 +272,16 @@
                 KodeItemBaru = response.data[i]['KodeItem'];
                 NamaItemBaru = response.data[i]['Article'];
               }
-              itemsData.push({
-                KodeItemLama :response.data[i]['KodeItem'],
-                NamaItemLama :response.data[i]['Article'],
-                KodeItemBaru :KodeItemBaru,
-                NamaItemBaru :NamaItemBaru,
-                QtyRetur     :response.data[i]['Qty'],
-                Price        :response.data[i]['Harga']
-              });
+              if (parseFloat(response.data[i]['LineTotal']) > 0) {
+                itemsData.push({
+                  KodeItemLama :response.data[i]['KodeItem'],
+                  NamaItemLama :response.data[i]['Article'],
+                  KodeItemBaru :KodeItemBaru,
+                  NamaItemBaru :NamaItemBaru,
+                  QtyRetur     :response.data[i]['Qty'],
+                  Price        :response.data[i]['Harga']
+                });
+              }
               bindGrid(itemsData)
             }
           }

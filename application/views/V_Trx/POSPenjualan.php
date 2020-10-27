@@ -33,6 +33,9 @@
                 <li class="nav-item">
                   <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Transaction History</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="Print-tab" data-toggle="tab" href="#Print_format" role="tab" aria-controls="profile" aria-selected="false">Cetak Format Kirim</a>
+                </li>
               </ul>
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -319,39 +322,6 @@
                   </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                  <!-- <div class="row col-md-12 col-sm-12">
-                    <div class="form-label-left input_mask">
-                      <div class="col-md-2 col-sm-12 form-group">
-                        <label class="col-form-label label-align" for="first-name">Tanggal
-                        </label>
-                      </div>
-                      <div class="col-md-4 col-sm-12  form-group">
-                        <input type="date" id="TglAwal" name="TglAwal" placeholder="dd-mm-yyyy" dateformat="dd-mm-yyyy" class="form-control" value="<?php echo date("Y-m-d");?>">
-                      </div>
-                      <div class="col-md-4 col-sm-12 form-group">
-                        <input type="date" id="TglAkhir" name="TglAkhir" placeholder=".col-md-12" class="form-control" value="<?php echo date("Y-m-d");?>">
-                      </div>
-                      <div class="col-md-2 col-sm-12 form-group">
-                        <button name="filterbutton" id="filterbutton" class="form-control btn btn-primary">Search</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row col-md-12 col-sm-12">
-                    <div class="col-md-12 col-sm-12">
-                      <div class="dx-viewport demo-container">
-                      <div id="data-grid-demo">
-                        <div id="gridContainerHeader">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="dx-viewport demo-container">
-                      <div id="data-grid-demo">
-                        <div id="gridContainerDetail">
-                        </div>
-                      </div>
-                    </div>
-                    </div>
-                  </div> -->
                   <div class="row col-md-12 col-sm-12">
                       <label class="col-md-2 col-sm-12 form-group" for="first-name">Tanggal <span class="required">*</span>
                       </label>
@@ -379,6 +349,21 @@
                         </div>
                       </div>
                     </div>
+                </div>
+                <div class="tab-pane fade" id="Print_format" role="tabpanel" aria-labelledby="profile-tab">
+                  <div class="row col-md-12 col-sm-12">
+                    <label class="col-md-2 col-sm-12 form-group" for="first-name">NoPenjualan <span class="required">*</span>
+                    </label>
+                    <div class="col-md-4 col-sm-12 form-group">
+                      <input type="text" name="NoAwal" id="NoAwal" class="form-control">
+                    </div>
+                    <div class="col-md-4 col-sm-12 form-group">
+                      <input type="text" name="NoAkhir" id="NoAkhir" class="form-control">
+                    </div>
+                    <div class="col-md-2 col-sm-12 form-group">
+                      <button class="form-control btb btn-primary" id="Print_">Search</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -786,6 +771,10 @@
       // Call Function Form Load
       GetCustomer();
     });
+    $('#Print_').click(function () {
+      window.open('<?php echo base_url(); ?>print/formatkirim.php?NoAwal='+$('#NoAwal').val()+'&NoAkhir='+$('#NoAkhir').val(),'_blank');
+      location.reload();
+    })
     $('#TransactionType').change(function () {
       GetOrigin($('#TransactionType').val());
       GetDestination($('#TransactionType').val());
