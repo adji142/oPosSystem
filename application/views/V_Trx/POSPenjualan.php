@@ -204,11 +204,14 @@
                           ?>
                         </select>
                       </div>
-                      <div class="col-md-6 col-sm-12 form-group">
+                      <div class="col-md-3 col-sm-12 form-group">
                         <select id="cekongkir_TableInfo" name="cekongkir_TableInfo" class="js-states form-control">
                           <option value="0">Pilih Service Pengiriman</option>
                           ?>
                         </select>
+                      </div>
+                      <div class="col-md-3 col-sm-12 form-group">
+                        <input type="text" name="NoResi" id="NoResi" placeholder="No Resi" class="form-control">
                       </div>
                     </div>
                     <br><br><br><br>
@@ -1553,6 +1556,7 @@
           'T_Kembali' : $('#T_Kembali').val().replace(',',''),
           'T_Ongkir' : $('#T_Ongkir').val().replace(',',''),
           'Servicexpdc' : $('#cekongkir_TableInfo').val(),
+          'NoResi' : $('#NoResi').val()
         }
         arrx.push(arr);
         var array_header  = JSON.stringify(arrx);

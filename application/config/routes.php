@@ -90,3 +90,7 @@ $route['return'] = 'Home/return';
 
 // Finance
 $route['CashFlow'] = 'Home/CashFlow';
+
+// Laporan
+
+$route['laporanpenjualan'] = 'Home/laporanpenjualan';

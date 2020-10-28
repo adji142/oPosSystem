@@ -179,4 +179,10 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Finance/cahsflow');
 	}
+
+	// Laporan
+	public function laporanpenjualan()
+	{
+		$this->load->view('V_Report/laporanpenjualan');
+	}
 }

@@ -255,7 +255,8 @@ class C_POS extends CI_Controller {
 					'T_Bayar' => $header[0]->T_Bayar,
 					'T_Kembali' => $header[0]->T_Kembali,
 					'T_Ongkir' => $header[0]->T_Ongkir,
-					'Servicexpdc' => $header[0]->Servicexpdc
+					'Servicexpdc' => $header[0]->Servicexpdc,
+					'NoResi' => $header[0]->NoResi
 				);
 				$PayNow = $header[0]->PayNow;
 				$appendHeader = $this->ModelsExecuteMaster->ExecInsert($paramheader,'penjualanheader');
