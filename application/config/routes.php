@@ -94,3 +94,4 @@ $route['CashFlow'] = 'Home/CashFlow';
 // Laporan
 
 $route['laporanpenjualan'] = 'Home/laporanpenjualan';
+$route['laporanstok'] = 'Home/laporanstok';

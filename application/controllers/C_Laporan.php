@@ -50,8 +50,14 @@ class C_Laporan extends CI_Controller {
 	{
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
-		$SQL = "SELECT * FROM vw_rpt_stok";
+		$Periode = $this->input->post('Periode');
 
+		$dt = '01-'.$Periode;
+		$TglAwal = $dt;
+		$TglAkhir = date("Y-m-t", strtotime($dt));
+
+		$SQL = "CALL rpt_stok('".$TglAwal."','".$TglAkhir."')";
+		// var_dump($SQL);
 		$rs = $this->db->query($SQL);
 
 		if ($rs->num_rows()>0) {
