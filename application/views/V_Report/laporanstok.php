@@ -97,7 +97,7 @@
         $.ajax({
             type: "post",
             url: "<?=base_url()?>C_Laporan/LaporanStok",
-            data: {'Periode':$('#Bulan').val()+'-'+$('#Tahun').val()},
+            data: {'Periode':$('#Tahun').val() +'-'+ $('#Bulan').val()},
             dataType: "json",
             success: function (response) {
               bindGrid_A(response.data);  

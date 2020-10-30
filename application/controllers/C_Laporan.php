@@ -52,12 +52,33 @@ class C_Laporan extends CI_Controller {
 
 		$Periode = $this->input->post('Periode');
 
-		$dt = '01-'.$Periode;
+		$dt = $Periode.'-01';
 		$TglAwal = $dt;
 		$TglAkhir = date("Y-m-t", strtotime($dt));
 
 		$SQL = "CALL rpt_stok('".$TglAwal."','".$TglAkhir."')";
 		// var_dump($SQL);
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows()>0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$data['message'] = 'No Record Found';
+		}
+		echo json_encode($data);
+	}
+
+	public function LaporanPenjualanShoppe()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$TglAwal = $this->input->post('TglAwal');
+		$TglAkhir = $this->input->post('TglAkhir');
+
+		$SQL = "CALL rpt_penjualanshopee('".$TglAwal."','".$TglAkhir."')";
+
 		$rs = $this->db->query($SQL);
 
 		if ($rs->num_rows()>0) {
