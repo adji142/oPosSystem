@@ -212,6 +212,7 @@ class C_General extends CI_Controller {
 		  echo "cURL Error #:" . $err;
 		} else {
 			$result = json_decode($response, true);
+			// var_dump($result);
 		  if ($result['rajaongkir']['status']['code'] == 200){
 		  	$data['success'] = true;
 		  	$data['data'] = $result['rajaongkir']['results'];
@@ -219,7 +220,7 @@ class C_General extends CI_Controller {
 		  	$data['dest_det'] = $result['rajaongkir']['destination_details'];
 		  }
 		  else{
-		  	$data['message'] = $result['rajaongkir']['results'];
+		  	$data['message'] = $result['rajaongkir']['status']['description'];
 		  }
 		}
 		echo json_encode($data);

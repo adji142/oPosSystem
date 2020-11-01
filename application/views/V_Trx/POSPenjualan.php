@@ -1787,6 +1787,7 @@
         dataType: "json",
         success: function (response) {
           if (response.data.length > 0) {
+            console.log(response.data.length);
             for (i =0; i< response.data.length ;i++) {
               // console.log(response.data[i]);
               $('#cekongkir_TableInfo').empty();
@@ -1811,20 +1812,42 @@
             }
           }
           else{
+            console.log('IN');
             $.ajax({
               async: false,
               type: "post",
-              url: "<?=base_url()?>C_General/GetBerat",
-              data: {'KodeItem':items_data[i]['ItemCode']},
+              url: "<?=base_url()?>C_expdc/ReadDetail",
+              data: {'KodeExpdc':$('#Expedisi').val()},
               dataType: "json",
-              success: function (response) {
+              success: function (response2) {
                 var TotalBerat = $('#beratStandar').val();
                 console.log(TotalBerat);
-                if(response.Berat > 0){
-                  $('#beratStandar').val((parseFloat(response.Berat) * parseFloat(items_data[i]['Qty'])));
+                if(response2.data.length > 0){
+                  $('#cekongkir_TableInfo').empty();
+                  $('#cekongkir_TableInfo').append("<option value='0'>Pilih Service Pengiriman</option>");
+
+                  for (var i = 0; i < response2.data.length; i++) {
+                    console.log(response2.data[i]['NamaService']);
+                    $('#cekongkir_TableInfo').append("<option value='"+response2.data[i].NamaService+"|0'>"+response2.data[i].NamaService+"</option>");                    
+                  }
                 }
               }
             });
+
+            // $.ajax({
+            //   async: false,
+            //   type: "post",
+            //   url: "<?=base_url()?>C_General/GetBerat",
+            //   data: {'KodeItem':items_data[i]['ItemCode']},
+            //   dataType: "json",
+            //   success: function (response) {
+            //     var TotalBerat = $('#beratStandar').val();
+            //     console.log(TotalBerat);
+            //     if(response.Berat > 0){
+            //       $('#beratStandar').val((parseFloat(response.Berat) * parseFloat(items_data[i]['Qty'])));
+            //     }
+            //   }
+            // });
           }
 
         }

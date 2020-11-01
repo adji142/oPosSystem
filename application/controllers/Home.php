@@ -197,4 +197,12 @@ class home extends CI_Controller {
 	{
 		$this->load->view('V_Report/laporanbookingstok');	
 	}
+	public function laporanmutasi()
+	{
+		$this->load->view('V_Report/laporanmutasistok');
+	}
+	public function laporanlabarugi()
+	{
+		$this->load->view('V_Report/laporanlabarugi');
+	}
 }

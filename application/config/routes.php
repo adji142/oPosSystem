@@ -97,3 +97,5 @@ $route['laporanpenjualan'] = 'Home/laporanpenjualan';
 $route['laporanstok'] = 'Home/laporanstok';
 $route['laporanpenjualanshopee'] = 'Home/laporanpenjualanshopee';
 $route['laporanbookingstok'] = 'Home/laporanbookingstok';
+$route['laporanmutasi'] = 'Home/laporanmutasi';
+$route['laporanlabarugi'] = 'Home/laporanlabarugi';

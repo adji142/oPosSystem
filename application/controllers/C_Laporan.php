@@ -111,4 +111,45 @@ class C_Laporan extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+	public function LaporanMutasi()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$TglAwal = $this->input->post('TglAwal');
+		$TglAkhir = $this->input->post('TglAkhir');
+		$Mutasi = $this->input->post('Mutasi');
+
+		$SQL = "CALL rpt_mutasi('".$TglAwal."','".$TglAkhir."',".$Mutasi.")";
+
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows()>0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$data['message'] = 'No Record Found';
+		}
+		echo json_encode($data);
+	}
+	public function LaporanLabaRugi()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$TglAwal = $this->input->post('TglAwal');
+		$TglAkhir = $this->input->post('TglAkhir');
+
+		$SQL = "CALL rpt_labarugi('".$TglAwal."','".$TglAkhir."')";
+
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows()>0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$data['message'] = 'No Record Found';
+		}
+		echo json_encode($data);
+	}
 }
