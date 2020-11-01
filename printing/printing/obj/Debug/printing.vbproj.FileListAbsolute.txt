@@ -19,3 +19,14 @@ D:\DAWNSTORE\printing\printing\obj\Debug\printing.xml
 D:\DAWNSTORE\printing\printing\obj\Debug\printing.pdb
 D:\DAWNSTORE\printing\printing\bin\Debug\printing.pdb
 D:\DAWNSTORE\printing\printing\bin\Debug\printing.xml
+C:\xampp\htdocs\oPos\printing\printing\bin\Debug\printing.exe.config
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.exe
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.xml
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.pdb
+C:\xampp\htdocs\oPos\printing\printing\bin\Debug\printing.exe
+C:\xampp\htdocs\oPos\printing\printing\bin\Debug\printing.pdb
+C:\xampp\htdocs\oPos\printing\printing\bin\Debug\printing.xml
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.Form1.resources
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.Resources.resources
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.ProjectInstaller.resources
+C:\xampp\htdocs\oPos\printing\printing\obj\Debug\printing.vbproj.GenerateResource.Cache

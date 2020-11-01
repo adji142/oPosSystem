@@ -5,47 +5,16 @@ Public Class Form1
 
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Dim ex As New ExportGrid()
+        Dim data As New PrintedData
+        Dim ds As New DataSet
+        ds = data.getPrintingdoc()
+        If ds.Tables(0).Rows.Count > 0 Then
+            ex._Create(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
+            data.UpdateFlag(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
+        Else
 
-        'Dim PrintPreviewDialog1 As PrintPreviewDialog = New PrintPreviewDialog
-
-        'Dim PrintDocument1 As Drawing.Printing.PrintDocument = New Drawing.Printing.PrintDocument
-
-        'PrintPreviewDialog1.Document = PrintDocument1
-
-        ''PrintPreviewDialog1.ShowDialog()
-
-        'AddHandler PrintDocument1.PrintPage, AddressOf Me.PrintDocument1_PrintPage
-
-        'PrintDocument1.Print()
-
-        'Dim Server As New ConnectionInfo
-        Dim DataTable As Table
-
-        Me.Cursor = Cursors.WaitCursor
-        '-----------------------------------------------------------------------------------------   
-
-        '-----------------------------------------------------------------------------------------   
-        'Dim DBX As Object = New DBConnection().ConnectionSetting()
-
-        'Setting Koneksi Database
-        'With Server
-        '    .ServerName = "DRIVER={MySQL ODBC 5.3 ANSI Driver};SERVER=" + DBX.Server + "; PORT = " + DBX.Port.ToString + "; "
-        '    .DatabaseName = DBX.Database
-        '    .UserID = DBX.UserID
-        '    .Password = DBX.Password
-        'End With
-        '-----------------------------------------------------------------------------------------
-        Dim RPTObject As New ReportDocument
-        RPTObject.Load(System.AppDomain.CurrentDomain.BaseDirectory() + "\rptHasilPerankingan2.RPT")
-
-        For Each DataTable In RPTObject.Database.Tables
-            'DataTable.LogOnInfo.ConnectionInfo = Server
-            DataTable.ApplyLogOnInfo(DataTable.LogOnInfo)
-        Next
-
-        'RPTObject.PrintToPrinter()
-
-        Me.Cursor = Cursors.Default
+        End If
     End Sub
 
 
