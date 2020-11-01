@@ -37,7 +37,7 @@ class C_POS extends CI_Controller {
 				a.NoTransaksi,a.TglTransaksi,c.NamaSales as Sales,a.Createdby,
 				CASE WHEN a.TransactionType = 1 THEN 'Ecomerce' ELSE 
 					CASE WHEN a.TransactionType = 2 THEN 'Direct Sales' ELSE 
-						CASE WHEN A.TransactionType = 3 THEN 'DropShip' ELSE 
+						CASE WHEN a.TransactionType = 3 THEN 'DropShip' ELSE 
 							CASE WHEN a.TransactionType = 4 THEN 'Reseller' ELSE '' END
 						END
 					END
