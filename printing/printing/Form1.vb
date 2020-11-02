@@ -18,7 +18,16 @@ Public Class Form1
 
         RPTObject.VerifyDatabase()
         RPTObject.Refresh()
-        RPTObject.ExportToDisk(ExportFormatType.PortableDocFormat, System.AppDomain.CurrentDomain.BaseDirectory() & "/xxx2.pdf")
+        Dim pDoc As New System.Drawing.Printing.PrintDocument
+        Dim PrintLayout As New CrystalDecisions.Shared.PrintLayoutSettings
+        Dim printerSettings As New System.Drawing.Printing.PrinterSettings
+
+        printerSettings.PrinterName = "58mm Series Printer"
+        Dim pSettings As System.Drawing.Printing.PageSettings = New System.Drawing.Printing.PageSettings(printerSettings)
+        RPTObject.PrintOptions.DissociatePageSizeAndPrinterPaperSize = True
+        RPTObject.PrintOptions.PrinterDuplex = PrinterDuplex.Simplex
+        'RPTObject.ExportToDisk(ExportFormatType.PortableDocFormat, System.AppDomain.CurrentDomain.BaseDirectory() & "/xxx2.pdf")
+        RPTObject.PrintToPrinter(printerSettings, pSettings, False, PrintLayout)
     End Sub
 
 

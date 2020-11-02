@@ -107,7 +107,19 @@ Public Class Service1
             RPTObject.VerifyDatabase()
             RPTObject.Refresh()
             'RPTObject.ExportToDisk(ExportFormatType.PortableDocFormat, System.AppDomain.CurrentDomain.BaseDirectory() & "/xxx2.pdf")
-            RPTObject.PrintToPrinter(1, False, 1, 1)
+            Dim pDoc As New System.Drawing.Printing.PrintDocument
+            Dim PrintLayout As New CrystalDecisions.Shared.PrintLayoutSettings
+            Dim printerSettings As New System.Drawing.Printing.PrinterSettings
+
+            printerSettings.PrinterName = "58mm Series Printer"
+            Dim pSettings As System.Drawing.Printing.PageSettings = New System.Drawing.Printing.PageSettings(printerSettings)
+            RPTObject.PrintOptions.DissociatePageSizeAndPrinterPaperSize = True
+            RPTObject.PrintOptions.PrinterDuplex = PrinterDuplex.Simplex
+
+
+            RPTObject.PrintToPrinter(printerSettings, pSettings, False)
+            'RPTObject.PrintToPrinter(1, False, 1, 1)
+
         Else
             Me.WriteToFile("Nothing to print: " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"))
         End If

@@ -53,7 +53,7 @@ Public Class PrintedData
         Dim DT As New penjualan.PjlPrintDataTable
         Dim newRow As penjualan.PjlPrintRow
         Dim data As New DataSet
-        Dim URI As String = "localhost/oPosSystem/getprinted"
+        Dim URI As String = "project.aiscoder.com/opos/getprinted"
         Dim hwr As HttpWebRequest
         Dim respornseserver = ""
 

@@ -1993,6 +1993,7 @@
         dataType: "json",
         success: function (response) {
           if(response.success == true){
+            items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items; 
             var html = '';
             var dflt = 0;
             var akumulasiQty = 1;

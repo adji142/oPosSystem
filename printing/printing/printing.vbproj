@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2189D5DF-3A44-4F7D-8F34-024C8E0E828D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>printing.My.MyApplication</StartupObject>
+    <StartupObject>printing.Service1</StartupObject>
     <RootNamespace>printing</RootNamespace>
     <AssemblyName>printing</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>Console</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
