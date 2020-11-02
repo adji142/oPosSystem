@@ -1104,8 +1104,8 @@
 
     $('#AddCust').click(function () {
       // $('#post_Cust').reset();
+      console.log($('#KodeCustomerPOS').val());
       document.getElementById("post_Cust").reset();
-      
       $('#modal_AddCust').modal('show');
       $.ajax({
         type: "post",
@@ -1119,7 +1119,10 @@
       });
     });
     $('.close').click(function() {
-      GetCustomer();
+      console.log($('#KodeCustomerPOS').val());
+      if ($('#KodeCustomerPOS').val() == "") {
+        GetCustomer();
+      }
     });
     $('#post_Cust').submit(function (e) {
       $('#btn_Save_Cust').text('Tunggu Sebentar.....');
