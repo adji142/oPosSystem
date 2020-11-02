@@ -248,7 +248,7 @@ class C_General extends CI_Controller {
 
 		try {
 			$this->db->trans_begin();
-			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('Printed'=>0),array('NoTransaksi'=> $NoTransaksi),'printinglog');
+			$rs = $this->ModelsExecuteMaster->ExecUpdate(array('Printed'=>0),array('NoTransaksi'=> $NoTransaksi),'penjualanheader');
 			if ($rs) {
 				$this->db->trans_commit();
 				$data['success'] = true;
@@ -262,6 +262,38 @@ class C_General extends CI_Controller {
 			$data['success'] = false;
 			$data['message'] = "Sistem Gagal Melakukan Pemrossan Data: ".$undone['message'];
 			$this->db->trans_rollback();
+		}
+		echo json_encode($data);
+	}
+	public function GetPrintingDocument()
+	{
+		$data = array();
+
+		$SQL = "SELECT 
+				a.NoTransaksi,
+				a.TglTransaksi,
+				a.Createdby,
+				a.T_Bayar,
+				a.T_Kembali,
+				b.Qty,
+				b.Harga,
+				c.Article,
+				(SELECT NamaPerusahaan FROM tperusahaan LIMIT 1) NamaPerusahaan,
+				(SELECT Alamat1 FROM tperusahaan LIMIT 1) Alamat1,
+				(SELECT NoTlp FROM tperusahaan LIMIT 1) NoTlp
+		FROM penjualanheader a
+		LEFT JOIN penjualandetail b on a.NoTransaksi = b.NoTransaksi
+		LEFT JOIN vw_stok c on b.KodeItem = c.ItemCode
+		WHERE a.Printed = 0 ORDER BY a.TglTransaksi";
+
+		try {
+			$rs = $this->db->query($SQL);
+			if ($rs->num_rows() > 0) {
+				$x = $this->ModelsExecuteMaster->ExecUpdate(array('Printed'=>1),array('NoTransaksi'=> $rs->row()->NoTransaksi),'penjualanheader');
+				$data = $rs->result();
+			}
+		} catch (Exception $e) {
+			catchjump:
 		}
 		echo json_encode($data);
 	}

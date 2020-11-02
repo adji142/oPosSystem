@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports System.Threading
 Imports System.Configuration
+Imports CrystalDecisions.CrystalReports.Engine
+Imports CrystalDecisions.Shared
 
 Public Class Service1
 
@@ -78,14 +80,34 @@ Public Class Service1
         'SendBroadcast()
     End Sub
     Public Sub print()
+        'Dim ex As New ExportGrid()
+        'Dim data As New PrintedData
+        'Dim ds As New DataSet
+        'ds = data.getPrintingdoc()
+        'If ds.Tables(0).Rows.Count > 0 Then
+        '    Me.WriteToFile("Printing: " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"))
+        '    ex._Create(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
+        '    data.UpdateFlag(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
+        'Else
+        '    Me.WriteToFile("Nothing to print: " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"))
+        'End If
+
         Dim ex As New ExportGrid()
         Dim data As New PrintedData
         Dim ds As New DataSet
-        ds = data.getPrintingdoc()
+        ds = data.GetDataAPI()
+
         If ds.Tables(0).Rows.Count > 0 Then
             Me.WriteToFile("Printing: " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"))
-            ex._Create(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
-            data.UpdateFlag(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
+            Dim RPTObject As New ReportDocument
+            RPTObject.Load(System.AppDomain.CurrentDomain.BaseDirectory() + "\Report3.rpt")
+            'RPTObject.ParameterFields("NoTransaksi").CurrentValues.AddValue(ds.Tables(0).Rows(0)("NoTransaksi"))
+            RPTObject.SetDataSource(ds)
+
+            RPTObject.VerifyDatabase()
+            RPTObject.Refresh()
+            'RPTObject.ExportToDisk(ExportFormatType.PortableDocFormat, System.AppDomain.CurrentDomain.BaseDirectory() & "/xxx2.pdf")
+            RPTObject.PrintToPrinter(1, False, 1, 1)
         Else
             Me.WriteToFile("Nothing to print: " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt"))
         End If

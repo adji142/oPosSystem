@@ -1,4 +1,5 @@
 ﻿Imports CrystalDecisions.CrystalReports.Engine
+Imports CrystalDecisions.Shared
 
 Public Class Form1
 
@@ -8,13 +9,16 @@ Public Class Form1
         Dim ex As New ExportGrid()
         Dim data As New PrintedData
         Dim ds As New DataSet
-        ds = data.getPrintingdoc()
-        If ds.Tables(0).Rows.Count > 0 Then
-            ex._Create(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
-            data.UpdateFlag(ds.Tables(0).Rows(0)("NoTransaksi").ToString)
-        Else
+        ds = data.GetDataAPI()
 
-        End If
+        Dim RPTObject As New ReportDocument
+        RPTObject.Load(System.AppDomain.CurrentDomain.BaseDirectory() + "\Report3.rpt")
+        'RPTObject.ParameterFields("NoTransaksi").CurrentValues.AddValue(ds.Tables(0).Rows(0)("NoTransaksi"))
+        RPTObject.SetDataSource(ds)
+
+        RPTObject.VerifyDatabase()
+        RPTObject.Refresh()
+        RPTObject.ExportToDisk(ExportFormatType.PortableDocFormat, System.AppDomain.CurrentDomain.BaseDirectory() & "/xxx2.pdf")
     End Sub
 
 
