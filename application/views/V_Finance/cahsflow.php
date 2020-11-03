@@ -409,7 +409,7 @@
                     dataField: "TransactionType",
                     caption: "TransactionType",
                     allowEditing:false,
-                    visible: false
+                    visible: true
                 },
                 {
                     dataField: "Action",
@@ -417,8 +417,9 @@
                     allowEditing:false,
                     cellTemplate: function(cellElement, cellInfo) {
                       var LinkAccess = "";
-                      
-                      if (cellInfo.data.TransactionType == 1 && cellInfo.data.Refrensicair == '') {
+                      console.log(cellInfo.data.Refrensicair)
+                      if (cellInfo.data.TransactionType == "1" && cellInfo.data.Refrensicair == '') {
+                        console.log("masuk")
                         LinkAccess += "<button class='badge badge-danger StartPay' onClick =Pencairan('"+cellInfo.data.NoTransaksi+"','"+cellInfo.data.NoPenjualan+"')>Pencairan</button>";
                       }
                       cellElement.append(LinkAccess);
