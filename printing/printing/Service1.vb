@@ -71,7 +71,15 @@ Public Class Service1
         Me.ScheduleService()
     End Sub
     Private Sub WriteToFile(text As String)
-        Dim path As String = "C:\log\ServiceLog.txt"
+        Dim path As String = "C:\log\ServiceLog-" + DateTime.Now.ToString("dd-MM-yyyy") + ".txt"
+        Dim SaveDirectory As String = "C:\log"
+
+        Dim Filename As String = System.IO.Path.GetFileName(path)
+        Dim SavePath As String = System.IO.Path.Combine(SaveDirectory, Filename)
+        If Not System.IO.File.Exists(SavePath) Then
+            'The file exists
+            File.Create(path).Dispose()
+        End If
         Using writer As New StreamWriter(path, True)
             writer.WriteLine(String.Format(text, DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")))
             writer.Close()

@@ -1,5 +1,6 @@
 ﻿Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
+Imports System.IO
 
 Public Class Form1
 
@@ -69,4 +70,19 @@ Public Class Form1
 
     End Sub
 
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim path As String = "C:\log\ServiceLog-" + DateTime.Now.ToString("dd-MM-yyyy") + ".txt"
+        Dim SaveDirectory As String = "C:\log"
+
+        Dim Filename As String = System.IO.Path.GetFileName(path)
+        Dim SavePath As String = System.IO.Path.Combine(SaveDirectory, Filename)
+        If Not System.IO.File.Exists(SavePath) Then
+            'The file exists
+            File.Create(path).Dispose()
+        End If
+        Using writer As New StreamWriter(path, True)
+            writer.WriteLine(String.Format(Text, DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")))
+            writer.Close()
+        End Using
+    End Sub
 End Class
