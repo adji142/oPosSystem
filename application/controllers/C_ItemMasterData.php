@@ -69,6 +69,7 @@ class C_ItemMasterData extends CI_Controller {
 		$BeratStandar = $this->input->post('BeratStandar');
 		$Createdby = $this->session->userdata('username');
 		$Createdon = date("Y-m-d h:i:sa");
+		$EcomPrice = $this->input->post('EcomPrice');
 		$isActive = 1;
 
 
@@ -90,7 +91,8 @@ class C_ItemMasterData extends CI_Controller {
 				'Createdby' => $Createdby,
 				'Createdon' => $Createdon,
 				'isActive' => $isActive,
-				'BeratStandar'=>$BeratStandar
+				'BeratStandar'=>$BeratStandar,
+				'EcomPrice' => $EcomPrice
 			);
 		}
 		elseif ($formtype == 'edit') {
@@ -107,7 +109,8 @@ class C_ItemMasterData extends CI_Controller {
 				'LastUpdatedby' => $Createdby,
 				'LastUpdatedon' => $Createdon,
 				'isActive' => $isActive,
-				'BeratStandar'=>$BeratStandar
+				'BeratStandar'=>$BeratStandar,
+				'EcomPrice' => $EcomPrice
 			);
 		}
 		if ($formtype == 'add') {

@@ -96,10 +96,17 @@
                         </div>
                       </div>
                       <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Default Price <span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Harga Reguler <span class="required">*</span>
                         </label>
                         <div class="col-md-8 col-sm-8 ">
-                          <input type="Number" name="DefaultPrice" id="DefaultPrice" required="" placeholder="Default Price" class="form-control ">
+                          <input type="Number" name="DefaultPrice" id="DefaultPrice" required="" placeholder="Harga Reguler" class="form-control ">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Harga Shoppe <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 ">
+                          <input type="Number" name="EcomPrice" id="EcomPrice" required="" placeholder="Harga Shoppe" class="form-control ">
                         </div>
                       </div>
                       <div class="item form-group">
@@ -301,6 +308,7 @@
             $('#Satuan').val(v.Satuan);
             $('#ItemGroup').val(v.ItemGroup).change();
             $('#BeratStandar').val(v.BeratStandar);
+            $('#EcomPrice').val(v.EcomPrice);
 
             $('#formtype').val("edit");
 

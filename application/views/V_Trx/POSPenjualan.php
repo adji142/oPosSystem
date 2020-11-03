@@ -138,7 +138,7 @@
                         <textarea name="Alamat_ori" id="Alamat_ori" class="form-control" rows="1" readonly=""></textarea>
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
-                        <input type="text" name="Nama_ori" id="Nama_ori" class="form-control" readonly="">
+                        <input type="text" name="Nama_ori" id="Nama_ori" class="form-control" readonly="" placeholder="Nama Pengirim">
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
                         <input type="text" name="Notlp_Ori" id="Notlp_Ori" class="form-control" readonly="">
@@ -1214,35 +1214,38 @@
         });
       }
       else{
-        if (isLevelingPrice == 1) {
-          console.log(akumulasiQty)
-          GetLevelingHarga(parseInt(akumulasiQty));
-          dflt = $('#LevelingPrice').val();
+        // if (isLevelingPrice == 1) {
+        //   console.log(akumulasiQty)
+        //   GetLevelingHarga(parseInt(akumulasiQty));
+        //   dflt = $('#LevelingPrice').val();
 
-          items_data.push({
-            ItemCode : ItemCode,
-            ItemName : ItemName,
-            Qty : parseInt(prevQty) + 1,
-            Satuan : Satuan,
-            Price: dflt,
-            OnHand:Stok,
-            Diskon : 0,
-            Total : (parseInt(prevQty) + 1) * dflt,
-            __KEY__:create_UUID(),
-            BaseRef : ''
-          });
-          // console.log(items_data.length);
-          for (var i = 0 ; i<items_data.length; i++) {
-            // items_data.splice(i, dflt);
-            items_data[i].Price = dflt;
-            console.log(items_data[i].Price);
-          }
-          // console.log(items_data);
-          bindGridItem(items_data);
-          addSubTotal();
-        }
-        else{
-          items_data.push({
+        //   items_data.push({
+        //     ItemCode : ItemCode,
+        //     ItemName : ItemName,
+        //     Qty : parseInt(prevQty) + 1,
+        //     Satuan : Satuan,
+        //     Price: dflt,
+        //     OnHand:Stok,
+        //     Diskon : 0,
+        //     Total : (parseInt(prevQty) + 1) * dflt,
+        //     __KEY__:create_UUID(),
+        //     BaseRef : ''
+        //   });
+        //   // console.log(items_data.length);
+        //   for (var i = 0 ; i<items_data.length; i++) {
+        //     // items_data.splice(i, dflt);
+        //     items_data[i].Price = dflt;
+        //     console.log(items_data[i].Price);
+        //   }
+        //   // console.log(items_data);
+        //   bindGridItem(items_data);
+        //   addSubTotal();
+        // }
+        // else{
+          
+        //   // GetBeratStandar();
+        // }
+        items_data.push({
             ItemCode : ItemCode,
             ItemName : ItemName,
             Qty : parseInt(prevQty) + 1,
@@ -1256,8 +1259,6 @@
           });
           bindGridItem(items_data);
           addSubTotal();
-          // GetBeratStandar();
-        }
       }
     });
     $('#FindItem').click(function () {
@@ -1454,12 +1455,18 @@
                 akumulasiQty += parseInt(z.Qty);
               });
               $.each(response.data,function (k,v) {
-                if (isLevelingPrice == 1) {
-                  GetLevelingHarga(parseInt(akumulasiQty));
-                  dflt = $('#LevelingPrice').val();
+                // if (isLevelingPrice == 1) {
+                //   GetLevelingHarga(parseInt(akumulasiQty));
+                //   dflt = $('#LevelingPrice').val();
+                // }
+                // else{
+                //   dflt = v.Price
+                // }
+                if ($('#TransactionType').val() ==  "1") {
+                  dflt = v.EcomPrice;
                 }
                 else{
-                  dflt = v.Price
+                  dflt = v.Price 
                 }
                 items_data.push({
                   ItemCode : v.KodeItem,
@@ -1744,7 +1751,7 @@
             //     }
             //   }
             // });
-            $('#Nama_ori').attr('disabled',false);
+            $('#Nama_ori').attr('readonly',false);
 
             $('#provinsi_dest').val('').change();
             $('#Kota_dest').val('').change();
@@ -1866,7 +1873,7 @@
         arr["Price"]    = harga;
         arr["Qty"]      = parseInt(gridItems[i]["Qty"]);
         arr["Diskon"]   = gridItems[i]['Diskon'],
-        arr['Total']    = (harga * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
+        arr['Total']    = (harga * parseInt(gridItems[i]['Qty'])) - parseFloat(gridItems[i]['Diskon']);
         arr["__KEY__"]  = gridItems[i]["__KEY__"];
         arr["BaseRef"]  = gridItems[i]["BaseRef"];
         
@@ -2033,33 +2040,41 @@
                   //   return output;
                   // });
                   // console.log(akumulasiQty);
-                  if (isLevelingPrice == 1)  {
-                    GetLevelingHarga(parseInt(akumulasiQty));
-                    dflt = $('#LevelingPrice').val();
-                    // UpdateHarga(dflt);
-                    items_data.push({
-                      ItemCode : v.ItemCode,
-                      ItemName : v.ItemName,
-                      Qty : parseInt(prevQty) + 1,
-                      Satuan : v.Satuan,
-                      Price: dflt,
-                      Diskon : 0,
-                      Total : (parseInt(prevQty) + 1) * dflt,
-                      __KEY__:create_UUID(),
-                      BaseRef : ''
-                    });
-                    // console.log(items_data.length);
-                    for (var i = 0 ; i<items_data.length; i++) {
-                      // items_data.splice(i, dflt);
-                      items_data[i].Price = dflt;
-                      // console.log(items_data[i].Price);
-                    }
-                    // console.log(items_data);
-                    bindGridItem(items_data);
-                    addSubTotal();
+                  // if (isLevelingPrice == 1)  {
+                  //   GetLevelingHarga(parseInt(akumulasiQty));
+                  //   dflt = $('#LevelingPrice').val();
+                  //   // UpdateHarga(dflt);
+                  //   items_data.push({
+                  //     ItemCode : v.ItemCode,
+                  //     ItemName : v.ItemName,
+                  //     Qty : parseInt(prevQty) + 1,
+                  //     Satuan : v.Satuan,
+                  //     Price: dflt,
+                  //     Diskon : 0,
+                  //     Total : (parseInt(prevQty) + 1) * dflt,
+                  //     __KEY__:create_UUID(),
+                  //     BaseRef : ''
+                  //   });
+                  //   // console.log(items_data.length);
+                  //   for (var i = 0 ; i<items_data.length; i++) {
+                  //     // items_data.splice(i, dflt);
+                  //     items_data[i].Price = dflt;
+                  //     // console.log(items_data[i].Price);
+                  //   }
+                  //   // console.log(items_data);
+                  //   bindGridItem(items_data);
+                  //   addSubTotal();
+                  // }
+                  // else{
+                    
+                  // }
+                  console.log($('#TransactionType').val());
+                  if ($('#TransactionType').val() == "1") {
+                    dflt = v.EcomPrice;
                   }
                   else{
                     dflt = v.DefaultPrice;
+                  }
                     items_data.push({
                       ItemCode : v.ItemCode,
                       ItemName : v.ItemName,
@@ -2073,7 +2088,7 @@
                     });
                     bindGridItem(items_data);
                     addSubTotal();
-                  }
+
                   items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items; 
                   useReturnData(items_data);
                   console.log(items_data);
@@ -2186,11 +2201,13 @@
             onRowInserting: function(e) {
             },
             onRowInserted: function(e) {
-              if (isLevelingPrice == 1) {
-                GetLevelingHarga(parseInt(akumulasiQty));
-                dflt = $('#LevelingPrice').val();
-                // UpdateHarga(dflt);
-                var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
+              // if (isLevelingPrice == 1) {
+              //   GetLevelingHarga(parseInt(akumulasiQty));
+              //   dflt = $('#LevelingPrice').val();
+              //   // UpdateHarga(dflt);
+                
+              // }
+              var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
 
                 var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
 
@@ -2198,17 +2215,16 @@
                   arr["ItemCode"] = gridItems[i]["ItemCode"];
                   arr["ItemName"] = gridItems[i]["ItemName"];
                   arr["Satuan"]   = gridItems[i]["Satuan"];
-                  arr["Price"]    = dflt;
+                  arr["Price"]    = gridItems[i]["Price"];
                   arr["Qty"]      = parseInt(gridItems[i]["Qty"]);
                   arr["Diskon"]   = gridItems[i]['Diskon'],
-                  arr['Total']    = (dflt * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
+                  arr['Total']    = (parseFloat(gridItems[i]["Price"]) * parseInt(gridItems[i]['Qty'])) - parseFloat(gridItems[i]['Diskon']);
                   arr["__KEY__"]  = gridItems[i]["__KEY__"];
                   arr["BaseRef"]  = gridItems[i]["BaseRef"];
                   
                   store.update(gridItems[i],arr)
                   grid.refresh();
                 }
-              }
             },
             onRowUpdating: function(e) {
             },
@@ -2225,27 +2241,28 @@
               }
               for (var i = 0; i < gridItems.length; i++) {
                 // console.log(isLevelingPrice);
-                if (isLevelingPrice == 1) {
-                  GetLevelingHarga(akumulasiQty);
-                  dflt = $('#LevelingPrice').val();
-                }
-                else{
-                  dflt = gridItems[i]["Price"];
-                }
+                // if (isLevelingPrice == 1) {
+                //   GetLevelingHarga(akumulasiQty);
+                //   dflt = $('#LevelingPrice').val();
+                // }
+                // else{
+                //   dflt = gridItems[i]["Price"];
+                // }
                 console.log(dflt);
                 arr["ItemCode"] = gridItems[i]["ItemCode"];
                 arr["ItemName"] = gridItems[i]["ItemName"];
                 arr["Satuan"]   = gridItems[i]["Satuan"];
-                arr["Price"]    = dflt;
+                arr["Price"]    = gridItems[i]["Price"];
                 arr["Qty"]      = parseInt(gridItems[i]["Qty"]);
                 arr["Diskon"]   = gridItems[i]['Diskon'],
-                arr['Total']    = (dflt * parseInt(gridItems[i]['Qty'])) - (gridItems[i]['Total'] / 100) * gridItems[i]['Diskon'];
+                arr['Total']    = (parseFloat(gridItems[i]["Price"]) * parseInt(gridItems[i]['Qty'])) - parseFloat(gridItems[i]['Diskon']);
                 arr["__KEY__"]  = gridItems[i]["__KEY__"];
                 arr["BaseRef"]  = gridItems[i]["BaseRef"];
                 
                 store.update(gridItems[i],arr)
                 grid.refresh();
               }
+              items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
               addSubTotal();
               // GetBeratStandar();
             },
@@ -2293,9 +2310,10 @@
       var Diskon = 0;
       var grandTotal = 0;
       var changeDue = 0;
+
       for (var i = 0; i < items_data.length; i++) {
         subtotal = subtotal + (parseFloat(items_data[i]["Price"]) * parseInt(items_data[i]["Qty"]));
-        Diskon = Diskon + (subtotal /100 ) * parseFloat(items_data[i]["Diskon"])
+        Diskon = Diskon + parseFloat(items_data[i]['Diskon'])
       }
       $('#T_SubTotal').val(addCommas(subtotal));
       $('#T_DiskTotal').val(addCommas(Diskon));

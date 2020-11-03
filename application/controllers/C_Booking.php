@@ -54,7 +54,7 @@ class C_Booking extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 		$HeaderID = $this->input->post('HeaderID');
 
-		$SQL = "SELECT A.*,B.ItemName,B.Article,B.Stok,B.Satuan FROM bookdetail A 
+		$SQL = "SELECT A.*,B.ItemName,B.Article,B.Stok,B.Satuan,B.EcomPrice FROM bookdetail A 
 				LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
 				where A.NoTransaksi = '".$HeaderID."' ORDER BY A.LineNum";
 
