@@ -76,7 +76,7 @@
                       <div class="col-md-3 col-sm-12 form-group">
                         <select class="js-states form-control" id="TransactionType" name="TransactionType" >
                           <option value = ''>Pilih Tipe Transaksi</option>
-                          <option value="1">Ecommerce</option>
+                          <option value="1">Shoppe</option>
                           <option value="2">Direct Sales</option>
                           <!-- <option value="3">Dropship</option> -->
                           <option value="4">Reseller</option>

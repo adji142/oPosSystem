@@ -80,6 +80,7 @@
     });
     $('#filterbutton').click(function () {
       $.ajax({
+        async : false,
         type: "post",
         url: "<?=base_url()?>C_Laporan/LaporanPenjualan",
         data: {'TglAwal':$('#TglAwal').val(),'TglAkhir':$('#TglAkhir').val()},
@@ -87,7 +88,40 @@
         success: function (response) {
           switch($('#TipeLaporan').val()) {
             case "1":
-                bindGrid_A(response.data);  
+                var items_data = [];
+                var ongkir = '';
+                var jumlahbayar = '';
+                var notrx = '';
+                for (var i = 0; i < response.data.length; i++) {
+                    console.log(response.data[i].NoTransaksi + " - " + response.data[i+1].NoTransaksi);
+                    if (response.data[i].NoTransaksi != response.data[i+1].NoTransaksi) {
+                        ongkir = response.data[i].T_Ongkir;
+                        jumlahbayar = response.data[i].Pembayaran;
+                    }
+                    var arr ={
+                        NoTransaksi     : response.data[i].NoTransaksi,
+                        TglTransaksi    : response.data[i].TglTransaksi,
+                        num             : response.data[i].num,
+                        NamaCustomer    : response.data[i].NamaCustomer,
+                        NamaSales       : response.data[i].NamaSales,
+                        Brand           : response.data[i].Brand,
+                        Alamat_dest     : response.data[i].Alamat_dest,
+                        Notlp_dest      : response.data[i].Notlp_dest,
+                        OldItem         : response.data[i].OldItem,
+                        Qty             : response.data[i].Qty,
+                        Harga           : response.data[i].Harga,
+                        Article         : response.data[i].Article,
+                        Warna           : response.data[i].Warna,
+                        Expedisi        : response.data[i].Expedisi,
+                        noresi          : response.data[i].noresi,
+                        T_Ongkir        : ongkir,
+                        Total           : response.data[i].Total,
+                        PaymentTerm     : response.data[i].PaymentTerm,
+                        Pembayaran      : jumlahbayar
+                    }
+                    items_data.push(arr);
+                }
+                bindGrid_A(items_data);  
               break;
             case "2":
                 bindGrid_B(response.data);

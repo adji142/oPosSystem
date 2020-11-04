@@ -44,6 +44,13 @@
                 </div>
               </div>
             </div>
+
+            <div class="dx-viewport demo-container">
+              <div id="data-grid-demo">
+                <div id="gridContainerDetail">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -373,19 +380,6 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "Debet",
-                    caption: "Debet",
-                    allowEditing:false,
-                    format:"0:#,#.00"
-                },
-                {
-                    dataField: "Credit",
-                    caption: "Credit",
-                    allowEditing:false,
-                    type: "fixedPoint",  
-                    precision: 0
-                },
-                {
                     dataField: "ExternalNote",
                     caption: "Keterangan",
                     allowEditing:false
@@ -401,7 +395,7 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "Saldo",
+                    dataField: "SaldoAkhir",
                     caption: "Saldo",
                     allowEditing:false
                 },
@@ -488,6 +482,117 @@
             const rowData = row && row.data;
             const xdata = rowData && rowData.NoPenjualan;
             NoRefcashflow = xdata
+
+            $.ajax({
+              type: "post",
+              url: "<?=base_url()?>C_CashFlow/ReadDetail",
+              data: {'NoTransaksi':xdata},
+              dataType: "json",
+              success: function (response) {
+                bindGridDetail(response.data);
+              }
+            });
+          }
+        }).dxDataGrid("instance");
+
+        // add dx-toolbar-after
+        // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
+    }
+
+    function bindGridDetail(data) {
+
+      $("#gridContainerDetail").dxDataGrid({
+        allowColumnResizing: true,
+            dataSource: data,
+            keyExpr: "NoTransaksi",
+            showBorders: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnAutoWidth: true,
+            showBorders: true,
+            focusedRowEnabled: true,
+            focusedRowKey: 0,
+            paging: {
+                enabled: true
+            },
+            editing: {
+                mode: "row",
+                texts: {
+                    confirmDeleteMessage: ''  
+                }
+            },
+            searchPanel: {
+                visible: true,
+                width: 240,
+                placeholder: "Search..."
+            },
+            export: {
+                enabled: true,
+                fileName: "Cash Flow"
+            },
+            columns: [
+                {
+                    dataField: "NoTransaksi",
+                    caption: "No Transaksi",
+                    allowEditing:false
+                },
+                {
+                    dataField: "TglTransaksi",
+                    caption: "Tgl Transaksi",
+                    allowEditing:false
+                },
+                {
+                    dataField: "BaseRef",
+                    caption: "No Ref",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Debet",
+                    caption: "Debet",
+                    allowEditing:false,
+                    format:"0:#,#.00"
+                },
+                {
+                    dataField: "Credit",
+                    caption: "Credit",
+                    allowEditing:false,
+                    type: "fixedPoint",  
+                    precision: 0
+                },
+                {
+                    dataField: "ExternalNote",
+                    caption: "Keterangan",
+                    allowEditing:false
+                },
+            ],
+            onEditingStart: function(e) {
+            },
+            onInitNewRow: function(e) {
+            },
+            onRowInserting: function(e) {
+                // logEvent("RowInserting");
+            },
+            onRowInserted: function(e) {
+                // logEvent("RowInserted");
+                // alert('');
+                // console.log(e.data.onhand);
+                // var index = e.row.rowIndex;
+            },
+            onRowUpdating: function(e) {
+                // logEvent("RowUpdating");
+                
+            },
+            onRowUpdated: function(e) {
+                // logEvent(e);
+            },
+            onRowRemoving: function(e) {
+            },
+            onRowRemoved: function(e) {
+              // console.log(e);
+            },
+            onFocusedRowChanging: function(e) {
+          },
+          onFocusedRowChanged: function(e) {
           }
         }).dxDataGrid("instance");
 

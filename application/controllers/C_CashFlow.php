@@ -33,9 +33,46 @@ class C_CashFlow extends CI_Controller {
 		$TglAwal = $this->input->post('TglAwal');
 		$TglAkhir = $this->input->post('TglAkhir');
 
-		$SQL = "SELECT * FROM vw_cashflowbasic WHERE TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."' ORDER BY NoPenjualan,TglTransaksi";
+		$SQL = "SELECT a.*, SUM(Debet - Credit) SaldoAkhir FROM vw_cashflowbasic a WHERE TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."' GROUP BY a.NoPenjualan ORDER BY a.NoPenjualan, a.TglTransaksi;";
 
 		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows()>0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$data['message'] = 'No Record Found';
+		}
+		echo json_encode($data);
+	}
+	public function ReadHeader()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$TglAwal = $this->input->post('TglAwal');
+		$TglAkhir = $this->input->post('TglAkhir');
+
+		$SQL = "SELECT 
+					NoTransaksi,TglTransaksi,BaseRef,`Comment`,ExternalNote,Source,SUM(Debet - Credit) Saldo
+				FROM cashflow WHERE TglTransaksi BETWEEN '".$TglAwal."' AND '".$TglAkhir."' GROUP BY BaseRef ORDER BY BaseRef, TglTransaksi ";
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows()>0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		else{
+			$data['message'] = 'No Record Found';
+		}
+		echo json_encode($data);
+	}
+	public function ReadDetail()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+		$NoTransaksi = $this->input->post('NoTransaksi');
+
+		$rs = $this->ModelsExecuteMaster->FindData(array('BaseRef'=>$NoTransaksi),'cashflow');
 
 		if ($rs->num_rows()>0) {
 			$data['success'] = true;
