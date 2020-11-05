@@ -93,11 +93,17 @@
                 var jumlahbayar = '';
                 var notrx = '';
                 for (var i = 0; i < response.data.length; i++) {
-                    console.log(response.data[i].NoTransaksi + " - " + response.data[i+1].NoTransaksi);
-                    if (response.data[i].NoTransaksi != response.data[i+1].NoTransaksi) {
+                    console.log(response.data[i].NoTransaksi + " - " + notrx);
+                    if (response.data[i].NoTransaksi != notrx) {
                         ongkir = response.data[i].T_Ongkir;
                         jumlahbayar = response.data[i].Pembayaran;
+                        console.log(ongkir + " - " + jumlahbayar);
                     }
+                    else{
+                        ongkir = '0';
+                        jumlahbayar = '0';
+                    }
+                    notrx = response.data[i].NoTransaksi;
                     var arr ={
                         NoTransaksi     : response.data[i].NoTransaksi,
                         TglTransaksi    : response.data[i].TglTransaksi,
@@ -148,8 +154,6 @@
             allowColumnResizing: true,
             columnAutoWidth: true,
             showBorders: true,
-            focusedRowEnabled: true,
-            focusedRowKey: 0,
             paging: {
                 enabled: true
             },

@@ -170,7 +170,7 @@ class C_POS extends CI_Controller {
 		// NoTransaksi
 		$Kolom = 'NoTransaksi';
 		$Table = 'penjualanheader';
-		$Prefix = substr(date("Y"), 2,4).date("m")."1";
+		$Prefix = 'PJ'.substr(date("Y"), 2,4).date("m");
 
 		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
 
@@ -179,7 +179,7 @@ class C_POS extends CI_Controller {
 
 		$temp = $rs->row()->Total + 1;
 
-		$nomor = $Prefix.str_pad($temp, 7,"0",STR_PAD_LEFT);
+		$nomor = $Prefix.str_pad($temp, 6,"0",STR_PAD_LEFT);
 		if ($nomor != '') {
 			$NoTransaksi = $nomor;
 		}
@@ -192,7 +192,7 @@ class C_POS extends CI_Controller {
 		// NoCashFlow
 		$Kolom = 'NoTransaksi';
 		$Table = 'cashflow';
-		$Prefix = substr(date("Y"), 2,4).date("m")."2";
+		$Prefix = 'CF'.substr(date("Y"), 2,4).date("m");
 
 		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
 
@@ -201,7 +201,7 @@ class C_POS extends CI_Controller {
 
 		$temp = $rs->row()->Total + 1;
 
-		$nomor = $Prefix.str_pad($temp, 7,"0",STR_PAD_LEFT);
+		$nomor = $Prefix.str_pad($temp, 6,"0",STR_PAD_LEFT);
 		if ($nomor != '') {
 			$NoCashflow = $nomor;
 		}
@@ -393,7 +393,7 @@ class C_POS extends CI_Controller {
 		// NoCashFlow
 		$Kolom = 'NoTransaksi';
 		$Table = 'cashflow';
-		$Prefix = substr(date("Y"), 2,4).date("m")."2";
+		$Prefix = 'CF'.substr(date("Y"), 2,4).date("m");
 
 		$SQL = "SELECT RIGHT(MAX(".$Kolom."),4)  AS Total FROM " . $Table . " WHERE LEFT(" . $Kolom . ", LENGTH('".$Prefix."')) = '".$Prefix."'";
 
@@ -402,7 +402,7 @@ class C_POS extends CI_Controller {
 
 		$temp = $rs->row()->Total + 1;
 
-		$nomor = $Prefix.str_pad($temp, 7,"0",STR_PAD_LEFT);
+		$nomor = $Prefix.str_pad($temp, 6,"0",STR_PAD_LEFT);
 		if ($nomor != '') {
 			$NoCashflow = $nomor;
 		}

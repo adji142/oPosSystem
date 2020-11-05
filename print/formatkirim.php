@@ -9,6 +9,10 @@
     }
     $NoAwal = $_GET['NoAwal'];
     $NoAkhir = $_GET['NoAkhir'];
+
+    // $NoAwal = substr($NoAwal, 6);
+    // $NoAkhir = substr($NoAkhir, 6);
+
     $sql = "
       SELECT * FROM vw_penjualanAlamat where NoTransaksi BETWEEN '".$NoAwal."' AND '".$NoAkhir."' 
       AND PaymentTerm <> 1
