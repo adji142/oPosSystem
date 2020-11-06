@@ -242,7 +242,7 @@
         ItemCode : ItemCode,
         ItemName : ItemName,
         Qty : parseInt(prevQty) + 1,
-        Price:dflt,
+        Hpp:dflt,
         OnHand:Stok,
         __KEY__:create_UUID()
       });
@@ -328,7 +328,7 @@
             $('#A_Motif').val(v.A_Motif).change();
             $('#A_Size').val(v.A_Size).change();
             $('#A_Sex').val(v.A_Sex).change();
-            $('#DefaultPrice').val(v.DefaultPrice);
+            $('#DefaultPrice').val(v.Hpp);
             $('#ItemGroup').val(v.ItemGroup).change();
             // $('#Nilai').val(v.Nilai);
 
@@ -355,7 +355,13 @@
             columnAutoWidth: true,
             showBorders: true,
             paging: {
-                enabled: false
+              enabled : true,
+              pageSize: 10
+            },
+            pager: {
+              showPageSizeSelector: true,
+              allowedPageSizes: [5, 10, 20],
+              showInfo: true
             },
             editing: {
                 mode: "row",
@@ -386,7 +392,7 @@
                     allowSorting: false
                 },
                 {
-                    dataField: "Price",
+                    dataField: "Hpp",
                     caption: "Price",
                     allowEditing:true,
                     allowSorting: false
@@ -536,7 +542,7 @@
                               grid.cellValue(index, "ItemCode", v.ItemCode);
                               grid.cellValue(index, "ItemName", v.ItemName);
                               grid.cellValue(index, "OnHand", v.Stok);
-                              grid.cellValue(index, "Price", v.DefaultPrice);
+                              grid.cellValue(index, "Price", v.Hpp);
                             });
                             grid.cellValue(index, "Qty", 1);
                           }
@@ -546,11 +552,11 @@
                             var j = 1;
                             for (i = 0; i < response.data.length; i++) {
                               html += '<tr>' +
-                                      '<td id = "ItemCode">' + response.data[i].ItemCode+'</td>' +
-                                      '<td id = "ItemName">' + response.data[i].ItemName + '</td>' +
+                                      '<td id = "ItemCode">' + response.data[i].ItemCode +'</td>' +
+                                      '<td id = "ItemName">' +response.data[i].KodeItemLama + " - " + response.data[i].ItemName + '</td>' +
                                       '<td id = "Article">' + response.data[i].Article + '</td>' +
                                       '<td id = "Stok">' + response.data[i].Stok + '</td>' +
-                                      '<td id = "dflt">' + response.data[i].DefaultPrice + '</td>' +
+                                      '<td id = "dflt">' + response.data[i].Hpp + '</td>' +
                                       '<tr>';
                                j++;
                             }

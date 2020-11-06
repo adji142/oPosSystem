@@ -72,7 +72,7 @@ class C_MutasiBarang extends CI_Controller {
 	{
 		$data = array('success' => true ,'message'=>array(),'data' =>array(),'masteralat'=>array());
 
-		$call = $this->db->query("select '' ItemCode,'' ItemName,0 Qty,0 Onhand,0 Price");
+		$call = $this->db->query("select '' ItemCode,'' ItemName,0 Qty,0 Onhand,0 Hpp");
 
 		$data['data'] = array();
 
@@ -152,14 +152,27 @@ class C_MutasiBarang extends CI_Controller {
 						'LineNum' 	=> $i,
 						'KodeItem' 	=> $detail[$i]->ItemCode,
 						'Qty' 		=> $detail[$i]->Qty,
-						'Price' 	=> $detail[$i]->Price,
-						'LineTotal' => $detail[$i]->Qty * $detail[$i]->Price,
+						'Price' 	=> $detail[$i]->Hpp,
+						'LineTotal' => $detail[$i]->Qty * $detail[$i]->Hpp,
 						'CreatedBy' => $Createdby,
 						'CreatedOn' => $CreatedOn
 					);
 					$appendDetail = $this->ModelsExecuteMaster->ExecInsert($paramdetail,'detailmutasi');
 					if ($appendDetail) {
-						$data['success'] = true;
+						$SQL = "SELECT SUM(Qty * Price) / SUM(Qty) Hpp
+								FROM detailmutasi WHERE LEFT(NoTransaksi,4) = 'MTIN' AND KodeItem = '".$detail[$i]->ItemCode."'";
+						$rsHpp = $this->db->query($SQL);
+						// var_dump($SQL);
+						if ($rsHpp->row()->Hpp > 0) {
+							$update = $this->ModelsExecuteMaster->ExecUpdate(array('Hpp'=>$rsHpp->row()->Hpp),array('ItemCode'=>$detail[$i]->ItemCode),'itemmasterdata');
+							if ($update) {
+								$data['success'] = true;
+							}
+							else{
+								$errorCount +=1;
+								goto catchjump;
+							}
+						}
 					}
 					else{
 						$errorCount +=1;

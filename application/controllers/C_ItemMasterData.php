@@ -114,8 +114,8 @@ class C_ItemMasterData extends CI_Controller {
 			);
 		}
 		if ($formtype == 'add') {
-			$this->db->trans_begin();
 			try {
+				$this->db->trans_begin();
 				$call_x = $this->ModelsExecuteMaster->ExecInsert($param,'itemmasterdata');
 				if ($call_x) {
 					$this->db->trans_commit();
