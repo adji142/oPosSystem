@@ -14,7 +14,7 @@
     // $NoAkhir = substr($NoAkhir, 6);
 
     $sql = "
-      SELECT * FROM vw_penjualanAlamat where NoTransaksi BETWEEN '".$NoAwal."' AND '".$NoAkhir."' 
+      SELECT * FROM vw_penjualanalamat where NoTransaksi BETWEEN '".$NoAwal."' AND '".$NoAkhir."' 
       AND PaymentTerm <> 1
     ";
     
