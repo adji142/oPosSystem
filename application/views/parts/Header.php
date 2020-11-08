@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>Sistem Pendukung Keputusan | COBIT</title>
+    <title><?php echo $_SERVER['SERVER_ADDR']; ?> | oPos System</title>
 
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>Assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">

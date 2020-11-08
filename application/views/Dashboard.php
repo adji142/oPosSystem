@@ -4,7 +4,7 @@
     $active = 'dashboard';
 ?>
 <!-- page content -->
-        <div class="right_col" role="main">
+        <!-- <div class="right_col" role="main">
           <div class="">
             <div class="page-title">
               <div class="title_left">
@@ -57,7 +57,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- /page content -->
 <?php
   require_once(APPPATH."views/parts/Footer.php");
