@@ -1186,9 +1186,10 @@
 
       var prevQty = 0;
       var akumulasiQty = 1;
-      // items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
-      items_data= $("#gridContainerItem").dxDataGrid("getDataSource").items();
-      console.log(items_data);
+      items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
+      // var xdata = $("#gridContainerItem").dxDataGrid("getDataSource").items();
+      var listDataSource = $("#gridContainerItem").dxDataGrid("getDataSource").items();
+      console.log(listDataSource);
       for (var i = 0; i < items_data.length; i++) {
         akumulasiQty += parseInt(items_data[i]["Qty"]);
       }
@@ -1714,6 +1715,7 @@
       if($('#chkdropship').is(":checked")) // "this" refers to the element that fired the event
       {
           // alert('home is checked');
+          // $("#chkdropship").prop("checked", true);
           if ($('#KodeCustomerPOS').val() == '') {
             Swal.fire({
               type: 'error',
@@ -1721,7 +1723,7 @@
               text: 'Pilih Customer Terlebih dahulu',
               // footer: '<a href>Why do I have this issue?</a>'
             }).then((result)=>{
-              $("#chkdropship").prop("checked", false);
+              $("#chkdropship").prop("checked", true);
             });
           }
           else {
@@ -1764,6 +1766,11 @@
             $('#Nama_dest').val('');
             $('#Notlp_dest').val('');
           }
+      }
+      else{
+        GetOrigin();
+        GetDestination($('#TransactionType').val());
+        $('#Nama_ori').attr('readonly',true);
       }
     })
     // ================================= FUNCTION =================================

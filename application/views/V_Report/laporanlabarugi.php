@@ -81,14 +81,12 @@
       $("#gridContainer").dxDataGrid({
         allowColumnResizing: true,
             dataSource: data,
-            keyExpr: "KodeItem",
+            keyExpr: "TglTransaksi",
             showBorders: true,
             allowColumnReordering: true,
             allowColumnResizing: true,
             columnAutoWidth: true,
             showBorders: true,
-            focusedRowEnabled: true,
-            focusedRowKey: 0,
             paging: {
                 enabled: true
             },
@@ -103,9 +101,15 @@
             },
             columns: [
                 {
-                    dataField: "KodeItem",
-                    caption: "Kode Item",
-                    allowEditing:false
+                    dataField: "TglTransaksi",
+                    caption: "Tanggal",
+                    allowEditing:false,
+                    groupIndex: 0
+                },
+                {
+                    dataField: "TglTransaksi",
+                    caption: "Tanggal",
+                    allowEditing:false,
                 },
                 {
                     dataField: "KodeItemLama",
@@ -123,23 +127,18 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "QtyPenerimaan",
-                    caption: "Qty Penerimaan",
+                    dataField: "Hpp",
+                    caption: "HPP",
                     allowEditing:false
                 },
                 {
-                    dataField: "TotalPenerimaan",
-                    caption: "Total Penerimaan",
+                    dataField: "QtyTotal",
+                    caption: "Qty Penjualan",
                     allowEditing:false
                 },
                 {
-                    dataField: "QtyPenjualan",
-                    caption: "Qty Penjualan Net",
-                    allowEditing:false
-                },
-                {
-                    dataField: "NominalPenjualan",
-                    caption: "Nominal Penjualan Net",
+                    dataField: "Total",
+                    caption: "Total Penjualan",
                     allowEditing:false
                 },
                 {
@@ -148,6 +147,33 @@
                     allowEditing:false
                 },
             ],
+            summary:{
+              groupItems:[
+                {
+                  column: "KodeItemLama",
+                  summaryType: "count",
+                  displayFormat: "{0} Items",
+                },
+                {
+                  column: "QtyTotal",
+                  summaryType : "sum",
+                  showInGroupFooter: false,
+                  alignByColumn: true
+                },
+                {
+                  column: "Total",
+                  summaryType : "sum",
+                  showInGroupFooter: false,
+                  alignByColumn: true
+                },
+                {
+                  column: "L/R",
+                  summaryType : "sum",
+                  showInGroupFooter: false,
+                  alignByColumn: true
+                },
+              ]
+            }
         });
 
         // add dx-toolbar-after
