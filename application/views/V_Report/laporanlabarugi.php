@@ -132,6 +132,11 @@
                     allowEditing:false
                 },
                 {
+                    dataField: "TotalHPP",
+                    caption: "Total HPP",
+                    allowEditing:false
+                },
+                {
                     dataField: "QtyTotal",
                     caption: "Qty Penjualan",
                     allowEditing:false
