@@ -401,7 +401,7 @@
                     allowSorting: false
                 },
                 {
-                    dataField: "Price",
+                    dataField: "Hpp",
                     caption: "Price",
                     allowEditing:true,
                     allowSorting: false
@@ -428,7 +428,7 @@
                   var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
                   // console.log(gridItems);
                   // console.log(gridItems[0]["__KEY__"]);
-                  var arr = {"ItemCode":"","ItemName":"","OnHand":0,"Price":0,"Qty":0,"__KEY__":""}
+                  var arr = {"ItemCode":"","ItemName":"","OnHand":0,"Hpp":0,"Qty":0,"__KEY__":""}
 
                   for (var i = 0; i < gridItems.length; i++) {
                     if (gridItems[i]["ItemCode"] == e.data.ItemCode && gridItems.length > 1 && e.key.__KEY__ != gridItems[i]["__KEY__"]) {
@@ -436,7 +436,7 @@
                       arr["ItemCode"] = gridItems[i]["ItemCode"];
                       arr["ItemName"] = gridItems[i]["ItemName"];
                       arr["OnHand"]   = gridItems[i]["OnHand"];
-                      arr["Price"]    = gridItems[i]["Price"];
+                      arr["Hpp"]    = gridItems[i]["Hpp"];
                       arr["Qty"]      = parseInt(gridItems[i]["Qty"])+parseInt(e.data.Qty);
                       arr["__KEY__"]  = gridItems[i]["__KEY__"];
 
@@ -480,7 +480,7 @@
                   var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
                   // console.log(gridItems);
                   // console.log(gridItems[0]["__KEY__"]);
-                  var arr = {"ItemCode":"","ItemName":"","OnHand":0,"Price":0,"Qty":0,"__KEY__":""}
+                  var arr = {"ItemCode":"","ItemName":"","OnHand":0,"Hpp":0,"Qty":0,"__KEY__":""}
 
                   for (var i = 0; i < gridItems.length; i++) {
                     if (gridItems[i]["ItemCode"] == e.data.ItemCode && gridItems.length > 1 && e.key.__KEY__ != gridItems[i]["__KEY__"]) {
@@ -488,7 +488,7 @@
                       arr["ItemCode"] = gridItems[i]["ItemCode"];
                       arr["ItemName"] = gridItems[i]["ItemName"];
                       arr["OnHand"]   = gridItems[i]["OnHand"];
-                      arr["Price"]    = gridItems[i]["Price"];
+                      arr["Hpp"]    = gridItems[i]["Hpp"];
                       arr["Qty"]      = parseInt(gridItems[i]["Qty"])+parseInt(e.data.Qty);
                       arr["__KEY__"]  = gridItems[i]["__KEY__"];
 
@@ -551,7 +551,7 @@
                               grid.cellValue(index, "ItemCode", v.ItemCode);
                               grid.cellValue(index, "ItemName", v.ItemName);
                               grid.cellValue(index, "OnHand", v.Stok);
-                              grid.cellValue(index, "Price", v.DefaultPrice);
+                              grid.cellValue(index, "Hpp", v.DefaultPrice);
                             });
                             grid.cellValue(index, "Qty", 1);
                           }
@@ -786,7 +786,7 @@
                     allowEditing:false
                 },
                 {
-                    dataField: "Price",
+                    dataField: "Hpp",
                     caption: "Harga",
                     allowEditing:false
                 },
