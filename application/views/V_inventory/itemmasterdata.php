@@ -357,7 +357,7 @@
             },
             export: {
                 enabled: true,
-                fileName: "Daftar Penyakit"
+                fileName: "Daftar Item"
             },
             columns: [
                 {

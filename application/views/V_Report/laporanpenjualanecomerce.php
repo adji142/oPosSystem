@@ -99,7 +99,7 @@
             },
             export: {
                 enabled: true,
-                fileName: "Laporan Penjualan All"
+                fileName: "Laporan Penjualan Ecomerce"
             },
             columns: [
                 {

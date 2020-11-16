@@ -112,7 +112,7 @@
             },
             export: {
                 enabled: true,
-                fileName: "Laporan Penjualan All"
+                fileName: "Laporan Mutasi Stok"
             },
             columns: [
                 {
