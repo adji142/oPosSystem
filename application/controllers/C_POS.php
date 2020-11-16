@@ -85,8 +85,8 @@ class C_POS extends CI_Controller {
 		$HeaderID = $this->input->post('HeaderID');
 
 		$SQL = "
-			SELECT A.KodeItem,B.Article,A.Qty,A.Harga,
-			(COALESCE(A.Qty,0) - COALESCE(f.QtyRetur,0)) * COALESCE(A.Harga,0) AS LineTotal,
+			SELECT A.KodeItem,B.Article,A.Qty,A.Harga, A.Disc Pot,
+			((COALESCE(A.Qty,0) - COALESCE(f.QtyRetur,0)) * COALESCE(A.Harga,0)) - A.Disc AS LineTotal,
 			f.QtyRetur
 			FROM penjualandetail A 
 			LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
@@ -282,7 +282,7 @@ class C_POS extends CI_Controller {
 						$appendDetail = $this->ModelsExecuteMaster->ExecInsert($paramdetail,'penjualandetail');
 						if ($appendDetail) {
 							$data['success'] = true;
-							$lineTotal += ($detail[$i]->Qty * $detail[$i]->Price) - (($detail[$i]->Qty * $detail[$i]->Price)/100) * $detail[$i]->Diskon;
+							$lineTotal += ($detail[$i]->Qty * $detail[$i]->Price) - $detail[$i]->Diskon;
 						}
 						else{
 							$errorCount +=1;

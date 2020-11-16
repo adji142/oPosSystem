@@ -1,7 +1,7 @@
 <?php
 //buka koneksi ke engine MySQL
     // $Open = mysqli_connect("localhost","root","hsp123","dbpos");
-    $Open = mysqli_connect("localhost","aisx1277_root","lagis3nt0s4","aisx1277_dbpos");
+    $Open = mysqli_connect("localhost","dawn6835_root","lagis3nt0s4","dawn6835_dbpos");
     // mysqli_connect("localhost","root","hsp123","xlpfk_solo");
     // $Open = mysqli_connect("localhost","root","lagis3nt0s4","dealsys");
     if (!$Open){
@@ -68,7 +68,7 @@
             <tr>
               <td width="30%"><h5>Expedisi</h5></td>
               <td><h5>:</h5></td>
-              <td><h5><?= $row['NamaExpdc'].' - '.explode('|', $row['Servicexpdc'])[0] ?></h5></td>
+              <td><h5><?= $row['NamaExpdc'].' - '.explode('|', $row['Servicexpdc'])[0] . ' Ongkir : '.$row['T_Ongkir'] ?></h5></td>
             </tr>
             <tr>
               <td width="30%"><h5>Dari</h5></td>
@@ -83,7 +83,7 @@
             <tr>
               <td width="30%"><b><h5>Total</h5></b></td>
               <td><h5>:</h5></td>
-              <td><h5><b>Rp. <?= number_format($row['T_GrandTotal']) ?></b></h5></td>
+              <td><h5><b>Rp. <?= number_format($row['T_SubTotal'] - $row['T_Diskon']).' ('.$row['Qty'].' pcs)' ?></b></h5></td>
             </tr>
           </table>
           <center>

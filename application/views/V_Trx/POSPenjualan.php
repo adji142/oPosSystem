@@ -2487,6 +2487,7 @@
                 'TransactionType',
                 'PaymentTerm',
                 'PayNow',
+                'T_GrandTotal',
                 'Action'
               ]
             },
@@ -2545,6 +2546,11 @@
                     dataField: "PayNow",
                     caption: "PayNow",
                     allowEditing:false
+                },
+                {
+                  dataField: "T_GrandTotal",
+                  caption: "Total",
+                  allowEditing:false
                 },
                 {
                     dataField: "Action",
@@ -2677,6 +2683,11 @@
                 {
                     dataField: "Harga",
                     caption: "Harga",
+                    allowEditing:false
+                },
+                {
+                    dataField: "Pot",
+                    caption: "Potongan",
                     allowEditing:false
                 },
                 {
