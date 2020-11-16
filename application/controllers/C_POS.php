@@ -125,7 +125,7 @@ class C_POS extends CI_Controller {
 				ROUND(a.T_GrandTotal) T_GrandTotal
 			FROM penjualanheader a
 			LEFT JOIN tcustomer c on a.KodeCustomer = c.KodeCustomer
-			WHERE A.NoTransaksi = '".$NoTransaksi."'
+			WHERE a.NoTransaksi = '".$NoTransaksi."'
 		";
 
 		$rs = $this->db->query($SQL);
