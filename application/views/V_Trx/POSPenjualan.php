@@ -679,6 +679,7 @@
   var isLevelingPrice = 0;
   var NoTransaksiBooking = '';
   var TotalBerat = 0;
+  var barcodeScan = 1;
 
   var $field = $('#TglTransaksi, #KodeSales, #KodeCustomerPOS, #TransactionType ,#PaymentTerm, #provinsi_ori, #Kota_ori,#Kecamatan_ori, #Kelurahan_ori, #KodePOS_ori, #Alamat_ori,#Nama_ori, #Notlp_Ori, #provinsi_dest, #Kota_dest, #Kecamatan_dest, #Kelurahan_dest, #KodePOS_dest, #Alamat_dest, #Nama_dest, #Notlp_dest, #T_Bayar')
   $(function () {
@@ -1171,7 +1172,14 @@
 
     $('#Barcode').keyup(function (x) {
       if (x.keyCode === 13) {
-        GetItemRow();
+        if (barcodeScan == 1) {
+          console.log(barcodeScan);
+          barcodeScan = 0;
+        }
+        else{
+          setTimeout(GetItemRow(),1000);
+          console.log(barcodeScan);
+        }
         // items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
         // console.log(items_data);
       }
@@ -2137,6 +2145,7 @@
       
       // items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
       items_data = $("#gridContainerItem").dxDataGrid("getDataSource").items();
+      barcodeScan = 1;
     }
 
     function bindGridItem(data) {
