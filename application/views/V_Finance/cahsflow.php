@@ -424,8 +424,8 @@
             },
             onInitNewRow: function(e) {
                 // logEvent("InitNewRow");
-                // console.log(NoRefcashflow)
-                if (typeof NoRefcashflow == 'undefined') {
+                console.log(NoRefcashflow)
+                if (typeof NoRefcashflow == 'undefined' || NoRefcashflow =='') {
                   Swal.fire({
                     type: 'error',
                     title: 'Woops...',
