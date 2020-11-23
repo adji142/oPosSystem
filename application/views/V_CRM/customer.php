@@ -66,7 +66,7 @@
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Email <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="mail" name="Email" id="Email" required="" placeholder="Email" class="form-control ">
+                      <input type="mail" name="Email" id="Email" placeholder="Email" class="form-control ">
                     </div>
                   </div>
                   <div class="item form-group">
@@ -80,7 +80,7 @@
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">NoWA <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="text" name="NoWA" id="NoWA" required="" placeholder="NoWA" class="form-control ">
+                      <input type="text" name="NoWA" id="NoWA" placeholder="NoWA" class="form-control ">
                     </div>
                   </div>
                   <div class="item form-group">
@@ -142,7 +142,7 @@
                     <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Kode POS <span class="required">*</span>
                     </label>
                     <div class="col-md-6 col-sm-6 ">
-                      <input type="text" name="KodePos" id="KodePos" class="form-control" placeholder="Kode Pos" required="">
+                      <input type="text" name="KodePos" id="KodePos" class="form-control" placeholder="Kode Pos">
                     </div>
                   </div>
                   <div class="item form-group">

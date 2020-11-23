@@ -83,7 +83,7 @@
             <tr>
               <td width="30%"><b><h5>Total</h5></b></td>
               <td><h5>:</h5></td>
-              <td><h5><b>Rp. <?= number_format($row['T_SubTotal'] - $row['T_Diskon']).' ('.$row['Qty'].' pcs)' ?></b></h5></td>
+              <td><h5><b><?='('.$row['Qty'].' pcs)' ?></b></h5></td>
             </tr>
           </table>
           <center>

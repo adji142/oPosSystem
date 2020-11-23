@@ -138,10 +138,10 @@
                         <textarea name="Alamat_ori" id="Alamat_ori" class="form-control" rows="1" readonly=""></textarea>
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
-                        <input type="text" name="Nama_ori" id="Nama_ori" class="form-control" readonly="" placeholder="Nama Pengirim">
+                        <input type="text" name="Nama_ori" id="Nama_ori" class="form-control" placeholder="Nama Pengirim">
                       </div>
                       <div class="col-md-3 col-sm-12 form-group">
-                        <input type="text" name="Notlp_Ori" id="Notlp_Ori" class="form-control" readonly="">
+                        <input type="text" name="Notlp_Ori" id="Notlp_Ori" class="form-control" placeholder="No Telepon">
                       </div>
                     </div>
 
@@ -858,6 +858,23 @@
       });
       $("#chkdropship").prop("checked", false);
     });
+
+    $('#KodeSales').change(function () {
+      $.ajax({
+        async: false,
+        type: "post",
+        url: "<?=base_url()?>C_Sales/Read",
+        data: {'KodeSales':$('#KodeSales').val()},
+        dataType: "json",
+        success: function (response) {
+          if(response.success == true){
+            // console.log(response.data[0].NamaSales);
+            $('#Nama_ori').val(response.data[0].NamaSales);
+            $('#Notlp_Ori').val(response.data[0].NoTlp);
+          }
+        }
+      });
+    })
     // Origin
     $('#provinsi_ori').change(function () {
       var idaddr = $('#provinsi_ori').val();
@@ -1755,22 +1772,24 @@
             //     }
             //   }
             // });
-            $('#Nama_ori').attr('readonly',false);
+            // $('#Nama_ori').attr('readonly',false);
+            // $('#Notlp_Ori').attr('readonly',false);
 
-            $('#provinsi_dest').val('').change();
-            $('#Kota_dest').val('').change();
-            $('#Kecamatan_dest').val('').change();
-            $('#Kelurahan_dest').val('').change();
-            $('#KodePOS_dest').val('');
-            $('#Alamat_dest').val('');
-            $('#Nama_dest').val('');
-            $('#Notlp_dest').val('');
+            // $('#provinsi_dest').val('').change();
+            // $('#Kota_dest').val('').change();
+            // $('#Kecamatan_dest').val('').change();
+            // $('#Kelurahan_dest').val('').change();
+            // $('#KodePOS_dest').val('');
+            // $('#Alamat_dest').val('');
+            // $('#Nama_dest').val('');
+            // $('#Notlp_dest').val('');
           }
       }
       else{
         GetOrigin();
         GetDestination($('#TransactionType').val());
-        $('#Nama_ori').attr('readonly',true);
+        // $('#Nama_ori').attr('readonly',true);
+        // $('#Notlp_Ori').attr('readonly',true);
       }
     })
     // ================================= FUNCTION =================================
@@ -1937,8 +1956,8 @@
               $('#Kelurahan_ori').val(response.data[0]['Kelurahan']).change();
               $('#KodePOS_ori').val(response.data[0]['KodePos']);
               $('#Alamat_ori').val(response.data[0]['Alamat1']);
-              $('#Nama_ori').val(response.data[0]['NamaPerusahaan']);
-              $('#Notlp_Ori').val(response.data[0]['NoTlp']);
+              // $('#Nama_ori').val(response.data[0]['NamaPerusahaan']);
+              // $('#Notlp_Ori').val(response.data[0]['NoTlp']);
             }
           }
         });
