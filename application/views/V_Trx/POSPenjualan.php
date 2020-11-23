@@ -2139,9 +2139,15 @@
                           '<td id = "ItemCode">' + v.ItemCode+'</td>' +
                           '<td id = "ItemName">' + v.ItemName + '</td>' +
                           '<td id = "Article">' + v.Article + '</td>' +
-                          '<td id = "Stok">' + v.Stok + '</td>' +
-                          '<td id = "dflt">' + v.DefaultPrice + '</td>' +
-                          '<td id = "Satuan">' + v.Satuan + '</td>' +
+                          '<td id = "Stok">' + v.Stok + '</td>'
+                if ($('#TransactionType').val() == "1") {
+                  html += '<td id = "dflt">' + v.EcomPrice + '</td>'
+                }
+                else{
+                  html += '<td id = "dflt">' + v.DefaultPrice + '</td>'
+                }
+                
+                html += '<td id = "Satuan">' + v.Satuan + '</td>' +
                         '<tr>';
                 $('#load_Lookup').html(html);
                 // items_data = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
