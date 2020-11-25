@@ -20,6 +20,10 @@ class ModelsExecuteMaster extends CI_Model
 	{
 		return $this->db->insert($table,$data);
 	}
+	function ExecInsertBatch($data,$table)
+	{
+		return $this->db->insert_batch($table,$data);
+	}
 	function FindData($where,$table){
 		$this->db->where($where);
 		return $this->db->get($table);

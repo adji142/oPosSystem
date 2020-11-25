@@ -58,7 +58,7 @@
             <tr>
               <td width="30%"><h5>Alamat</h5></td>
               <td><h5>:</h5></td>
-              <td><h5><?= $row['Alamat_dest'].', '.$row['Kota'].', Provinsi '.$row['provinsi'].', '.$row['KodePos_dest']?></h5></td>
+              <td><h5><?= $row['Alamat_dest'].', '.$row['Kota'].', Provinsi '.$row['provinsi'].', Kelurahan '.$row['kelurahan'].' Kecamatan'.$row['Kecamatan'].' ,'.$row['KodePos_dest']?></h5></td>
             </tr>
             <tr>
               <td width="30%"><h5>No. Tlp</h5></td>
@@ -68,7 +68,7 @@
             <tr>
               <td width="30%"><h5>Expedisi</h5></td>
               <td><h5>:</h5></td>
-              <td><h5><?= $row['NamaExpdc'].' - '.explode('|', $row['Servicexpdc'])[0] . ' Ongkir : '.$row['T_Ongkir'] ?></h5></td>
+              <td><h5><?= $row['NamaExpdc'].' - '.explode('|', $row['Servicexpdc'])[0] . ' Ongkir : '.$row['T_Ongkir']. ' / No. Resi :'.$row['NoResi'] ?></h5></td>
             </tr>
             <tr>
               <td width="30%"><h5>Dari</h5></td>

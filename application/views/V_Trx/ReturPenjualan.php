@@ -279,7 +279,7 @@
                   KodeItemBaru :KodeItemBaru,
                   NamaItemBaru :NamaItemBaru,
                   QtyRetur     :response.data[i]['Qty'],
-                  Price        :response.data[i]['Harga']
+                  Price        : parseFloat(response.data[i]['Harga']) - parseFloat(response.data[i]['Pot'])
                 });
               }
               bindGrid(itemsData)

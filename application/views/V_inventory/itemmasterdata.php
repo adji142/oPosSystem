@@ -144,6 +144,25 @@
               </div>
             </div>
 
+            <div class="row">
+              <div class="col-md-12 col-sm-12  ">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Import</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                      <form action="<?php echo base_url();?>C_General/importFile" method="post" enctype="multipart/form-data">
+                        <a href="<?php echo base_url()."Data/FormatImportAuto.xlsx" ?>">Download Sample Format Import</a>
+                        <br>
+                        Upload excel file : 
+                        <input type="file" name="uploadFile" value="" /><br><br>
+                        <input type="submit" name="submit" value="Upload" />
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="clearfix"></div>
 
             <div class="row">

@@ -297,4 +297,172 @@ class C_General extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+
+	// Import Excel
+
+	public function importFile(){
+		$errorcount = 0;
+		$path = './Data';
+		// var_dump(APPPATH. "third_party\\PHPExcel.php");
+		require_once APPPATH . "third_party\\PhpExcel\\Classes\\PHPExcel.php";
+
+		$config['upload_path'] = $path;
+		$config['allowed_types'] = 'xlsx|xls|csv';
+		$config['remove_spaces'] = TRUE;
+		// var_dump($config);
+		$this->load->library('upload', $config);
+		$this->upload->initialize($config);            
+		if (!$this->upload->do_upload('uploadFile')) {
+			$error = array('error' => $this->upload->display_errors());
+		} else {
+			$data = array('upload_data' => $this->upload->data());
+		}
+
+		if(empty($error)){
+			if (!empty($data['upload_data']['file_name'])) {
+				$import_xls_file = $data['upload_data']['file_name'];
+			}
+			else{
+				$import_xls_file = 0;
+			}
+			$inputFileName = $path .'/'. $import_xls_file;
+			// var_dump($inputFileName);
+			try {
+				$this->db->trans_begin();
+				$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+				$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+				$objPHPExcel = $objReader->load($inputFileName);
+				$allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+				$flag = true;
+				$i=0;
+				$indexitem =0;
+				$indexdetail = 0 ;
+				$inserdata = [];
+				$itemmasterdata = [];
+				$mutasiheader = [];
+				$mutasidetail = [];
+
+				$SQL = "SELECT RIGHT(MAX(NoTransaksi),4)  AS Total FROM headermutasi WHERE LEFT(NoTransaksi, LENGTH('MTIN')) = 'MTIN'";
+
+				// var_dump($SQL);
+				$rs = $this->db->query($SQL);
+
+				$temp = $rs->row()->Total + 1;
+
+				$nomor_mutasi = 'MTIN'.str_pad($temp, 6,"0",STR_PAD_LEFT);
+
+				$mutasiheader['NoTransaksi'] = $nomor_mutasi;
+				$mutasiheader['TglTransaksi'] = date("Y-m-d");
+				$mutasiheader['TglPencatatan'] = date("Y-m-d h:i:sa");
+				$mutasiheader['Mutasi'] = 1;
+				$mutasiheader['Keterangan'] = 'Import Excel';
+				$mutasiheader['Createdby'] = $this->session->userdata('username');
+				$mutasiheader['CreatedOn'] = date("Y-m-d h:i:sa");
+				// var_dump($mutasiheader);
+				foreach ($allDataInSheet as $value) {
+					if($flag){
+						$flag =false;
+						continue;
+					}
+
+					$cekitemexist = $this->ModelsExecuteMaster->FindData(array('KodeItemLama'=>$value['A']),'itemmasterdata');
+					// var_dump($cekitemexist->num_rows());
+					if ($cekitemexist->num_rows() == 0) {
+						$Prefix = '101.';
+
+						$SQL = "SELECT RIGHT(MAX(ItemCode),4)  AS Total FROM itemmasterdata WHERE LEFT(ItemCode, LENGTH('".$Prefix."')) = '".$Prefix."'";
+
+						$rs = $this->db->query($SQL);
+
+						$temp = $rs->row()->Total + 1;
+
+						$nomor = $Prefix.str_pad($temp, 4,"0",STR_PAD_LEFT);
+						// var_dump($nomor);
+						$itemmasterdata['ItemCode'] = $nomor;
+						$itemmasterdata['KodeItemLama'] = $value['A'];
+						$itemmasterdata['ItemName'] = $value['D'];
+						$itemmasterdata['A_Warna'] = $value['C'];
+						$itemmasterdata['A_Motif'] = $value['B'];
+						$itemmasterdata['A_Size'] = '3006';
+						$itemmasterdata['A_Sex'] = '4003';
+						$itemmasterdata['DefaultPrice'] = $value['F'];
+						$itemmasterdata['EcomPrice'] = $value['G'];
+						$itemmasterdata['ItemGroup'] = 1;
+						$itemmasterdata['Satuan'] = 'pcs';
+						$itemmasterdata['Createdby'] = $this->session->userdata('username');
+						$itemmasterdata['Createdon'] = date("Y-m-d h:i:sa");
+						$itemmasterdata['isActive'] = 1;
+						$itemmasterdata['BeratStandar'] = 0.75;
+						$itemmasterdata['Hpp'] = 0;
+
+						$indexitem++;
+
+						$insertitem = $this->ModelsExecuteMaster->ExecInsert($itemmasterdata,'itemmasterdata');
+						if (!$insertitem) {
+							$errorcount++;
+							goto jump;
+						}
+					}
+
+					if ($value['E'] * $value['H'] > 0) {
+						$cekitemexist = $this->ModelsExecuteMaster->FindData(array('KodeItemLama'=>$value['A']),'itemmasterdata');
+
+						$mutasidetail[$indexdetail]['NoTransaksi'] = $nomor_mutasi;
+						$mutasidetail[$indexdetail]['LineNum'] = $indexdetail;
+						$mutasidetail[$indexdetail]['KodeItem'] = $cekitemexist->row()->ItemCode;
+						$mutasidetail[$indexdetail]['Qty'] = $value['E'];
+						$mutasidetail[$indexdetail]['Price'] = $value['H'];
+						$mutasidetail[$indexdetail]['LineTotal'] = $value['E'] * $value['H'];
+						$mutasidetail[$indexdetail]['CreatedBy'] = $this->session->userdata('username');
+						$mutasidetail[$indexdetail]['CreatedOn'] = date("Y-m-d h:i:sa");
+
+						$indexdetail++;
+					}
+
+					// $inserdata[$i]['KodeItem'] = $value['A'];
+					// $inserdata[$i]['KodeArticleMotif'] = $value['B'];
+					// $inserdata[$i]['KodeArticleWarna'] = $value['C'];
+					// $inserdata[$i]['NamaItem'] = $value['D'];
+					// $inserdata[$i]['Qty'] = $value['E'];
+					// $inserdata[$i]['HargaReguler'] = $value['F'];
+					// $inserdata[$i]['HargaEcomerce'] = $value['G'];
+					// $inserdata[$i]['HPP'] = $value['H'];
+					$i++;
+				}
+				$insertheader = $this->ModelsExecuteMaster->ExecInsert($mutasiheader,'headermutasi');
+				if ($insertheader) {
+					$insertdetail = $this->ModelsExecuteMaster->ExecInsertBatch($mutasidetail,'detailmutasi');
+					if (!$insertdetail) {
+						$errorcount += 1;
+						goto jump;
+					}
+				}
+				else{
+					$errorcount += 1;
+					goto jump;
+				}
+				// var_dump($itemmasterdata);
+				// var_dump($mutasiheader);
+				// var_dump($mutasidetail);
+				jump:
+				if ($errorcount>0) {
+					$undone = $this->db->error();
+					echo "Sistem Gagal Melakukan Pemrossan Data: ".$undone['message'];
+					$this->db->trans_rollback();
+				}
+				else{
+					echo '<script>alert("Done");</script>';
+					$this->db->trans_commit();
+					redirect('itemmasterdata');
+				}
+			} catch (Exception $e) {
+				die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
+				. '": ' .$e->getMessage());
+			}
+		}
+		else{
+			echo $error['error'];
+		}
+	}
+
 }
