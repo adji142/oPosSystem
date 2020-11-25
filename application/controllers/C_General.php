@@ -451,9 +451,9 @@ class C_General extends CI_Controller {
 					$this->db->trans_rollback();
 				}
 				else{
-					echo '<script>alert("Done");</script>';
+					// echo '<script>alert("Done");</script>';
 					$this->db->trans_commit();
-					redirect('itemmasterdata');
+					redirect('http://opos.dawnstore.id/itemmasterdata');
 				}
 			} catch (Exception $e) {
 				die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
