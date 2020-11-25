@@ -303,7 +303,7 @@ class C_General extends CI_Controller {
 	public function importFile(){
 		$errorcount = 0;
 		$path = './Data';
-		var_dump(APPPATH. "third_party\\PhpExcel\\Classes\\PHPExcel.php");
+		var_dump(APPPATH. "third_party/PhpExcelClasses/PHPExcel.php");
 		// require_once APPPATH . "third_party\\PhpExcel\\Classes\\PHPExcel.php";
 
 		// $config['upload_path'] = $path;
