@@ -804,7 +804,7 @@
       }
 
       if ($('#PaymentTerm').val() == "1") {
-        $("#Expedisi").attr("disabled", true);
+        $("#Expedisi").attr("disabled", false);
         $("#T_Bayar").attr("disabled", false);
         // $("#T_Paynow").prop("checked", true);
         
@@ -2243,6 +2243,31 @@
                     allowSorting: false
                 },
             ],
+            summary:{
+              totalItems: [
+                {
+                  column : "ItemCode",
+                  summaryType : "count"
+                },
+                {
+                  column : "Qty",
+                  summaryType : "sum"
+                },
+                {
+                  column : "Price",
+                  summaryType : "sum"
+                },
+                {
+                  column : "Diskon",
+                  summaryType : "sum"
+                },
+                {
+                  column : "Total",
+                  summaryType : "sum"
+                }
+
+              ]
+            },
             onEditingStart: function(e) {
             },
             onInitNewRow: function(e) {
