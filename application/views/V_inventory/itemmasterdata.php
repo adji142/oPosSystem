@@ -415,6 +415,18 @@
                     allowEditing:false
                 },
             ],
+            summary:{
+              totalItems: [
+                {
+                  column : "ItemCode",
+                  summaryType : "count"
+                },
+                {
+                  column : "Stok",
+                  summaryType : "sum"
+                }
+              ]
+            },
             onEditingStart: function(e) {
                 GetData(e.data.ItemCode);
             },
