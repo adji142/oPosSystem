@@ -533,6 +533,7 @@
           <thead>
               <tr>
                 <th>Kode Item</th>
+                <th>#</th>
                 <th>Nama Item</th>
                 <th>Article</th>
                 <th>Stok Akhir</th>
@@ -1208,6 +1209,7 @@
       var Stok = $(this).find("#Stok").text();
       var dflt = $(this).find("#dflt").text();
       var Satuan = $(this).find("#Satuan").text();
+      var KodeItemLama = $(this).find("#KodeItemLama").text();
 
       var prevQty = 0;
       var akumulasiQty = 1;
@@ -1275,6 +1277,7 @@
         // }
         items_data.push({
             ItemCode : ItemCode,
+            KodeItemLama : KodeItemLama,
             ItemName : ItemName,
             Qty : parseInt(prevQty) + 1,
             Price:dflt,
@@ -1498,6 +1501,7 @@
                 }
                 items_data.push({
                   ItemCode : v.KodeItem,
+                  KodeItemLama : v.KodeItemLama,
                   ItemName : v.ItemName,
                   Qty : parseInt(v.Qty),
                   Price:dflt,
@@ -1901,10 +1905,11 @@
       });
     }
     function UpdateHarga(harga) {
-      var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
+      var arr = {"ItemCode":"","KodeItemLama":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
       var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
       for (var i = 0; i < gridItems.length; i++) {
         arr["ItemCode"] = gridItems[i]["ItemCode"];
+        arr["KodeItemLama"] = gridItems[i]["KodeItemLama"];
         arr["ItemName"] = gridItems[i]["ItemName"];
         arr["Satuan"]   = gridItems[i]["Satuan"];
         arr["Price"]    = harga;
@@ -2116,6 +2121,7 @@
                   }
                     items_data.push({
                       ItemCode : v.ItemCode,
+                      KodeItemLama : v.KodeItemLama,
                       ItemName : v.ItemName,
                       Qty : parseInt(prevQty) + 1,
                       Satuan : v.Satuan,
@@ -2137,6 +2143,7 @@
               else{
                 html += '<tr>' +
                           '<td id = "ItemCode">' + v.ItemCode+'</td>' +
+                          '<td id = "KodeItemLama">' + v.KodeItemLama+'</td>' +
                           '<td id = "ItemName">' + v.ItemName + '</td>' +
                           '<td id = "Article">' + v.Article + '</td>' +
                           '<td id = "Stok">' + v.Stok + '</td>'
@@ -2197,6 +2204,12 @@
                 {
                     dataField: "ItemCode",
                     caption: "Kode Item",
+                    allowEditing:false,
+                    allowSorting: false
+                },
+                {
+                    dataField: "KodeItemLama",
+                    caption: "#",
                     allowEditing:false,
                     allowSorting: false
                 },
@@ -2281,12 +2294,13 @@
               //   // UpdateHarga(dflt);
                 
               // }
-              var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
+              var arr = {"ItemCode":"","KodeItemLama":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
 
                 var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
 
                 for (var i = 0; i < gridItems.length; i++) {
                   arr["ItemCode"] = gridItems[i]["ItemCode"];
+                  arr["KodeItemLama"] = gridItems[i]["KodeItemLama"];
                   arr["ItemName"] = gridItems[i]["ItemName"];
                   arr["Satuan"]   = gridItems[i]["Satuan"];
                   arr["Price"]    = gridItems[i]["Price"];
@@ -2306,7 +2320,7 @@
               var grid = $("#gridContainerItem").dxDataGrid("instance");
               var gridItems = $("#gridContainerItem").dxDataGrid('instance')._controllers.data._dataSource._items;
               console.log(gridItems);
-              var arr = {"ItemCode":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
+              var arr = {"ItemCode":"","KodeItemLama":"","ItemName":"","Satuan":0,"Price":0,"Qty":0,"Diskon":0,"Total":0,"__KEY__":"","BaseRef":''}
             
               var dflt = 0;
               var akumulasiQty = 0;
@@ -2324,6 +2338,7 @@
                 // }
                 console.log(dflt);
                 arr["ItemCode"] = gridItems[i]["ItemCode"];
+                arr["KodeItemLama"] = gridItems[i]["KodeItemLama"];
                 arr["ItemName"] = gridItems[i]["ItemName"];
                 arr["Satuan"]   = gridItems[i]["Satuan"];
                 arr["Price"]    = gridItems[i]["Price"];

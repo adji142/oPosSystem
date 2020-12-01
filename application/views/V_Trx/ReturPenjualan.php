@@ -274,11 +274,11 @@
               }
               if (parseFloat(response.data[i]['LineTotal']) > 0) {
                 itemsData.push({
-                  KodeItemLama :response.data[i]['KodeItem'],
-                  NamaItemLama :response.data[i]['Article'],
-                  KodeItemBaru :KodeItemBaru,
-                  NamaItemBaru :NamaItemBaru,
-                  QtyRetur     :response.data[i]['Qty'],
+                  KodeItemLama : response.data[i]['KodeItem'],
+                  NamaItemLama : response.data[i]['Article'],
+                  KodeItemBaru : KodeItemBaru,
+                  NamaItemBaru : NamaItemBaru,
+                  QtyRetur     : response.data[i]['Qty'] - response.data[i]['QtyRetur'],
                   Price        : parseFloat(response.data[i]['Harga']) - parseFloat(response.data[i]['Pot'])
                 });
               }

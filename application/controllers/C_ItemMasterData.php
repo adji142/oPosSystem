@@ -33,11 +33,11 @@ class C_ItemMasterData extends CI_Controller {
 		$id = $this->input->post('id');
 		$kriteria = $this->input->post('kriteria');
 		if ($id == '') {
-			$SQL = "SELECT * FROM vw_stok";
+			$SQL = "SELECT * FROM vw_stok WHERE Stok > 0";
 			$rs = $this->db->query($SQL);
 		}
 		elseif ($kriteria <> '') {
-			$SQL = "SELECT * FROM vw_stok WHERE CONCAT(ItemCode,' ',Article,' ', KodeItemLama) LIKE '%".$kriteria."%'";
+			$SQL = "SELECT * FROM vw_stok WHERE CONCAT(ItemCode,' ',Article,' ', KodeItemLama) LIKE '%".$kriteria."%' AND Stok > 0";
 			$rs = $this->db->query($SQL);	
 		}
 		else{

@@ -87,7 +87,7 @@ class C_POS extends CI_Controller {
 		$SQL = "
 			SELECT A.KodeItem,B.Article,A.Qty,A.Harga, A.Disc Pot,
 			((COALESCE(A.Qty,0) - COALESCE(f.QtyRetur,0)) * COALESCE(A.Harga,0)) - A.Disc AS LineTotal,
-			f.QtyRetur
+			COALESCE(f.QtyRetur,0) QtyRetur
 			FROM penjualandetail A 
 			LEFT JOIN vw_stok  B on A.KodeItem = B.ItemCode
 			LEFT JOIN (
